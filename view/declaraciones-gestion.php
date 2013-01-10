@@ -292,14 +292,14 @@ if(isset($_SESSION['timeout']) ) {
 						?>     
 						
 					 <div class="texto_explicacion_formulario">N&uacute;mero de Control:</div>
-							<div>
-							<input name="ncontrol" id="ncontrol" readonly rows="1" value="<? echo isset($ncontrol) ? $ncontrol : "";?>" type="text" class="required" title="Numero de Control de Declaraciones">
-							</div>
-								
+					    <div>
+							<input class="elementos_form" name="ncontrol" id="ncontrol" readonly rows="1" value="<? echo isset($ncontrol) ? $ncontrol : "";?>" type="text" class="required" title="Numero de Control de Declaraciones">
+						</div>
+						
 					<div class="texto_explicacion_formulario">Nombre de Empresa:</div>
 							<div>
 								
-                                <select id="nit" name="nit" class="required" title="Ingrese el nombre de la empresa que realiza la compra">
+                                <select class="elementos_form"id="nit" name="nit" class="required" title="Ingrese el nombre de la empresa que realiza la compra">
                                 	<?
                                 	
 											$result = mysql_query("SELECT * FROM empresas ORDER BY nombre", $link);
@@ -317,17 +317,18 @@ if(isset($_SESSION['timeout']) ) {
 							</div>
 								
 						
-					 
+					
 					 <div class="texto_explicacion_formulario">N&uacute;mero de Retaceo:</div>
 							<div>
-							<input name="nretaceo" id="nretaceo" rows="1" value="<? echo isset($nretaceo) ? $nretaceo : "";?>" type="text" class="required" title="Ingrese el numero de Retaceo de la Empresa">
+							<input class="elementos_form" name="nretaceo" id="nretaceo" rows="1" value="<? echo isset($nretaceo) ? $nretaceo : "";?>" type="text" class="required" title="Ingrese el numero de Retaceo de la Empresa">
 							
 							</div>
-							
+				 <br><br>
+				 			
 							<div class="texto_explicacion_formulario">Modelo de Declaraci&oacute;n:</div>
 							<div>
 								
-                              <select id="modelodeclaracion" name="modelodeclaracion" class="required" title="Ingrese el nombre de la empresa que realiza la compra">
+                              <select class="elementos_form"id="modelodeclaracion" name="modelodeclaracion" class="required" title="Ingrese el nombre de la empresa que realiza la compra">
                                
                                 <option value="EX1" >EX1 Exportacion</option>
 								<option value="EX2" >EX2 Exportacion Temporal</option>
@@ -344,7 +345,7 @@ if(isset($_SESSION['timeout']) ) {
 								<div class="texto_explicacion_formulario">Modo de Transporte:</div>
 							<div>
 								
-                              <select id="modotransporte" name="modotransporte" class="required" title="Ingrese el nombre de la empresa que realiza la compra">
+                              <select class="elementos_form"id="modotransporte" name="modotransporte" class="required" title="Ingrese el nombre de la empresa que realiza la compra">
                                 <option value="0" >Terrestre</option>
 								<option value="1" >A&eacute;reo</option>
 								<option value="2" >Mar&iacute;timo</option>
@@ -356,22 +357,27 @@ if(isset($_SESSION['timeout']) ) {
 						
 							<div class="texto_explicacion_formulario">Fecha:</div>
 							<div>
-								<input name="fecha" id="fecha" rows="1" value="<? echo isset($fecha) ? $fecha : "";?>" type="text" class="required" title="Seleccione fecha de realizacion de la compra">
+								<input class="elementos_form" name="fecha" id="fecha" rows="1" value="<? echo isset($fecha) ? $fecha : "";?>" type="text" class="required" title="Seleccione fecha de realizacion de la compra">
 							</div>
+						
+					<br><br>	
 							<div class="texto_explicacion_formulario">Numero de Documento de Transporte:</div>
 							<div>
-								<input name="numdoctransporte" id="numdoctransporte" rows="1" value="<? echo isset($numdoctransporte) ? $numdoctransporte : "";?>" type="text" class="required" title="Seleccione fecha de realizacion de la compra">
+								<input class="elementos_form" name="numdoctransporte" id="numdoctransporte" rows="1" value="<? echo isset($numdoctransporte) ? $numdoctransporte : "";?>" type="text" class="required" title="Seleccione fecha de realizacion de la compra">
 							</div>
+							
 							<div class="texto_explicacion_formulario">Flete:</div>
 							<div>
-								<input name="flete" id="flete" rows="1" type="text" value="<? echo isset($flete) ? $flete : "";?>" class="required" title="Ingrese el N&uacute;mero de Documento">
+								<input class="elementos_form" name="flete" id="flete" rows="1" type="text" value="<? echo isset($flete) ? $flete : "";?>" class="required" title="Ingrese el N&uacute;mero de Documento">
 							</div>
-                          
-                               <?php
+							<br>
+                          <div><input class="elementos_form" name="submit" id="submit" style="text-align: center" value="Guardar" type="submit"></div>
+                          <br>
+                          <?php
                                //si es un retaceo existente que muestre sus facturas si es que tiene
                            if($id_declaracion != "" || $id_declaracion !="0"){
                            	?>
-                            <div class="texto_explicacion_formulario">Detalles de Facturas:</div>
+                            <div style="float:center" class="texto_explicacion_formulario">Detalles de Facturas:</div>
                             <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
                               <tbody><tr bgcolor="#6990BA" >
                                 <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">Numero Factura</td>
@@ -423,8 +429,6 @@ if(isset($_SESSION['timeout']) ) {
                                     </td>
                             </tr>
                             </tbody></table> <? }?>
-                            
-							<div><input name="submit" id="submit" value="Guardar" type="submit"></div>
                           
                           </td>
                         </tr>
