@@ -1,0 +1,267 @@
+BODY {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; BACKGROUND: url(../images/background.gif) #f5f5f5; PADDING-TOP: 0px
+}
+A {
+	COLOR: white; TEXT-DECORATION: none
+}
+.texto_explicacion_formulario {
+	PADDING-BOTTOM: 5px; FONT-FAMILY: Arial; COLOR: #000000; FONT-SIZE: 12px; FONT-WEIGHT: bold; PADDING-TOP: 5px
+}
+.texto_correcto {
+	TEXT-ALIGN: center; COLOR: green !important
+}
+.texto_incorrecto {
+	TEXT-ALIGN: center; COLOR: #cc0000 !important
+}
+.texto_normal {
+	FONT-FAMILY: Arial; COLOR: #000000; FONT-SIZE: 12px; FONT-WEIGHT: normal
+}
+TEXTAREA {
+	FONT-FAMILY: Arial; COLOR: #000000; FONT-SIZE: 12px; FONT-WEIGHT: normal; resize: none
+}
+.texto_error {
+	PADDING-BOTTOM: 5px; FONT-FAMILY: Arial; COLOR: #cc0000; FONT-SIZE: 12px; FONT-WEIGHT: bold; PADDING-TOP: 5px
+}
+.texto_ok {
+	PADDING-BOTTOM: 5px; FONT-FAMILY: Arial; COLOR: #669900; FONT-SIZE: 12px; FONT-WEIGHT: bold; PADDING-TOP: 5px
+}
+.texto_small {
+	COLOR: #0066d9; FONT-SIZE: 11px
+}
+.borde_fieldset {
+	BORDER-BOTTOM: #d5dfe5 1px solid; BORDER-LEFT: #d5dfe5 1px solid; BORDER-TOP: #d5dfe5 1px solid; BORDER-RIGHT: #d5dfe5 1px solid
+}
+.no_borde_fieldset {
+	
+}
+LEGEND {
+	PADDING-BOTTOM: 5px; FONT-FAMILY: Arial; COLOR: #3c859f; FONT-SIZE: 12px; FONT-WEIGHT: bold; PADDING-TOP: 5px
+}
+TD.cabecera {
+	WIDTH: 988px; BACKGROUND: url(../images/cabecera.jpg) no-repeat; HEIGHT: 67px;	border-top-left-radius: 26px;
+	-moz-border-top-left-radius: 26px;
+		border-top-right-radius: 26px;
+	-moz-border-top-right-radius: 26px;
+}
+TD.fondo_login {
+	BORDER-LEFT: #c0c0c0 1px solid; WIDTH: 986px; BACKGROUND: url(../images/fondo-login.jpg) no-repeat center top; HEIGHT: 582px; BORDER-TOP: #c0c0c0 1px solid; BORDER-RIGHT: #c0c0c0 1px solid
+}
+TD.fondo_error {
+	BORDER-LEFT: #c0c0c0 1px solid; WIDTH: 986px; BACKGROUND: url(../images/fondo-error.jpg) no-repeat center top; HEIGHT: 582px; BORDER-TOP: #c0c0c0 1px solid; BORDER-RIGHT: #c0c0c0 1px solid
+}
+TD.fondo_menu {
+	BORDER-LEFT: #c0c0c0 1px solid; BACKGROUND-COLOR: #ffffff; WIDTH: 986px; BORDER-TOP: #c0c0c0 1px solid; BORDER-RIGHT: #c0c0c0 1px solid
+}
+TD.fondo_login_abajo {
+	WIDTH: 988px; BACKGROUND: url(../images/fondo-login-abajo.gif) #ffffff no-repeat; HEIGHT: 7px
+}
+TD.fondo_login_abajo_menu {
+	WIDTH: 988px; BACKGROUND: url(../images/fondo-login-abajo-menu.gif) #ffffff no-repeat; HEIGHT: 7px
+}
+TD.menu_arriba {
+	WIDTH: 986px; BACKGROUND: url(../images/menu-arriba.gif) no-repeat; HEIGHT: 33px
+}
+TD.menu_interior_arriba {
+	WIDTH: 986px; BACKGROUND: url(../images/menu-interior-arriba.gif) no-repeat; HEIGHT: 21px
+}
+TD.menu_abajo {
+	WIDTH: 986px; BACKGROUND: url(../images/menu-abajo.gif) no-repeat; HEIGHT: 19px
+}
+TD.menu_fondo {
+	BORDER-LEFT: #c0c0c0 1px solid; BACKGROUND-COLOR: #ffffff; WIDTH: 950px; BORDER-RIGHT: #c0c0c0 1px solid
+}
+TD.menu_fondo_2 {
+	BORDER-BOTTOM: #d8d8d8 1px solid; BORDER-LEFT: #d8d8d8 1px solid; BACKGROUND-COLOR: #f7f7f7; WIDTH: 930px; BORDER-RIGHT: #d8d8d8 1px solid
+}
+TD.menu_separador_1 {
+	WIDTH: 14px
+}
+TD.modulo {
+	BORDER-BOTTOM: #ececec 1px solid; BORDER-LEFT: #ececec 1px solid; BACKGROUND-COLOR: #f2f2f2; WIDTH: 138px; HEIGHT: 206px; BORDER-TOP: #ececec 1px solid; BORDER-RIGHT: #ececec 1px solid
+}
+A.modulo_titulo {
+	FONT-FAMILY: Arial; COLOR: #676767; FONT-SIZE: 13px; FONT-WEIGHT: bold; TEXT-DECORATION: none
+}
+A.modulo_titulo:hover {
+	FONT-FAMILY: Arial; COLOR: #676767; FONT-SIZE: 13px; FONT-WEIGHT: bold; TEXT-DECORATION: none
+}
+A.enlace_modulo {
+	FONT-FAMILY: Arial; COLOR: #676767; FONT-SIZE: 12px; FONT-WEIGHT: bold; TEXT-DECORATION: none
+}
+A.enlace_modulo:hover {
+	FONT-FAMILY: Arial; COLOR: #676767; FONT-SIZE: 12px; FONT-WEIGHT: bold; TEXT-DECORATION: none
+}
+A.enlace_eliminar {
+	FONT-FAMILY: Arial; COLOR: #9c2d2d; FONT-SIZE: 12px; FONT-WEIGHT: bold; TEXT-DECORATION: none
+}
+A.enlace_eliminar:hover {
+	FONT-FAMILY: Arial; COLOR: #9c2d2d; FONT-SIZE: 12px; FONT-WEIGHT: bold; TEXT-DECORATION: none
+}
+.titulo_dominio {
+	FONT-FAMILY: Arial; COLOR: #ffffff; FONT-SIZE: 32px; FONT-WEIGHT: bold
+}
+TD.titulo_modulo {
+	FONT-FAMILY: Arial; COLOR: #4999b3; FONT-SIZE: 24px; FONT-WEIGHT: bold
+}
+TD.tabla_titulo {
+	FONT-FAMILY: Arial; COLOR: #686969; FONT-SIZE: 13px; FONT-WEIGHT: normal
+}
+A.menu_opcion {
+	FONT-FAMILY: Arial; COLOR: #3663c5; FONT-SIZE: 12px; FONT-WEIGHT: normal; TEXT-DECORATION: none
+}
+A.menu_opcion:hover {
+	FONT-FAMILY: Arial; COLOR: #3663c5; FONT-SIZE: 12px; FONT-WEIGHT: normal; TEXT-DECORATION: none
+}
+.titulo_acceder_panel_admin {
+	FONT-FAMILY: Arial; COLOR: #727272; FONT-SIZE: 20px; FONT-WEIGHT: bold
+}
+.titulo_texto_login {
+	FONT-FAMILY: Arial; COLOR: #727272; FONT-SIZE: 15px; FONT-WEIGHT: normal
+}
+INPUT.txt_login {
+	BORDER-BOTTOM: #c0c0c0 1px solid; BORDER-LEFT: #c0c0c0 1px solid; WIDTH: 220px; FONT-FAMILY: Arial; HEIGHT: 23px; COLOR: #727272; FONT-SIZE: 13px; BORDER-TOP: #c0c0c0 1px solid; FONT-WEIGHT: normal; BORDER-RIGHT: #c0c0c0 1px solid
+}
+.texto_recordar_password {
+	FONT-FAMILY: Arial; COLOR: #367285; FONT-SIZE: 11px; FONT-WEIGHT: normal; TEXT-DECORATION: none
+}
+A.texto_recordar {
+	FONT-FAMILY: Arial; COLOR: #367285; FONT-SIZE: 11px; FONT-WEIGHT: normal; TEXT-DECORATION: none
+}
+A.texto_recordar:hover {
+	FONT-FAMILY: Arial; COLOR: #367285; FONT-SIZE: 11px; FONT-WEIGHT: normal; TEXT-DECORATION: none
+}
+A.texto_volver_inicio {
+	FONT-FAMILY: Arial; COLOR: #787878; FONT-SIZE: 12px; FONT-WEIGHT: bold; TEXT-DECORATION: none
+}
+A.texto_volver_inicio:hover {
+	FONT-FAMILY: Arial; COLOR: #787878; FONT-SIZE: 12px; FONT-WEIGHT: bold; TEXT-DECORATION: none
+}
+.texto_copyright {
+	FONT-FAMILY: Arial; COLOR: #4590a8; FONT-SIZE: 12px; FONT-WEIGHT: normal
+}
+A.copyright {
+	FONT-FAMILY: Arial; COLOR: #4590a8; FONT-SIZE: 12px; FONT-WEIGHT: normal; TEXT-DECORATION: none
+}
+A.copyright:hover {
+	FONT-FAMILY: Arial; COLOR: #4590a8; FONT-SIZE: 12px; FONT-WEIGHT: normal; TEXT-DECORATION: underline
+}
+TD.paginacion {
+	BACKGROUND-COLOR: #ebebeb
+}
+.button1-left A {
+	LINE-HEIGHT: 26px; DISPLAY: block; FLOAT: left; HEIGHT: 26px; COLOR: #333; FONT-SIZE: 13px; CURSOR: pointer; FONT-WEIGHT: bold
+}
+.button1-right A {
+	LINE-HEIGHT: 26px; DISPLAY: block; FLOAT: left; HEIGHT: 26px; COLOR: #333; FONT-SIZE: 13px; CURSOR: pointer; FONT-WEIGHT: bold
+}
+.button2-left SPAN {
+	COLOR: #999; CURSOR: pointer
+}
+.button2-right SPAN {
+	COLOR: #999; CURSOR: pointer
+}
+.off SPAN {
+	COLOR: #999; CURSOR: default
+}
+.off SPAN {
+	COLOR: #999; CURSOR: default
+}
+.button1-left {
+	FLOAT: left
+}
+.button1-right {
+	FLOAT: left
+}
+.button2-left {
+	FLOAT: left
+}
+.button2-right {
+	FLOAT: left
+}
+.button1-left DIV {
+	FLOAT: left
+}
+.button1-right DIV {
+	FLOAT: left
+}
+.button2-left DIV {
+	FLOAT: left
+}
+.button2-right DIV {
+	FLOAT: left
+}
+.button2-left A {
+	LINE-HEIGHT: 22px; FLOAT: left; HEIGHT: 22px; COLOR: #333; FONT-SIZE: 12px
+}
+.button2-right A {
+	LINE-HEIGHT: 22px; FLOAT: left; HEIGHT: 22px; COLOR: #333; FONT-SIZE: 12px
+}
+.button2-left SPAN {
+	LINE-HEIGHT: 22px; FLOAT: left; HEIGHT: 22px; COLOR: #333; FONT-SIZE: 12px
+}
+.button2-right SPAN {
+	LINE-HEIGHT: 22px; FLOAT: left; HEIGHT: 22px; COLOR: #333; FONT-SIZE: 12px
+}
+.button2-left A:hover {
+	COLOR: #0b55c4; TEXT-DECORATION: none
+}
+.button2-right A:hover {
+	COLOR: #0b55c4; TEXT-DECORATION: none
+}
+.button2-left A {
+	PADDING-BOTTOM: 0px; PADDING-LEFT: 6px; PADDING-RIGHT: 24px; PADDING-TOP: 0px
+}
+.button2-left SPAN {
+	PADDING-BOTTOM: 0px; PADDING-LEFT: 6px; PADDING-RIGHT: 24px; PADDING-TOP: 0px
+}
+.button2-right A {
+	PADDING-BOTTOM: 0px; PADDING-LEFT: 24px; PADDING-RIGHT: 6px; PADDING-TOP: 0px
+}
+.button2-right SPAN {
+	PADDING-BOTTOM: 0px; PADDING-LEFT: 24px; PADDING-RIGHT: 6px; PADDING-TOP: 0px
+}
+.button2-left {
+	BACKGROUND: url(../images/j_button2_left.gif) no-repeat; FLOAT: right; MARGIN-LEFT: 5px
+}
+.button2-right {
+	BACKGROUND: url(../images/j_button2_right.gif) no-repeat 100% 0px; FLOAT: left; MARGIN-LEFT: 5px
+}
+.button2-right .prev {
+	BACKGROUND: url(../images/j_button2_prev.gif) no-repeat
+}
+.off .prev {
+	BACKGROUND: url(../images/j_button2_prev_off.gif) no-repeat
+}
+.button2-right .start {
+	BACKGROUND: url(../images/j_button2_first.gif) no-repeat
+}
+.off .start {
+	BACKGROUND: url(../images/j_button2_first_off.gif) no-repeat
+}
+.button2-left .page {
+	BACKGROUND: url(../images/j_button2_right_cap.gif) no-repeat 100% 0px
+}
+.button2-left .blank {
+	BACKGROUND: url(../images/j_button2_right_cap.gif) no-repeat 100% 0px
+}
+.button2-left .next {
+	BACKGROUND: url(../images/j_button2_next.gif) no-repeat 100% 0px
+}
+.off .next {
+	BACKGROUND: url(../images/j_button2_next_off.gif) no-repeat 100% 0px
+}
+.button2-left .end {
+	BACKGROUND: url(../images/j_button2_last.gif) no-repeat 100% 0px
+}
+.off .end {
+	BACKGROUND: url(../images/j_button2_last_off.gif) no-repeat 100% 0px
+}
+.container {
+	CLEAR: both; TEXT-DECORATION: none
+}
+.search {
+	FONT-FAMILY: Arial; COLOR: #333333; FONT-SIZE: 11pt; FONT-WEIGHT: normal
+}
+.inputbox {
+	WIDTH: 400px !important
+}

@@ -1,0 +1,234 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+<meta name="robots" content="all" />
+<meta name="Author" content="Universidad Don Bosco" />
+<meta name="keywords" content="Multigimnasio Don Bosco, Don Bosco, Multigimnasio" />
+<meta name="description" content="Sitio Web de Multigimnasio Don Bosco, sitio personalizado"
+<meta name="Revisit" content="5 days" />
+<meta name="descripthe-Control" content="no-cache">
+<base href="http://mutigimnasiodb.comyr.com/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="administrator/js/jqueryindex.js"></script>
+<script type="text/javascript" src="administrator/js/jquery.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+<script type="text/javascript" src="js/jquery.infinitecarousel.js"></script>
+
+<script type="text/javascript">
+$(function(){
+	$('#noticias').infiniteCarousel({
+		displayTime: 6000,
+	    imagePath: '../images/images_slider/',
+		textholderHeight : .25
+	});
+});
+</script>
+<title> ..:: Multigimnasio Don Bosco ::..</title>
+<link href="css/style.css" rel="stylesheet" type="text/css">
+<link href="css/menu_general.css" rel="stylesheet" type="text/css" />
+<style>
+    .cssbox, .cssbox_body, .cssbox_head, .cssbox_head h2{
+      background: transparent url(images/borderUp.png) no-repeat bottom right}
+    .cssbox{
+      width:275px !important; /* IE Win = width - padding */
+      width: 265px; 
+      padding-right:20px; /* use to position the box */
+      margin:20px auto
+	  }
+    .cssbox_head{background-position:top right;
+      margin-right:-15px; 
+      padding-right:40px
+	  }
+    .cssbox_head h2{
+      background-position:top left;
+      margin:0; 
+      border:0; 
+      padding:25px 0 15px 40px; 
+      height:auto !important;
+      height:1%
+	  } 
+    .cssbox_body{
+      background-position:bottom left;
+      margin-right:25px; 
+      padding:15px 0 15px 40px
+	  } 
+</style>
+</head>
+<body>
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+ 	<tbody>
+    	<tr>
+ 			<td class="topbg" align="left" valign="top">
+            	<table align="center" border="0" cellpadding="0" cellspacing="0" width="890">
+ 					<tbody><tr>
+ 					<td class="header" align="left" valign="top">
+                    		<br />
+                        	<!--Aqui va -> Multigimnasio Don Bosco-->
+                    </td>
+ 					</tr></tbody>
+                </table>
+             </td>
+ 		</tr>
+ 		<tr>
+ 			<td class="nav" align="left" valign="top">
+            	<table align="center" border="0" cellpadding="0" cellspacing="0" width="410">
+ 					<tbody>
+                    	<tr>
+ 							<td align="left" valign="top">
+                                <ul id="nav">
+                                    <li class="current"><a href="http://ayutuxtepeque.net46.net">Inicio</a></li>
+					<div class="separator"></div> 
+					<li class="first"><a href="#">Ayutuxtepeque</a>
+                        <ul>
+                        	<li><a href="misi-n-de-la-alcaldia-de-ayutuxtepeque.html">Misi&oacute;n</a></li>
+                            <li><a href="visi-n-alcaldia-de-ayutuxtepeque.html">Visi&oacute;n</a></li>
+                            <li><a href="historia-y-datos-generales.html">Historia</a></li>
+                            <li><a href="fiestas-patronales.html">Fiestas Patronales</a></li>
+                        </ul>
+					</li>
+					<div class="separator"></div>  
+					<li class="first"><a href="#">Municipalidad</a>
+                        <ul>
+                            <li><a href="gobierno.html">Gobierno</a></li>
+                            <li><a href="concejo-municipal.html">Consejo Municipal</a></li>
+                            <li><a href="mensaje-de-alcaldesa.html">Mensaje de Alcaldesa</a></li>
+                            <li><a href="escudo-municipal.html">Escudo Municipal</a></li>
+                        </ul>
+					</li>	 
+					<div class="separator"></div>  
+					<li class="first"><a href="#">Servicios</a>
+                        <ul>
+                            <li><a href="cuerpo-de-agentes-metropolitanos-cam.html">CAM</a></li>
+                            <li><a href="servicio-ciudadano.html">Registro Ciudadano</a></li>
+                            <li><a href="tramites-tributarios.html">Tramites tributarios</a></li>
+                            <li><a href="recoleccion-de-desechos.html">Recolecci&oacute;n de desechos</a></li>
+                        </ul>
+    				</li> 
+					<div class="separator"></div>
+    				<li class="first"><a href="proyectos.html">Proyectos</a></li>
+					<div class="separator"></div>
+					<li class="first"><a href="directorio.html">Atenci&oacute;n ciudadana</a></li>
+					<div class="separator"></div>
+					<li class="first"><a href="contacto.html">Contacto</a></li>
+    				<br clear="all" />
+                                </ul>
+							</td>
+ 						</tr>
+ 				</tbody>
+              </table>
+            </td>
+ 		</tr>
+ 		<tr>
+ 			<td class="blockmain" align="left" valign="top"><table align="center" border="0" cellpadding="0" cellspacing="0" width="890">
+ 				<tbody>
+                	<tr>
+						<td class="block" align="left" valign="top" width="278"><table align="center" border="0" cellpadding="0" cellspacing="0" width="252">
+							<tbody>
+                            	<tr>
+ 									<td align="left" valign="top">
+ 										<div id="noticias">
+	<ul>
+		<li><img alt="" src="images/youtube.png" width="500" height="213" />
+        <p>Hi there. I&#39;m 
+		a caption for this image. If you click the pause icon in the upper right 
+		hand corner you can pause the slideshow and restart it whenever you like.</p>
+		</li>
+		<li><img alt="" src="images/youtube.png" width="500" height="213" /><p>
+        This is the caption 
+		for the second image. The image to the right has no caption. clicking the 
+		left and right arrows will also pause the show.</p>
+		</li>
+		<li><img alt="" src="images/youtube.png" width="500" height="213" /></li>
+	</ul>
+</div>
+									</td>
+ 								</tr>
+ 							</tbody></table>
+                         </td>
+ 					</tr>
+				</tbody></table>
+             </td>
+		</tr>
+ 		<tr>
+ 			<td class="contener" align="left"><table align="center" border="0" cellpadding="0" cellspacing="0" width="890">
+				<tbody>
+					<tr>
+						<td align="left"><table border="0" cellpadding="0" cellspacing="0" width="890">
+ 							<tbody>
+                            	<tr> 
+								<div style="width:890px; height:500px; padding:5px 0 10px 0;">
+                                	<div style="width:285px; margin:0 0 0 5px; float:left;">
+                                             <div class="cssbox">
+      											<div class="cssbox_head">
+       												<h2>This is a header</h2>
+      											</div>
+      											<div class="cssbox_body">
+											       <p style="background:#000;">This is for your content.</p>
+      											</div>
+     										</div>
+                                    </div>
+                                    <div style="width:285px; margin:0 5px 0; float:left;">
+                                    	<div class="cssbox">
+      											<div class="cssbox_head">
+       												<h2>This is a header</h2>
+      											</div>
+      											<div class="cssbox_body">
+											       <p style="background:#000;">This is for your content.</p>
+      											</div>
+     										</div>
+                                    </div>
+                                    <div style="width:285px; float:left;">
+                                    	<div class="cssbox">
+      											<div class="cssbox_head">
+       												<h2>This is a header</h2>
+      											</div>
+      											<div class="cssbox_body">
+											       <p style="background:#000;">This is for your content.</p>
+      											</div>
+     										</div>
+                                    </div>
+                                </div>
+ 								</tr>
+							 </tbody></table>
+                        </td>
+ 					</tr>
+				 </tbody></table>
+            </td>
+ 		</tr>
+ 		<tr>
+ 			<td class="foot" align="left" valign="top">
+				<table align="center" border="0" cellpadding="0" cellspacing="0" width="405">
+					 <tbody>
+                         <tr>
+                            <td align="left" height="20" valign="top">
+                                <ul>
+                                        <li><a href="/" title="Inicio" class="active">Inicio</a></li>
+                                        <li><a href="http://www.templatekingdom.com/demo/Website-Templates/Entertainment/TNS-0006-EN/aboutus.html" title="About Us">About Us</a></li>
+                                        <li><a href="#" title="Events Zone">Events Zone</a></li>
+                                        <li><a href="#" title="New Games">New Games</a></li>
+                                        <li class="nobg02"><a href="#" title="Contact">Contact</a></li>
+                                </ul>
+                            </td>
+                        </tr>
+ 						<tr>
+							<td align="left" height="20" valign="top"><p>© Copyright Information Goes Here. All Rights Reserved.</p></td>
+ 						</tr>
+ 						<tr>
+							<td align="left" valign="top"><p>Design by: <a href="http://www.templatekingdom.com/" title="Template Kingdom.com" target="_blank">Template Kingdom.com</a></p></td>
+ 						</tr>
+					</tbody>
+                </table>
+			</td>
+ 		</tr>
+	</tbody>
+</table>
+
+<div style="    margin: 10px;    padding: 5px 10px;    background-color: #808080;    overflow: auto;    opacity: 0.9;    font-size: 0.9em;    color: #333;    text-align: left;    z-index: 9999;    position: absolute;    top: 0;    right: 0;" id="">            <div id="">              <!-- Add to Cart Button -->              <a href="http://www.templatekingdom.com/Cart/action/add/templateId/TNS-0006-EN/" title="Buy this Template" rel="nofollow">Hola</a>            </div></div>
+</body>
+</html>
+
+
+
+<!-- Hosting24 Analytics Code -->
+<script type="text/javascript" src="http://stats.hosting24.com/count.php"></script>
+<!-- End Of Analytics Code -->
