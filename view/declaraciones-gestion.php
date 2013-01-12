@@ -231,7 +231,7 @@ if(isset($_SESSION['timeout']) ) {
 		
 		
 		
-                <tr><td class="menu_interior_arriba">&nbsp;</td></tr>
+        <tr><td class="menu_interior_arriba">&nbsp;</td></tr>
         <tr>
           <td align="center" valign="top">
             <table align="center" border="0" cellpadding="0" cellspacing="0" width="950">
@@ -246,6 +246,7 @@ if(isset($_SESSION['timeout']) ) {
                           <td valign="top">
 						  
 						  <?
+                                                  //CARGA DE DATOS DESDE BD
 							if($id_declaracion != "" || $id_declaracion != "0"){
 								$result = mysql_query("SELECT * FROM retaceo WHERE numero ='".$id_declaracion."'", $link);
 								
@@ -260,11 +261,13 @@ if(isset($_SESSION['timeout']) ) {
 									$numdoctransporte= $fila['numeroDocumentoTransporte'];
 									$flete= $fila['flete'];
 								}
-						//consulta que genera un preview de las facturas de un retaceo definido
-                       $facturas = mysql_query("SELECT * FROM factura WHERE numeroretaceo ='".$id_declaracion."'", $link);
+                                                                
+                                                        //consulta que genera un preview de las facturas de un retaceo definido
+                                                        $facturas = mysql_query("SELECT * FROM factura WHERE numeroretaceo ='".$id_declaracion."'", $link);
 							}
-							
-							if($opc=="nuevo"){
+                                                    
+                                                        //SI LA OPCION ES NUEVA SOLAMENTE SE GENERA UN NUEVO NUMERO DE CONTROL
+							if(!strcmp($opc, 'nuevo')){
 							
 								$f=false;
 								while($f!=TRUE){
@@ -293,11 +296,44 @@ if(isset($_SESSION['timeout']) ) {
 						
 					 <div class="texto_explicacion_formulario">N&uacute;mero de Control:</div>
 					    <div>
-							<input class="elementos_form" name="ncontrol" id="ncontrol" readonly rows="1" value="<? echo isset($ncontrol) ? $ncontrol : "";?>" type="text" class="required" title="Numero de Control de Declaraciones">
+							<input style="background-color:#F0F0F0" class="elementos_form" name="ncontrol" id="ncontrol" readonly rows="1" value="<? echo isset($ncontrol) ? $ncontrol : "";?>" type="text" class="required" title="Numero de Control de Declaraciones">
 						</div>
+                                         
+                                          <div class="texto_explicacion_formulario">N&uacute;mero de Retaceo:</div>
+						<div>
+						<input class="elementos_form" name="nretaceo" id="nretaceo" rows="1" value="<? echo isset($nretaceo) ? $nretaceo : "";?>" type="text" class="required" title="Ingrese el numero de Retaceo de la Empresa">
 						
-					<div class="texto_explicacion_formulario">Nombre de Empresa:</div>
+						</div>
+                                         
+                                          
+                                         
+                                          <div class="texto_explicacion_formulario">Modo de Transporte:</div>
 							<div>
+								
+                              <select class="elementos_form"id="modotransporte" name="modotransporte" class="required" title="Ingrese el nombre de la empresa que realiza la compra">
+                                <option value="0" >Terrestre</option>
+								<option value="1" >A&eacute;reo</option>
+								<option value="2" >Mar&iacute;timo</option>
+								<option value="3" >Ferreo</option>
+								<option value="4" >Multimodal</option>
+				
+							 </select>		
+							</div>
+                                          
+                                          <div class="texto_explicacion_formulario">Fecha:</div>
+							<div>
+								<input class="elementos_form" name="fecha" id="fecha" rows="1" value="<? echo isset($fecha) ? $fecha : "";?>" type="text" class="required" title="Seleccione fecha de realizacion de la compra">
+							</div>
+                                     <br><br>     
+                           
+                            <div class="texto_explicacion_formulario">Numero de Documento de Transporte:</div>
+                            <div>
+                            <input class="elementos_form" name="numdoctransporte" id="numdoctransporte" rows="1" value="<? echo isset($numdoctransporte) ? $numdoctransporte : "";?>" type="text" class="required" title="Seleccione fecha de realizacion de la compra">
+			    </div>
+				
+                          <div class="texto_explicacion_formulario">Nombre de Empresa:</div>
+					
+                                <div>
 								
                                 <select class="elementos_form"id="nit" name="nit" class="required" title="Ingrese el nombre de la empresa que realiza la compra">
                                 	<?
@@ -314,19 +350,18 @@ if(isset($_SESSION['timeout']) ) {
 											}
 									?>
                                 </select>
-							</div>
-								
-						
-					
-					 <div class="texto_explicacion_formulario">N&uacute;mero de Retaceo:</div>
-							<div>
-							<input class="elementos_form" name="nretaceo" id="nretaceo" rows="1" value="<? echo isset($nretaceo) ? $nretaceo : "";?>" type="text" class="required" title="Ingrese el numero de Retaceo de la Empresa">
-							
-							</div>
-				 <br><br>
-				 			
-							<div class="texto_explicacion_formulario">Modelo de Declaraci&oacute;n:</div>
-							<div>
+				</div>
+                          
+                          	
+							<br><br>
+                         <div class="texto_explicacion_formulario">Flete:</div>
+			<div>
+			<input class="elementos_form" name="flete" id="flete" rows="1" type="text" value="<? echo isset($flete) ? $flete : "";?>" class="required" title="Ingrese el N&uacute;mero de Documento">
+			</div>
+                          
+                            <div class="texto_explicacion_formulario">Modelo de Declaraci&oacute;n:</div>
+                                        
+                            <div>
 								
                               <select class="elementos_form"id="modelodeclaracion" name="modelodeclaracion" class="required" title="Ingrese el nombre de la empresa que realiza la compra">
                                
@@ -340,39 +375,25 @@ if(isset($_SESSION['timeout']) ) {
 								<option value="IM8" >IM8 Importacion a Franquicia</option>	
 								
 							 </select>		
-							</div>
-																				
-								<div class="texto_explicacion_formulario">Modo de Transporte:</div>
-							<div>
-								
-                              <select class="elementos_form"id="modotransporte" name="modotransporte" class="required" title="Ingrese el nombre de la empresa que realiza la compra">
-                                <option value="0" >Terrestre</option>
-								<option value="1" >A&eacute;reo</option>
-								<option value="2" >Mar&iacute;timo</option>
-								<option value="3" >Ferreo</option>
-								<option value="4" >Multimodal</option>
-				
-							 </select>		
-							</div>
-						
-							<div class="texto_explicacion_formulario">Fecha:</div>
-							<div>
-								<input class="elementos_form" name="fecha" id="fecha" rows="1" value="<? echo isset($fecha) ? $fecha : "";?>" type="text" class="required" title="Seleccione fecha de realizacion de la compra">
-							</div>
-						
-					<br><br>	
-							<div class="texto_explicacion_formulario">Numero de Documento de Transporte:</div>
-							<div>
-								<input class="elementos_form" name="numdoctransporte" id="numdoctransporte" rows="1" value="<? echo isset($numdoctransporte) ? $numdoctransporte : "";?>" type="text" class="required" title="Seleccione fecha de realizacion de la compra">
-							</div>
-							
-							<div class="texto_explicacion_formulario">Flete:</div>
-							<div>
-								<input class="elementos_form" name="flete" id="flete" rows="1" type="text" value="<? echo isset($flete) ? $flete : "";?>" class="required" title="Ingrese el N&uacute;mero de Documento">
-							</div>
-							<br>
+					</div>
+                                     	
+							<br><br>    
+                            <hr>
+			<?php 
+                        if(!strcmp($opc, 'nuevo')){	
+                            ?>
+                      	
                           <div><input class="elementos_form" name="submit" id="submit" style="text-align: center" value="Guardar" type="submit"></div>
-                          <br>
+                        <?php
+                        } 
+                        else if(strcmp($id_declaracion,0)){
+                            ?>
+                          <div><input class="elementos_form" name="submit" id="submit" style="text-align: center" value="Actualizar" type="submit"></div>
+                        <?php    
+                        }	
+                            ?>
+                          
+                          <br><br>
                           <?php
                                //si es un retaceo existente que muestre sus facturas si es que tiene
                            if($id_declaracion != "" || $id_declaracion !="0"){
