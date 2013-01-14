@@ -15,6 +15,7 @@ if(isset($_SESSION['timeout']) ) {
      header("Location: ../clases/cerrar_sesion.php");
   }
 }
+$_SESSION['timeout'] = time();
 
 	function LlenarMeses($mes=0){
 		$meses = array("Enero" , "Febrero", "Marzo", "Abril" , "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
@@ -52,13 +53,15 @@ if(isset($_SESSION['timeout']) ) {
 		if($_POST['idCompra'] != "" || $_POST['idCompra'] != "0"){
 			$id_declaracion = $_POST['idCompra'];
 		}
-		
-		$_POST['Id_Usuario'] = 1;
+                
+                //Funcion para poder hacer el insert, o update
 		if($_POST['submit']=='Actualizar'){
-			$resultado =  $clase_database->formToDB($link,'retaceo','submit, idCompra, gran, ','','update',' idCompras_Contribuyentes = ' . $id_declaracion);
-		}else if($_POST['submit']=='Guardar'){
-			
-			$resultado = $clase_database->formToDB($link,'temp','submit, idCompra, gran, ','','insert','');
+			$resultado = $clase_database->formToDB($link,'retaceo','post','', 'submit, frm, nretaceo','update','');
+                        
+                }else if($_POST['submit']=='Guardar'){
+		//PARA QUE GUARDE EL NIT SIN ENCRIPTACION.	
+                    $_POST['NIT']=  hideunlock($_POST['NIT']);
+			$resultado = $clase_database->formToDB($link,'retaceo','post','', 'submit, frm, nretaceo, ','insert','');
 			//$id_declaracion = $clase_database->obtenerId($link,'idCompras_Contribuyentes','compras');
 		}
 		
@@ -71,6 +74,27 @@ if(isset($_SESSION['timeout']) ) {
 		}	
 	}
 	
+        
+         //CARGA DE DATOS DESDE BD
+	if($id_declaracion != "" || $id_declaracion != "0"){
+					$result = mysql_query("SELECT * FROM retaceo WHERE numero ='".$id_declaracion."'", $link);
+					while($fila = mysql_fetch_array($result)){
+
+				$nitempresa = $fila['NIT'];
+				$ncontrol=$fila['numero'];
+				$fecha= substr($fila['fecha'],0,10);
+				$nretaceo="####";
+				$modelodeclaracion= $fila['modeloDeclaracion'];
+				$modotransporte= $fila['modoTransporte'];
+				$numdoctransporte= $fila['numeroDocumentoTransporte'];
+				$flete= $fila['flete'];
+			}
+                                                                
+                              //consulta que genera un preview de las facturas de un retaceo definido
+                             $facturas = mysql_query("SELECT * FROM factura WHERE numeroretaceo ='".$id_declaracion."'", $link);
+		}
+        
+        
 ?>
 <html><head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -104,6 +128,7 @@ if(isset($_SESSION['timeout']) ) {
         	}
 			Calculatotal();
 		});
+                
 		$('#grin').change(function() {
 			if(isNaN($("#grin").val())) {  
             	$('#grin').val("");
@@ -112,6 +137,7 @@ if(isset($_SESSION['timeout']) ) {
         	}
 			Calculatotal();
 		});
+                
 		$('#grim').change(function() {
 			if(isNaN($("#grim").val())) {  
             	$('#grim').val("");
@@ -120,10 +146,17 @@ if(isset($_SESSION['timeout']) ) {
         	}
 			Calculatotal();
 		});
+                
 		$('#gran').click(function() {
 			Calculatotal();
 		});
-		
+                
+                
+                $("#modotransporte ").val('<?=$modotransporte?>');
+                var modeldec="<?=$modelodeclaracion?>";
+                if(modeldec=="")modeldec="IM4";
+		$("#modelodeclaracion ").val(modeldec);
+                
 	  });
 	  
 	  jQuery(function($){
@@ -216,7 +249,7 @@ if(isset($_SESSION['timeout']) ) {
                     <tbody><tr>
                       <td valign="top">
                       <br />
-						<span class="<? echo $clase_css; ?>"><? echo $mensaje; ?></span>
+		<span class="<? echo $clase_css; ?>"><? echo $mensaje; ?></span>
                       <br />
                       </td>
                     </tr>
@@ -246,26 +279,7 @@ if(isset($_SESSION['timeout']) ) {
                           <td valign="top">
 						  
 						  <?
-                                                  //CARGA DE DATOS DESDE BD
-							if($id_declaracion != "" || $id_declaracion != "0"){
-								$result = mysql_query("SELECT * FROM retaceo WHERE numero ='".$id_declaracion."'", $link);
-								
-								while($fila = mysql_fetch_array($result)){
-
-									$nitempresa = $fila['NIT'];
-									$ncontrol=$fila['numero'];
-									$fecha= substr($fila['fecha'],0,10);
-									$nretaceo="####";
-									$modelodeclaracion= $fila['modeloDeclaracion'];
-									$modotransporte= $fila['modoTransporte'];
-									$numdoctransporte= $fila['numeroDocumentoTransporte'];
-									$flete= $fila['flete'];
-								}
-                                                                
-                                                        //consulta que genera un preview de las facturas de un retaceo definido
-                                                        $facturas = mysql_query("SELECT * FROM factura WHERE numeroretaceo ='".$id_declaracion."'", $link);
-							}
-                                                    
+                                                                                                     
                                                         //SI LA OPCION ES NUEVA SOLAMENTE SE GENERA UN NUEVO NUMERO DE CONTROL
 							if(!strcmp($opc, 'nuevo')){
 							
@@ -296,7 +310,7 @@ if(isset($_SESSION['timeout']) ) {
 						
 					 <div class="texto_explicacion_formulario">N&uacute;mero de Control:</div>
 					    <div>
-							<input style="background-color:#F0F0F0" class="elementos_form" name="ncontrol" id="ncontrol" readonly rows="1" value="<? echo isset($ncontrol) ? $ncontrol : "";?>" type="text" class="required" title="Numero de Control de Declaraciones">
+							<input style="background-color:#F0F0F0" class="elementos_form" name="numero" id="numero" readonly rows="1" value="<? echo isset($ncontrol) ? $ncontrol : "";?>" type="text" class="required" title="Numero de Control de Declaraciones">
 						</div>
                                          
                                           <div class="texto_explicacion_formulario">N&uacute;mero de Retaceo:</div>
@@ -310,12 +324,12 @@ if(isset($_SESSION['timeout']) ) {
                                           <div class="texto_explicacion_formulario">Modo de Transporte:</div>
 							<div>
 								
-                              <select class="elementos_form"id="modotransporte" name="modotransporte" class="required" title="Ingrese el nombre de la empresa que realiza la compra">
-                                <option value="0" >Terrestre</option>
-								<option value="1" >A&eacute;reo</option>
-								<option value="2" >Mar&iacute;timo</option>
-								<option value="3" >Ferreo</option>
-								<option value="4" >Multimodal</option>
+                              <select class="elementos_form"id="modoTransporte" name="modoTransporte" class="required" title="Ingrese el nombre de la empresa que realiza la compra">
+                                    <option value="0" >Terrestre</option>
+					<option value="1" >A&eacute;reo</option>
+					<option value="2" >Mar&iacute;timo</option>
+					<option value="3" >Ferreo</option>
+					<option value="4" >Multimodal</option>
 				
 							 </select>		
 							</div>
@@ -328,14 +342,14 @@ if(isset($_SESSION['timeout']) ) {
                            
                             <div class="texto_explicacion_formulario">Numero de Documento de Transporte:</div>
                             <div>
-                            <input class="elementos_form" name="numdoctransporte" id="numdoctransporte" rows="1" value="<? echo isset($numdoctransporte) ? $numdoctransporte : "";?>" type="text" class="required" title="Seleccione fecha de realizacion de la compra">
+                            <input class="elementos_form" name="numeroDocumentoTransporte" id="numeroDocumentoTransporte" rows="1" value="<? echo isset($numdoctransporte) ? $numdoctransporte : "";?>" type="text" class="required" title="Seleccione fecha de realizacion de la compra">
 			    </div>
 				
                           <div class="texto_explicacion_formulario">Nombre de Empresa:</div>
 					
                                 <div>
 								
-                                <select class="elementos_form"id="nit" name="nit" class="required" title="Ingrese el nombre de la empresa que realiza la compra">
+                                <select class="elementos_form"id="NIT" name="NIT" class="required" title="Ingrese el nombre de la empresa que realiza la compra">
                                 	<?
                                 	
 											$result = mysql_query("SELECT * FROM empresas ORDER BY nombre", $link);
@@ -363,7 +377,7 @@ if(isset($_SESSION['timeout']) ) {
                                         
                             <div>
 								
-                              <select class="elementos_form"id="modelodeclaracion" name="modelodeclaracion" class="required" title="Ingrese el nombre de la empresa que realiza la compra">
+                              <select class="elementos_form"id="modeloDeclaracion" name="modeloDeclaracion" class="required" title="Ingrese el nombre de la empresa que realiza la compra">
                                
                                 <option value="EX1" >EX1 Exportacion</option>
 								<option value="EX2" >EX2 Exportacion Temporal</option>

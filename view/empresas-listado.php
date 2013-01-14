@@ -15,6 +15,7 @@ if(isset($_SESSION['timeout']) ) {
      header("Location: ../clases/cerrar_sesion.php");
   }
 }
+$_SESSION['timeout'] = time();
 
 	include_once("../configuracion/configuracion.php");
 	include_once("../clases/conexion.php");

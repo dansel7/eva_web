@@ -18,7 +18,7 @@
 	//$tabla,nombre de la tabla
 	//$recepcionDatos, la manera en como recibira los datos si por post o directamente a la funcion
 	//$valores='',si no es por post
-	//$excepciones, son los campos enviados por post 
+	//$excepciones, son los campos enviados por post, el formato es [campo, ] despues de la coma un espacio
 	//$sql_tipo='',es el tipo de accion a ejecutar
 	//$sql_condicion=Null, es la condicion para hacer un update y en ese caso no es opcional
 		
@@ -39,7 +39,8 @@
 	  		$campos = preg_replace('/, $/', '', $campos);//para quitar la coma del final de la cadena
 
 	  		$sql = "INSERT INTO ".$tabla." SET ".$campos;
-	  	 }else{
+                       echo $sql;
+	  	 }else{//SINO ES POR POST, SE EJECUTARA CON LOS VALORES QUE SE DEFINIERON DE PARAMETROS
 	  		$sql = "INSERT INTO ".$tabla." values (".$valores.")";
 	  	 }
 		
@@ -56,7 +57,7 @@
 	  		}
 	  		$campos = preg_replace('/, $/', '', $campos);//para quitar la coma del final de la cadena
 			
-			if (!isset($sql_condicion))//por seguridad, si se llegara a dejar vacio que no ejecuta la consulta
+			if (!isset($sql_condicion))//por seguridad, si se llegara a dejar vacio que no ejecute la consulta,sino hara un update barrido
 			{
 		  	return false;
 			}
@@ -64,7 +65,7 @@
 	  
 	  	 }else{
 	  	 	
-	  	 	if (!isset($sql_condicion))//por seguridad, si se llegara a dejar vacio que no ejecuta la consulta
+	  	 	if (!isset($sql_condicion))//por seguridad, si se llegara a dejar vacio que no ejecuta la consulta,sino hara un update barrido
 			{
 		  	return false;
 			} 	
@@ -75,6 +76,8 @@
 	  {
 		return 0;
 	  }
+          
+          
 	  if (mysql_query($sql,$link))
 	  {		
 		  return true;		

@@ -14,6 +14,8 @@ if(isset($_SESSION['timeout']) ) {
      header("Location: ../clases/cerrar_sesion.php");
   }
 }
+$_SESSION['timeout'] = time();
+
 
 		$direccion = "Location: index.php";
 	if(!$_SESSION["autenticado_admin"]){//Solamente si esta debidamente autenticado
