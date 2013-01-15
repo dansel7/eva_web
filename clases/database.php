@@ -8,11 +8,14 @@
 	}	
 	
 	public function Eliminar($link, $tabla, $condicion){
+            //$link,es el objeto de conexion
+            //$tabla,nombre de la tabla
+            //$sql_condicion="", es la condicion para hacer un update y en ese caso no es opcional
 		return mysql_query("DELETE FROM ". $tabla ." WHERE ". $condicion, $link);	
 	}
 		
 		
-	public function formToDB($link, $tabla, $recepcionDatos,$valores='',$excepciones, $sql_tipo='',$sql_condicion=NULL)
+	public function formToDB($link, $tabla, $recepcionDatos,$valores='',$excepciones, $sql_tipo='',$sql_condicion="")
 	{//Diccionario:
 	//$link,es el objeto de conexion
 	//$tabla,nombre de la tabla
@@ -20,7 +23,7 @@
 	//$valores='',si no es por post
 	//$excepciones, son los campos enviados por post, el formato es [campo, ] despues de la coma un espacio
 	//$sql_tipo='',es el tipo de accion a ejecutar
-	//$sql_condicion=Null, es la condicion para hacer un update y en ese caso no es opcional
+	//$sql_condicion="", es la condicion para hacer un update y en ese caso no es opcional
 		
 	$campos="";//se hace uso de el solo cuando es por recibido por post
 
@@ -39,7 +42,7 @@
 	  		$campos = preg_replace('/, $/', '', $campos);//para quitar la coma del final de la cadena
 
 	  		$sql = "INSERT INTO ".$tabla." SET ".$campos;
-                       echo $sql;
+                      
 	  	 }else{//SINO ES POR POST, SE EJECUTARA CON LOS VALORES QUE SE DEFINIERON DE PARAMETROS
 	  		$sql = "INSERT INTO ".$tabla." values (".$valores.")";
 	  	 }
@@ -57,15 +60,16 @@
 	  		}
 	  		$campos = preg_replace('/, $/', '', $campos);//para quitar la coma del final de la cadena
 			
-			if (!isset($sql_condicion))//por seguridad, si se llegara a dejar vacio que no ejecute la consulta,sino hara un update barrido
+			if ($sql_condicion=="")//por seguridad, si se llegara a dejar vacio que no ejecute la consulta,sino hara un update barrido
 			{
 		  	return false;
 			}
 			$sql = "UPDATE ".$tabla." SET ".$campos." WHERE ".$sql_condicion;
+                       
 	  
 	  	 }else{
 	  	 	
-	  	 	if (!isset($sql_condicion))//por seguridad, si se llegara a dejar vacio que no ejecuta la consulta,sino hara un update barrido
+	  	 	if ($sql_condicion=="")//por seguridad, si se llegara a dejar vacio que no ejecuta la consulta,sino hara un update barrido
 			{
 		  	return false;
 			} 	

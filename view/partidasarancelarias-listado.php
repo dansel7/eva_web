@@ -48,9 +48,9 @@ $_SESSION['timeout'] = time();
 		<meta name="Author" content="Universidad Don Bosco">
 		<title><? echo $title; ?> - Listado de Empresas</title>
 		<link rel="stylesheet" href="../css/estilos.css" type="text/css">
-		<script src="../js/avg_ls_dom.js" type="text/javascript"></script>
-		<script type="text/javascript" language="javascript" src="../js/jquery.js"></script>
-    	<script type="text/javascript" src="../js/si.js"></script>
+		<link href="../css/redmond/jquery-ui-1.9.2.custom.css" rel="stylesheet">
+	<script src="../js/jquery-1.8.3.js"></script>
+	<script src="../js/jquery-ui-1.9.2.custom.js"></script>
 </head>
 	<body>
 		<center>

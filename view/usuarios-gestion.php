@@ -201,13 +201,11 @@ FROM  modulo WHERE id_modulo_padre=".$modulos_padre['id_modulo'];
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title><? echo $title; ?></title>
 	<link rel="stylesheet" href="../css/estilos.css" type="text/css">
-	<script type="text/javascript" language="javascript" src="../js/jquery.js"></script>
-    <link href="fckeditor/_samples/sample.css" rel="stylesheet" type="text/css" />
-	<script type="text/javascript" src="fckeditor/fckeditor.js"></script>
-    
-    <script src="http://cdn.jquerytools.org/1.2.7/full/jquery.tools.min.js"></script>
-    
-        <script type="text/javascript" src="fckeditor/validator.js"></script>
+<link href="../css/redmond/jquery-ui-1.9.2.custom.css" rel="stylesheet">
+	<script src="../js/jquery-1.8.3.js"></script>
+	<script src="../js/jquery-ui-1.9.2.custom.js"></script>
+
+<script src="../js/validator.js"></script>
 
   <script>
   $(function(){

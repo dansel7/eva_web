@@ -48,9 +48,9 @@ $_SESSION['timeout'] = time();
 		<meta name="Author" content="Universidad Don Bosco">
 		<title><? echo $title; ?> - Listado de Empresas</title>
 		<link rel="stylesheet" href="../css/estilos.css" type="text/css">
-		<script src="../js/avg_ls_dom.js" type="text/javascript"></script>
-		<script type="text/javascript" language="javascript" src="../js/jquery.js"></script>
-    	<script type="text/javascript" src="../js/si.js"></script>
+	<link href="../css/redmond/jquery-ui-1.9.2.custom.css" rel="stylesheet">
+	<script src="../js/jquery-1.8.3.js"></script>
+	<script src="../js/jquery-ui-1.9.2.custom.js"></script>
 </head>
 	<body>
 		<center>
@@ -98,10 +98,10 @@ $_SESSION['timeout'] = time();
                                 
   <table border="0" cellpadding="0" cellspacing="0">
     <tbody><tr>
-      <td style="padding-left: 10px; padding-right: 10px;" align="center"><a href="<?=$enlace_gestion?>"><img src="../images/menu-crear.gif" border="0"></a></td>
+      <td style="padding-left: 10px; padding-right: 10px;" align="center"><a id="agreg1" href="<?=$enlace_gestion."?opc=".hidelock("nuevo")?>"><img src="../images/menu-crear.gif" border="0"></a></td>
     </tr>
     <tr>
-      <td style="padding-left: 10px; padding-right: 10px;" align="center"><a href="<?=$enlace_gestion?>" class="menu_opcion"><nobr>Crear</nobr></a></td>
+      <td style="padding-left: 10px; padding-right: 10px;" align="center"><a id="agreg2" href="<?=$enlace_gestion."?opc=".hidelock("nuevo")?>" class="menu_opcion"><nobr>Agregar Nuevo</nobr></a></td>
     </tr>
   </tbody></table>
   

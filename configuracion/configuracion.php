@@ -18,7 +18,7 @@
 
 	$title = "Centro de Administraci&oacute;n";
 
-	$nombre_institucion = "E-Facil";
+	$nombre_institucion = "e-Facil";
 
 $copyright = "&copy; e-Facil";
 

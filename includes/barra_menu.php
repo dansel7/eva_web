@@ -201,9 +201,6 @@
 
 </div>
 
-<link rel="stylesheet" href="../css/redmond/jquery-ui-1.9.2.custom.css" />
-    <script src="../js/jquery-1.8.0.min.js"></script>
-    <script src="../js/jquery-ui-1.9.2.custom.js"></script>
         <script>
     // increase the default animation speed to exaggerate the effect
     $.fx.speeds._default = 1000;
