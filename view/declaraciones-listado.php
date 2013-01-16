@@ -17,6 +17,7 @@ if(isset($_SESSION['timeout']) ) {
 }
 $_SESSION['timeout'] = time();
 
+
 	include_once("../configuracion/configuracion.php");
 	include_once("../clases/conexion.php");
 	include_once("../clases/database.php");
@@ -24,7 +25,16 @@ $_SESSION['timeout'] = time();
 	$enlace_listado = "declaraciones-listado.php";
 	$enlace_gestion = "declaraciones-gestion.php";
 	$resultado = "";
+
+
+//VERIFICAR SI HAY UN RETACEO ABIERTO Y REDIRECCIONAR AL FORMULARIO DE EDICION.
 	
+   if(isset($_SESSION['n_declaracion']) ) {
+   header ("Location:".$enlace_gestion."?id=".hideunlock($_SESSION['n_declaracion']));
+}     
+        
+        
+        
 	$conexion = new conexion();
 	$link = $conexion->conectar();
 	$clase_database = new database();
@@ -33,7 +43,7 @@ $_SESSION['timeout'] = time();
 	if(isset($_GET['id']) && isset($_GET['accion']) && $_GET['accion'] == "eliminar"){
 		$resultado = $clase_database->Eliminar($link,'retaceo',' numero ="' . hideunlock($_GET['id']).'"');
 		if ($resultado){ 
-			$mensaje = "Eliminado Exitosamente";
+			$mensaje = "Registro Eliminado Exitosamente";
 			$clase_css = "texto_ok";
 		}else{
 			$mensaje = "Error al Eliminar Registro";

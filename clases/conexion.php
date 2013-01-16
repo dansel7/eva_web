@@ -51,5 +51,6 @@ function hideunlock($string) {//DECRYPT ID, CADENAS O CUALQUIER DATO EN STRING
    }
    return $result;
 }
+//ESTAS MISMAS FUNCIONES ESTAN PARA JAVASCRIPT EN JS/JQUERY-1.8.3.JS
 
 ?>

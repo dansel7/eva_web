@@ -30,9 +30,9 @@ $_SESSION['timeout'] = time();
 	$clase_database = new database();
 	
 	if(isset($_GET['accion']) && $_GET['accion'] == "eliminar"){
-		$resultado = $clase_database->Eliminar($link,'entidad_mercantil',' id_Entidad_Mercantil = ' . $_GET['id']);
+		$resultado = $clase_database->Eliminar($link,'empresas',' NIT = "' . hideunlock($_GET['id']).'"');
 		if ($resultado){ 
-			$mensaje = "Empresa Eliminada Correctamente";
+			$mensaje = "Empresa Eliminada Exitosamente";
 			$clase_css = "texto_ok";
 		}else{
 			$mensaje = "Error al Eliminar Empresa";
@@ -45,7 +45,7 @@ $_SESSION['timeout'] = time();
 	<head><meta http-equiv="X-UA-Compatible" content="IE=8" >
 		<meta http-equiv="X-UA-Compatible" content="IE=7" >
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-		<meta name="Author" content="Universidad Don Bosco">
+		<meta name="Author" content="Villatoro Asociados">
 		<title><? echo $title; ?> - Listado de Empresas</title>
 		<link rel="stylesheet" href="../css/estilos.css" type="text/css">
 	<link href="../css/redmond/jquery-ui-1.9.2.custom.css" rel="stylesheet">

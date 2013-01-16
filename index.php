@@ -1,7 +1,7 @@
 <?php
 session_start();
 error_reporting(0);
-	
+
 	if(isset($_POST["cs"])){
 	$_SESSION = array();
 	session_destroy();

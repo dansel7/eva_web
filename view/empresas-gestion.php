@@ -32,29 +32,28 @@ $clase_database = new database();
 $id_empresa = isset($_GET['id']) ? hideunlock($_GET['id']) : 0;
 $opc = isset($_GET['opc']) ? hideunlock($_GET['opc']) : 0;//variable que define la opcion nuevo,actualizar,eliminar
 
-if (isset($_POST['submit']) && $_POST['submit']=='Guardar'){
+if (isset($_POST['submit'])){
+//PARA QUE GUARDE EL NIT SIN ENCRIPTACION.	
 
-        if($_POST['idEmpresa'] != "" || $_POST['idEmpresa'] != "0"){
-                $id_empresa = $_POST['idEmpresa'];
-        }
+//Funcion para poder hacer el insert, o update
+if($_POST['submit']=='Actualizar'){
+        $_POST["nombre"]=strtoupper($_POST["nombre"]);
+        $resultado = $clase_database->formToDB($link,'empresas','post','', 'submit, frm, idEmpresa, ','update','NIT="'.$_POST['idEmpresa'].'"');
 
-        if($_POST['idEmpresa'] != ""){
-                $resultado  = $clase_database->formToDB($link,'entidad_mercantil','submit, idEmpresa, id_Departamento, ','','update',' nit = ' . $id_empresa);
-        }else{
-                $_POST['VCONS'] = '0';
-                $_POST['VCONT'] = '0';
-                $_POST['COM'] = '0';
-                $resultado = $clase_database->formToDB($link,'entidad_mercantil','submit, idEmpresa, id_Departamento, ','','insert','');
-                $id_empresa = $clase_database->obtenerId($link,'nit','entidad_mercantil');
-        }
+}else if($_POST['submit']=='Guardar'){
+        $nit=$_POST['NIT'];
+        $_POST["nombre"]=strtoupper($_POST["nombre"]);
+        $resultado = $clase_database->formToDB($link,'empresas','post','', 'submit, frm, idEmpresa, ','insert','');
+        
+}
 
-        if ($resultado){ 
-                $mensaje = "Empresa Almacenada Correctamente";
-                $clase_css = "texto_ok";
-        }else{
-                $mensaje = "Error al Almacenar Empresa";
-                $clase_css = "texto_error";
-        }	
+if ($resultado){ 
+        $mensaje = "Informacion Almacenada Exitosamente";
+        $clase_css = "texto_ok";
+}else{
+        $mensaje = "Error al Almacenar Informacion";
+        $clase_css = "texto_error";
+}	
 }
 
 function escribir($var){ echo $varr = isset($var) ? $var : ""; }
@@ -72,7 +71,6 @@ function escribir($var){ echo $varr = isset($var) ? $var : ""; }
 <script src="../js/jquery.maskedinput.js"></script>
 
 
-
 <style type="text/css">
         label { width: 10em; float: left; }
         label.error { float: none; color: black; padding-left: .5em; vertical-align: top; border:#C63 thin dashed; background-color:#F9C; }
@@ -84,23 +82,21 @@ function escribir($var){ echo $varr = isset($var) ? $var : ""; }
         $("#frm").validate();
         
         $("#frm :input").tooltip();
+        
+         $("#submit").click(function(){
+       $("#frm").attr("action",$("#frm").attr("action")+hidelockjs($("#NIT").val())); 
+        
+    });
+    
   });
 
+   
+    
+
   jQuery(function($){
-   $("#Telefono").mask("9999-9999");
-   $("#NIT").mask("9999-999999-999-9");  
+   // $("#NIT").mask("9999-999999-999-9");  
 });
 
-$(document).ready(function(){
-        $("#Departamentos").change(function(){
-                $("#Municipios").html('<option selected="selected" value="0"> ..:: Cargando ::..</option>')
-                $.post("includes/combos.php",{
-                           id:$(this).val()
-                 },function(data){
-                           $("#Municipios").html(data);    
-                 })
-        })       
-})
 </script>
 
 </head>
@@ -119,20 +115,9 @@ $(document).ready(function(){
 
 <tr>
 <td class="fondo_menu" valign="top">
-<?php 
-////CONDICION PARA REDIRECCIONAR AL NUEVO REGISTRO, A LA HORA DE GUARDAR
-//O SINO REDIRECCIONARLO AL MISMO A LA HORA DE ACTUALIZAR
-if(!strcmp($opc, 'nuevo')){	
-    ?>
- <form name="frm" id="frm" action="<?=$enlace_gestion.'?id='.hidelock($ncontrol)?>" method="post" style="margin:0px;"> 
-<?php
-} 
-else if(strcmp($id_declaracion,0)){
-    ?>
- <form name="frm" id="frm" action="<?=$_SERVER['REQUEST_URI'];?>" method="post" style="margin:0px;"> 
-<?php    
-}	
-    ?>   
+
+ <form name="frm" id="frm" action="<?=$enlace_gestion.'?id='?>" method="post" style="margin:0px;"> 
+
 <table border="0" cellpadding="0" cellspacing="0">
 <tbody><tr><td height="10"></td></tr>
 <tr><td style="padding-right: 14px;" align="right"><table align="right" border="0" cellpadding="0" cellspacing="0"><tbody><tr><td height="20" valign="middle"><a href="index.php"><img src="../images/volver-menu.gif" border="0" height="16" width="14"></a></td><td style="padding-right: 40px;" height="20" valign="middle"><a href="empresas-listado.php" class="texto_volver_inicio">&nbsp;Volver a la p&aacute;gina de Listado de Empresas</a></td><td height="20" valign="middle"><a href="../clases/cerrar_sesion.php"><img src="../images/menu-cerrar-sesion.gif" border="0" height="18" width="18"></a></td><td height="20" valign="middle"><a href="../clases/cerrar_sesion.php" class="texto_volver_inicio">&nbsp;Cerrar sesi&oacute;n</a></td></tr></tbody></table></td></tr>
@@ -221,10 +206,11 @@ else if(strcmp($id_declaracion,0)){
 
               <?
                     if($id_empresa != "" || $id_empresa != "0"){
-                            $result = mysql_query("SELECT * FROM empresas WHERE nit = ".$id_empresa, $link);
+                            $result = mysql_query("SELECT * FROM empresas WHERE nit ='".$id_empresa."'", $link);
+                            
                             while($fila = mysql_fetch_array($result)){
                                     $idEmpresa = $fila['nit'];
-                                    $contribuyente = $fila['nombre'];
+                                    $nombre_empresa = $fila['nombre'];
                                     //$nombre_comercial = $fila['Nombre_Comercial'];
                                     //$actividad = $fila['Actividad_Economica'];
                             //	$direccion = $fila['Direccion'];
@@ -234,40 +220,37 @@ else if(strcmp($id_declaracion,0)){
                                     $NIT = $fila['nit'];
                             }
 
-                            $result = mysql_query("SELECT a.id_departamento FROM departamentos a 
-                                    INNER JOIN municipios b ON a.id_departamento=b.id_Departamento WHERE b.id_Municipio = ".$municipio, $link);
-                            while($fila = mysql_fetch_array($result)){
-                                    $departamento = $fila['id_departamento'];
-                            }
-                    }
+                      }
             ?>     
 
-                    <div class="texto_explicacion_formulario">Nombre de Contribuyente:</div>
+                    <div class="texto_explicacion_formulario">Nombre de la Empresa:</div>
                     <div>
-                            <input name="nombre" id="" style="width: 928px;" type="text" value="<? echo isset($contribuyente) ? $contribuyente : "";?>" class="required" title="Ingrese el Nombre del Contribuyente">
-                            <input name="idEmpresa" id="" type="hidden" value="<? echo isset($idEmpresa) ? $idEmpresa : "";?>";>
+                            <input name="nombre" id="nombre" style="width: 928px;" type="text" value="<? echo isset($nombre_empresa) ? $nombre_empresa : "";?>" class="required" title="Ingrese el Nombre de la Empresa">
+                            <input name="idEmpresa" id="idEmpresa" type="hidden" value="<? echo isset($idEmpresa) ? $idEmpresa : "";?>";>
                     </div>
                     <br>
                     <div class="texto_explicacion_formulario">N&uacute;mero de Identidad Tributaria (NIT):</div>
                     <div>
-                            <input name="NIT" id="NIT" rows="1" style="width: 928px;" type="text" value="<? echo isset($NIT) ? $NIT : "";?>" class="required" title="Ingrese el N&uacute;mero de Identidad Tributario de Contribuyente en formato ####-######-###-#">
+                            <input name="NIT" id="NIT" rows="1" style="width: 928px;" type="text" value="<? echo isset($NIT) ? $NIT : "";?>" class="required" title="Ingrese el N&uacute;mero de Identidad Tributario">
                     </div>
-                    <br>         
+                <br>
+                <hr>
+                <center>
                                     <?php 
         //CONDICION PARA MOSTRAR BOTONES, EN EL CASO DE UN NUEVO REGISTRO O DE UNA ACTUALIZACION
         if(!strcmp($opc, 'nuevo')){	
             ?>
 
-          <div><input name="submit" id="submit" style="text-align: center" value="Guardar" type="submit"></div>
+          <div><input name="submit" id="submit" style="text-align: center;font-size: 20px" value="Guardar" type="submit"></div>
         <?php
         } 
-        else if(strcmp($id_declaracion,0)){
+        else if(strcmp($id_empresa,0)){
             ?>
-          <div><input name="submit" id="submit" style="text-align: center" value="Actualizar" type="submit"></div>
+          <div><input name="submit" id="submit" style="text-align: center;font-size: 20px" value="Actualizar" type="submit"></div>
         <?php    
         }	
             ?>
-          
+          </center>
 </td>
                 </tr>
               </tbody></table>

@@ -44,7 +44,15 @@ $conexion = new conexion();
 $link = $conexion->conectar();
 $clase_database = new database();
 
+//SE CREA UNA VARIABLE DE SESION PARA EL RETACEO CON EL QUE SE ESTARA TRABAJANDO
 $id_declaracion = isset($_GET['id']) ? hideunlock($_GET['id']) : 0;
+if($id_declaracion!=0 && !isset($_SESSION["n_declaracion"])){
+    $_SESSION["n_declaracion"]=$_GET['id'];
+}
+
+
+//REVISAR QUE NO FUNCIONA UN RETACEO EN SESION
+
 $opc = isset($_GET['opc']) ? hideunlock($_GET['opc']) : 0;//variable que define la opcion nuevo,actualizar
 
 if (isset($_POST['submit'])){
@@ -124,7 +132,7 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                     $('#fecha').datepicker({
                             dateFormat: "yy-mm-dd"
                     });
-                    
+                    $('#fecha').mask("9999-99-99")
                           
 
                     $("#frm :input").tooltip();

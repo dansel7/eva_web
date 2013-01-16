@@ -42,6 +42,7 @@
 	  		$campos = preg_replace('/, $/', '', $campos);//para quitar la coma del final de la cadena
 
 	  		$sql = "INSERT INTO ".$tabla." SET ".$campos;
+                        //echo $sql;
                       
 	  	 }else{//SINO ES POR POST, SE EJECUTARA CON LOS VALORES QUE SE DEFINIERON DE PARAMETROS
 	  		$sql = "INSERT INTO ".$tabla." values (".$valores.")";
@@ -65,7 +66,7 @@
 		  	return false;
 			}
 			$sql = "UPDATE ".$tabla." SET ".$campos." WHERE ".$sql_condicion;
-                       
+                         //echo $sql;
 	  
 	  	 }else{
 	  	 	
