@@ -88,7 +88,10 @@ $_SESSION['timeout'] = time();
 </head>
 
 <body>
-<div id="dialog" title="Reportes" align="center">
+  <div id="dialog" title="Reportes" align="center">
+<?php
+if(isset($_SESSION["n_declaracion"])){
+?>
 
 <table align="center" border="0" cellpadding="0" cellspacing="0">
 
@@ -100,9 +103,9 @@ $_SESSION['timeout'] = time();
 			  <td align="center" valign="top">
 			  	<div><img src="../images/transparente(1).gif" height="8" width="1"></div>
 
-				<div align="center"><a href="../reports/factura-reporte.php"><img src="../images/icono-articulos.gif" border="0"></a></div>
+				<div align="center"><a target="_blank" href="../reports/factura-reporte.php"><img src="../images/icono-articulos.gif" border="0"></a></div>
 				
-				<div style="height:30px;"><a href="../reports/factura-reporte.php" class="modulo_titulo">Reportes Facturas</a></div>
+				<div style="height:30px;"><a target="_blank" href="../reports/factura-reporte.php" class="modulo_titulo">Facturas Ordenadas</a></div>
 			  </td>
 
 		  	  <td class="menu_separador_1"><img src="../images/transparente.gif" height="1" width="14"></td>
@@ -113,9 +116,9 @@ $_SESSION['timeout'] = time();
 
 			  <td align="center" valign="top"><div><img src="../images/transparente(1).gif" height="8" width="1"></div>
 
-				<div align="center"><a href="agrupados-reporte.php"><img src="../images/icono-menus.gif" border="0"></a></div>
+				<div align="center"><a target="_blank" href="agrupados-reporte.php"><img src="../images/icono-menus.gif" border="0"></a></div>
 
-				<div style="height:30px;"><a href="agrupados-reporte.php" class="modulo_titulo">Reportes Agrupados</a></div>
+				<div style="height:30px;"><a  target="_blank"href="agrupados-reporte.php" class="modulo_titulo">Reportes Facturas</a></div>
 
 			  </td>
 
@@ -126,7 +129,12 @@ $_SESSION['timeout'] = time();
 			  </tr>
 			  </tbody></table>
 
-
+<?php
+}else{?>
+      <h2>Para visualizar una factura Debe Abrir una Declaracion.<br> <a href="declaraciones-listado.php">Abrir</a></h2>    
+<?php 
+}
+?>
 </div>
 
 

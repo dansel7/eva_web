@@ -2,18 +2,15 @@
 
 //error_reporting(0);
 session_start();
-if($_SESSION["autenticado_admin"] != "si"){
+
+if(!isset($_SESSION["n_declaracion"])){
 		$direccion = "Location: ../index.php";
 		header($direccion);
 	}else{
 require_once('tcpdf/config/lang/eng.php');
 require_once('tcpdf/tcpdf.php');
 require_once('../clases/conexion.php');
-if(isset($_GET["idem"])){
-$idem=$_GET["idem"];
-$m=$_GET["m"];
-$an=$_GET["an"];
-}
+
 $db= new conexion();
 $link = $db->conectar();
 $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false); 
@@ -60,7 +57,7 @@ $orientacion="vertical";
 //ARREGLO DE MESES PARA MOSTRAR
 $meses=array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
 // ---------------INICIO DEL REPORTE-----------------
-$result=mysql_query("select * from retaceo  where numero='jor301'",$link);
+$result=mysql_query("select * from retaceo  where numero='".hideunlock($_SESSION["n_declaracion"])."'",$link);
 
 while($rows_e = mysql_fetch_array($result)){ //CONSULTA PARA ENCABEZADO
 $pdf->addpage($orientacion,'legal');//AGREGA NUEVA PAGINA POR CADA MES
@@ -100,8 +97,9 @@ $rsd='
 //NOFUNCIONA CONSULTA ABAJO REVISAR
 $resultado=mysql_query("select item.idItem, item.numeroFactura as factura, item.partidaArancelaria as partida, item.descripcion , " .
                 " item.cuantia as cuantia, (item.cuantia * item.precioUnitario) as fob ".
-                "from factura inner join item on factura.numero=item.numeroFactura where item.numeroRetaceo='jor301' order by factura.idFactura,item.numerofactura,item.iditem",$link);
+                "from factura inner join item on factura.numero=item.numeroFactura where item.numeroRetaceo='".hideunlock($_SESSION["n_declaracion"])."' order by factura.idFactura,item.numerofactura,item.iditem",$link);
 $fobSubt=0;
+$fobTotal=0;
 $temp=0;
 while($row_exp = mysql_fetch_array($resultado)) //CONSULTA PARA CADA REGISTRO
 {
@@ -132,7 +130,7 @@ $fact=$row_exp[1];//PRIMERO SE GUARDA EL NUMERO DE FACTURA
 
 $fobSubt+=$row_exp[5];	
 $temp=$row_exp[1];//Guarda un temporal que seria el numero anterior para comparar
-
+$fobTotal+=$fobSubt;
 }//FIN IMPRESION CADA REGISTRO
 $varr.="<tr>
 		<td colspan=\"7\" style=\"border:1px solid black;text-align:center\">Subtotal</td>
@@ -144,7 +142,7 @@ $varr.="<tr>
 $fin=$rsd.$varr."<tr>
 		<td colspan=\"7\" style=\"border:1px solid black;text-align:center\">TOTALES</td>
 
-		<td style=\"border:1px solid black\">$</td>
+		<td style=\"border:1px solid black\">$".number_format(round($fobTotal,2),2)."</td>
 	</tr>
 </table>
 <br><br>

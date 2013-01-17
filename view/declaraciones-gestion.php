@@ -46,15 +46,18 @@ $clase_database = new database();
 
 //SE CREA UNA VARIABLE DE SESION PARA EL RETACEO CON EL QUE SE ESTARA TRABAJANDO
 $id_declaracion = isset($_GET['id']) ? hideunlock($_GET['id']) : 0;
-if($id_declaracion!=0 && !isset($_SESSION["n_declaracion"])){
+
+if(isset($_GET['id']) && $_GET['id']!="" && !isset($_SESSION["n_declaracion"])){
     $_SESSION["n_declaracion"]=$_GET['id'];
 }
 
 
-//REVISAR QUE NO FUNCIONA UN RETACEO EN SESION
-
 $opc = isset($_GET['opc']) ? hideunlock($_GET['opc']) : 0;//variable que define la opcion nuevo,actualizar
 
+if (isset($_POST['cerrar'])){
+   unset($_SESSION["n_declaracion"]);
+   header ("Location: http://".$_SERVER["HTTP_HOST"].substr($_SERVER['PHP_SELF'],0,-25).$enlace_listado);
+}
 if (isset($_POST['submit'])){
 //PARA QUE GUARDE EL NIT SIN ENCRIPTACION.	
     $_POST['NIT']=  hideunlock($_POST['NIT']);
@@ -234,7 +237,7 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                 </td>
                 <td width="20"><img src="../images/transparente.gif" height="1" width="20"></td>
                 <td class="titulo_modulo" align="left" width="100%">Gesti&oacute;n de Declaraciones</td>
-              </tr>
+                </tr>
             </tbody></table>
           </td>
         </tr>
@@ -379,22 +382,25 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                         </div>
 <br>  
             <hr>
+        <center>
         <?php 
         //CONDICION PARA MOSTRAR BOTONES, EN EL CASO DE UN NUEVO REGISTRO O DE UNA ACTUALIZACION
         if(!strcmp($opc, 'nuevo')){	
             ?>
-
           <div><input name="submit" id="submit" style="text-align: center" value="Guardar" type="submit"></div>
         <?php
         } 
         else if(strcmp($id_declaracion,0)){
             ?>
-          <div><input name="submit" id="submit" style="text-align: center" value="Actualizar" type="submit"></div>
+          <div>
+          <div><input name="submit" id="submit" style="float: left" value="Actualizar" type="submit"></div>
+          <div><input name="cerrar" id="cerrar" style="float: left" value="Cerrar Declaracion" type="submit"></div>
+          </div>
         <?php    
         }	
             ?>
-
-          <br><br>
+          </center>
+              <br><br>
           <?php
                //si es un retaceo existente que muestre sus facturas si es que tiene
            if($id_declaracion != "" || $id_declaracion !="0"){

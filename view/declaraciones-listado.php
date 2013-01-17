@@ -30,7 +30,7 @@ $_SESSION['timeout'] = time();
 //VERIFICAR SI HAY UN RETACEO ABIERTO Y REDIRECCIONAR AL FORMULARIO DE EDICION.
 	
    if(isset($_SESSION['n_declaracion']) ) {
-   header ("Location:".$enlace_gestion."?id=".hideunlock($_SESSION['n_declaracion']));
+    header ("Location: http://".$_SERVER["HTTP_HOST"].  substr($_SERVER['PHP_SELF'],0,-25).$enlace_gestion."?id=".$_SESSION['n_declaracion']);
 }     
         
         
