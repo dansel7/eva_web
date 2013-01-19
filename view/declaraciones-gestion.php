@@ -54,21 +54,24 @@ if(isset($_GET['id']) && $_GET['id']!="" && !isset($_SESSION["n_declaracion"])){
 
 $opc = isset($_GET['opc']) ? hideunlock($_GET['opc']) : 0;//variable que define la opcion nuevo,actualizar
 
+
+//ACCION AL CERRAR UNA DECLARACION, ELIMINA DE LA SESION Y REDIRECCIONA PARA ABRIR OTRO.
 if (isset($_POST['cerrar'])){
    unset($_SESSION["n_declaracion"]);
-   header ("Location: http://".$_SERVER["HTTP_HOST"].substr($_SERVER['PHP_SELF'],0,-25).$enlace_listado);
+   header ("Location: ../view/".$enlace_listado);
 }
+
 if (isset($_POST['submit'])){
 //PARA QUE GUARDE EL NIT SIN ENCRIPTACION.	
     $_POST['NIT']=  hideunlock($_POST['NIT']);
+    
 //Funcion para poder hacer el insert, o update
 if($_POST['submit']=='Actualizar'){
         $resultado = $clase_database->formToDB($link,'retaceo','post','', 'submit, frm, nretaceo, ','update','numero="'.$_POST['numero'].'"');
 
 }else if($_POST['submit']=='Guardar'){
 
-        $resultado = $clase_database->formToDB($link,'retaceo','post','', 'submit, frm, nretaceo, ','insert','');
-        
+        $resultado = $clase_database->formToDB($link,'retaceo','post','', 'submit, frm, nretaceo, ','insert','');       
 }
 
 if ($resultado){ 
@@ -124,7 +127,7 @@ if($id_declaracion != "" || $id_declaracion != "0"){
     <script>
                 $(document).ready(function(){
                     $("#frm").validate();
-
+                    $("#frmf").validate();   
 
                     $("#modotransporte ").val('<?=$modotransporte?>');
                     var modeldec="<?=$modelodeclaracion?>";
@@ -136,10 +139,16 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                             dateFormat: "yy-mm-dd"
                     });
                     $('#fecha').mask("9999-99-99")
-                          
+                    
+                    $('#fechaf').datepicker({
+                            dateFormat: "yy-mm-dd"
+                    });
+                    $('#fechaf').mask("9999-99-99")
+                    
+                    
 
                     $("#frm :input").tooltip();
-
+                    $("#frmf :input").tooltip();
 
                 });    
 
@@ -180,7 +189,6 @@ if($id_declaracion != "" || $id_declaracion != "0"){
 </head>
 
 <body>
-
 <center>
 <table border="0" cellpadding="0" cellspacing="0">
 <tbody><tr><td height="22">&nbsp;</td></tr>
@@ -194,22 +202,7 @@ if($id_declaracion != "" || $id_declaracion != "0"){
 <tr>
 <td class="fondo_menu" valign="top">
 
-
-      <?php 
-      //CONDICION PARA REDIRECCIONAR AL NUEVO REGISTRO, A LA HORA DE GUARDAR
-      //O SINO REDIRECCIONARLO AL MISMO A LA HORA DE ACTUALIZAR
-        if(!strcmp($opc, 'nuevo')){	
-            ?>
-         <form name="frm" id="frm" action="<?=$enlace_gestion.'?id='.hidelock($ncontrol)?>" method="post" style="margin:0px;"> 
-        <?php
-        } 
-        else if(strcmp($id_declaracion,0)){
-            ?>
-         <form name="frm" id="frm" action="<?=$_SERVER['REQUEST_URI'];?>" method="post" style="margin:0px;"> 
-        <?php    
-        }	
-            ?>
-    
+  
 <table border="0" cellpadding="0" cellspacing="0">
 <tbody><tr><td height="10"></td></tr>
 <tr><td style="padding-right: 14px;" align="right"><table align="right" border="0" cellpadding="0" cellspacing="0"><tbody><tr><td height="20" valign="middle"><a href="index.php"><img src="../images/volver-menu.gif" border="0" height="16" width="14"></a></td><td style="padding-right: 40px;" height="20" valign="middle"><a href="declaraciones-listado.php" class="texto_volver_inicio">&nbsp;Volver a la P&aacute;gina de Declaraciones</a></td><td height="20" valign="middle"><a href="../clases/cerrar_sesion.php"><img src="../images/menu-cerrar-sesion.gif" border="0" height="18" width="18"></a></td><td height="20" valign="middle"><a href="../clases/cerrar_sesion.php" class="texto_volver_inicio">&nbsp;Cerrar sesi&oacute;n</a></td></tr></tbody></table></td></tr>
@@ -296,6 +289,20 @@ if($id_declaracion != "" || $id_declaracion != "0"){
         <tbody><tr>
           <td valign="top">
               
+      <?php 
+      //CONDICION PARA REDIRECCIONAR AL NUEVO REGISTRO, A LA HORA DE GUARDAR
+      //O SINO REDIRECCIONARLO AL MISMO A LA HORA DE ACTUALIZAR
+        if(!strcmp($opc, 'nuevo')){	
+            ?>
+         <form name="frm" id="frm" action="<?=$enlace_gestion.'?id='.hidelock($ncontrol)?>" method="post" style="margin:0px;"> 
+        <?php
+        } 
+        else if(strcmp($id_declaracion,0)){
+            ?>
+         <form name="frm" id="frm" action="<?=$_SERVER['REQUEST_URI'];?>" method="post" style="margin:0px;"> 
+        <?php    
+        }	
+            ?>
 <!--INICIO DE LOS CAMPOS DEL FORMULARIO-------------->
 
                          <div class="texto_explicacion_formulario">N&uacute;mero de Control:</div>
@@ -400,11 +407,85 @@ if($id_declaracion != "" || $id_declaracion != "0"){
         }	
             ?>
           </center>
-              <br><br>
+
+        </form>
+<!---------------------------FIN DEL FORMULARIO DECLARACIONES-------------------------------------->
+<br><br>
+
           <?php
-               //si es un retaceo existente que muestre sus facturas si es que tiene
+           //si es un retaceo existente que muestre sus facturas si es que tiene
            if($id_declaracion != "" || $id_declaracion !="0"){
                 ?>
+
+<!--------------------------INCIIO DEL FORM PARA INGRESAR DATOS DE FACTURAS ----------------------->             
+<form name="frmf" id="frmf" action="<?=$_SERVER['REQUEST_URI'];?>" method="post" style="margin:0px;"> 
+                 
+              <h4 style="font-family:helvetica">Agregar Datos de Nueva Factura</h4>
+              
+             <table><tr>
+                <td>
+                <div class="texto_explicacion_formulario">Numero Factura:</div>
+                <div>
+                <input class="required" name="nfactura" id="nfactura" type="text" value="" title="Ingrese No. De Factura">
+                </div>
+                </td>
+                
+                <td>
+                <div class="texto_explicacion_formulario">Fecha:</div>
+                <div>
+                <input class="required" name="fechaf" id="fechaf" type="text" value="" title="Ingrese Fecha Factura">
+                </div>
+                </td>
+                
+                <td>
+                <div class="texto_explicacion_formulario">Bultos:</div>
+                <div>
+                <input class="" name="bultos" id="bultos" type="text" value="0.0" title="Ingrese Bultos">
+                </div>
+                </td>
+                
+                <td>
+                <div class="texto_explicacion_formulario">Peso Bruto:</div>
+                <div>
+                <input class="" name="pbruto" id="pbruto" type="text" value="0.0" title="Ingrese Peso Bruto">
+                </div>
+                </td>
+                
+                <td>
+                <div class="texto_explicacion_formulario">Cuantia:</div>
+                <div>
+                <input class="" name="cuantia" id="cuantia" type="text" value="0.0" title="Ingrese Cuantia">
+                </div>
+                </td>
+                
+                <td>
+                <div class="texto_explicacion_formulario">Gastos:</div>
+                <div>
+                <input class="required" name="gastos" id="gastos" type="text" value="" title="Ingrese Otros Gastos">
+                </div>
+                </td>
+                
+                <td>
+                <div class="texto_explicacion_formulario">FOB:</div>
+                <div>
+                <input class="required" name="fob" id="fob" type="text" value="" title="Ingrese FOB">
+                </div>
+                </td>  
+                </tr>
+            <tr>
+                <td colspan="5"></td>
+                <td><div class="texto_explicacion_formulario">No. Paginas:</div>
+                <div>
+                <input class=""  name="npag" id="npag" type="text" value="1" title="Ingrese Numero Paginas">
+                </div></td>
+                
+                <td><div><input name="addf" id="addf" style="float: right" value="Agregar Factura" type="submit"></div></td> 
+            </tr>
+             </table>
+          </form>
+<!---------------------------FIN DEL FORMULARIO-------------------------------------->
+
+
             <div style="float:center" class="texto_explicacion_formulario">Detalles de Facturas:</div>
             <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
               <tbody><tr bgcolor="#6990BA" >
@@ -471,16 +552,11 @@ if($id_declaracion != "" || $id_declaracion != "0"){
 </tr>
 <tr><td class="menu_abajo">&nbsp;</td></tr>
 </tbody></table>    
-<?php $result = mysql_query("SELECT * FROM temp", $link);
-                                                                        while($fila = mysql_fetch_array($result)){
-                                                                                echo $fila[0].$fila[1].$fila[2];
-                                                                                }
-                                                                                ?>
-</form>
+
 </td>
 </tr>
 <tr><td class="fondo_login_abajo_menu"></td></tr>
-<tr><td class="texto_copyright" align="right" height="44" valign="middle"> <?=$copyrigth; ?></td></tr>
+<tr><td class="texto_copyright" align="right" height="44" valign="middle"> <?=$copyrigth;?></td></tr>
 </tbody></table>
 </center>
 <? include_once("../includes/barra_menu.php");?>
