@@ -5,7 +5,14 @@
 		$result = mysql_query("SELECT LAST_INSERT_ID(".$idcolumn.") AS Ultimo FROM ". $tabla ." ORDER BY ".$idcolumn." DESC LIMIT 1", $link);	
 		$fila = mysql_fetch_row($result);
 		return $fila[0];
-	}	
+	}
+        public function GenerarNuevoId($link, $idcolumn, $tabla, $condicion){
+		$result = mysql_query("SELECT MAX(".$idcolumn.")+1 AS Ultimo FROM ". $tabla ." ".$condicion." ORDER BY ".$idcolumn." DESC LIMIT 1", $link);
+   
+		$fila = mysql_fetch_row($result);
+		return $fila[0];
+	}
+        
 	
 	public function Eliminar($link, $tabla, $condicion){
             //$link,es el objeto de conexion
@@ -47,7 +54,6 @@
 	  	 }else{//SINO ES POR POST, SE EJECUTARA CON LOS VALORES QUE SE DEFINIERON DE PARAMETROS
 	  		$sql = "INSERT INTO ".$tabla." values (".$valores.")";
 	  	 }
-		
 	  }
 	  else if ($sql_tipo=='update')
 	  {//ejecucion cuando es un update

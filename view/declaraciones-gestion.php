@@ -35,7 +35,6 @@ for($i=1; $i<=12; $i++){
 include_once("../configuracion/configuracion.php");
 include_once("../clases/conexion.php");
 include_once("../clases/database.php");
-
 $enlace_listado = "declaraciones-listado.php";
 $enlace_gestion = "declaraciones-gestion.php";
 $resultado = "";
@@ -46,7 +45,7 @@ $clase_database = new database();
 
 //SE CREA UNA VARIABLE DE SESION PARA EL RETACEO CON EL QUE SE ESTARA TRABAJANDO
 $id_declaracion = isset($_GET['id']) ? hideunlock($_GET['id']) : 0;
-
+        
 if(isset($_GET['id']) && $_GET['id']!="" && !isset($_SESSION["n_declaracion"])){
     $_SESSION["n_declaracion"]=$_GET['id'];
 }
@@ -65,12 +64,18 @@ if (isset($_POST['submit'])){
 //PARA QUE GUARDE EL NIT SIN ENCRIPTACION.	
     $_POST['NIT']=  hideunlock($_POST['NIT']);
     
-//Funcion para poder hacer el insert, o update
+//Funcion para poder hacer el insert, o update de declaracion
 if($_POST['submit']=='Actualizar'){
+        $_POST["fechaModificado"]=date("Y-m-d H:i:s");
         $resultado = $clase_database->formToDB($link,'retaceo','post','', 'submit, frm, nretaceo, ','update','numero="'.$_POST['numero'].'"');
 
 }else if($_POST['submit']=='Guardar'){
-
+        $_POST["idRetaceo"]=$clase_database->GenerarNuevoId($link, "idRetaceo", "retaceo", "");
+        $_POST["usuario"]=$_SESSION["usu"];
+        $_POST["estado"]="0";
+        $_POST["fechaCreado"]=date("Y-m-d H:i:s");
+        $_POST["fechaModificado"]=date("Y-m-d H:i:s");
+        
         $resultado = $clase_database->formToDB($link,'retaceo','post','', 'submit, frm, nretaceo, ','insert','');       
 }
 
@@ -81,6 +86,17 @@ if ($resultado){
         $mensaje = "Error al Almacenar Informacion";
         $clase_css = "texto_error";
 }	
+}
+
+//AGREGAR DATOS NUEVOS DE FACTURAS
+if(isset($_POST['addf'])){
+    $idFacNuevo=$clase_database->GenerarNuevoId($link, "idFactura", "factura","where numeroRetaceo='".$_SESSION["n_declaracion"]."'");
+    $_POST["idFactura"]=($idFacNuevo=="") ? 1 : $idFacNuevo;    
+    //REVISAR PORQUE NO ESTA DANDO UN ID VALIDO
+    $_POST["numeroRetaceo"]=  hideunlock($_SESSION["n_declaracion"]);
+    $_POST["fecha"]=  $_POST["fechaf"];
+        
+        $resultado = $clase_database->formToDB($link,'factura','post','', 'addf, frmf, npag, fechaf, ','insert','');
 }
 
 
@@ -135,11 +151,7 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                     $("#modelodeclaracion ").val(modeldec);
 
 
-                    $('#fecha').datepicker({
-                            dateFormat: "yy-mm-dd"
-                    });
-                    $('#fecha').mask("9999-99-99")
-                    
+                                       
                     $('#fechaf').datepicker({
                             dateFormat: "yy-mm-dd"
                     });
@@ -302,13 +314,13 @@ if($id_declaracion != "" || $id_declaracion != "0"){
          <form name="frm" id="frm" action="<?=$_SERVER['REQUEST_URI'];?>" method="post" style="margin:0px;"> 
         <?php    
         }	
-            ?>
+       ?>
 <!--INICIO DE LOS CAMPOS DEL FORMULARIO-------------->
-
-                         <div class="texto_explicacion_formulario">N&uacute;mero de Control:</div>
-                            <div>
-                                        <input style="background-color:#F0F0F0" class="required" name="numero" id="numero" readonly rows="1" value="<? echo isset($ncontrol) ? $ncontrol : "";?>" type="text" title="Numero de Control de Declaraciones">
-                                </div>
+                         
+               <div class="texto_explicacion_formulario">N&uacute;mero de Control:</div>
+               <div>
+               <input style="background-color:#F0F0F0" class="required" name="numero" id="numero" readonly rows="1" value="<? echo isset($ncontrol) ? $ncontrol : "";?>" type="text" title="Numero de Control de Declaraciones">
+               </div>
 <br>
                           <div class="texto_explicacion_formulario">N&uacute;mero de Retaceo:</div>
                                 <div>
@@ -316,33 +328,7 @@ if($id_declaracion != "" || $id_declaracion != "0"){
 
                                 </div>
 <br>
-
-
-                          <div class="texto_explicacion_formulario">Modo de Transporte:</div>
-                                        <div>
-
-                     <select id="modoTransporte" name="modoTransporte" title="Seleccione el Modo de Transporte">
-                           <option value="0" >Terrestre</option>
-                           <option value="1" >A&eacute;reo</option>
-                           <option value="2" >Mar&iacute;timo</option>
-                           <option value="3" >Ferreo</option>
-                           <option value="4" >Multimodal</option>
-
-                                         </select>		
-                                        </div>
-<br>
-                          <div class="texto_explicacion_formulario">Fecha:</div>
-                                        <div>
-                                                <input class="required" name="fecha" id="fecha" rows="1" value="<? echo isset($fecha) ? $fecha : "";?>" type="text" title="Seleccione fecha">
-                                        </div>
-<br>                        
-
-            <div class="texto_explicacion_formulario">Numero de Documento de Transporte:</div>
-            <div>
-            <input class="required" name="numeroDocumentoTransporte" id="numeroDocumentoTransporte" rows="1" value="<? echo isset($numdoctransporte) ? $numdoctransporte : "";?>" type="text" title="Ingrese No. de Transporte">
-            </div>
-<br>
-          <div class="texto_explicacion_formulario">Nombre de Empresa:</div>
+   <div class="texto_explicacion_formulario">Nombre de Empresa:</div>
 
                 <div>
 
@@ -362,6 +348,32 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                 ?>
                 </select>
                 </div>
+
+
+<br>
+                          <div class="texto_explicacion_formulario">Fecha:</div>
+                                        <div>
+                                                <input class="required" name="fecha" readonly id="fecha" rows="1" value="<? echo isset($fecha) ? $fecha : date("Y-m-d");?>" type="text" title="">
+                                        </div>
+<br>                        
+
+            <div class="texto_explicacion_formulario">Numero de Documento de Transporte:</div>
+            <div>
+            <input class="required" name="numeroDocumentoTransporte" id="numeroDocumentoTransporte" rows="1" value="<? echo isset($numdoctransporte) ? $numdoctransporte : "";?>" type="text" title="Ingrese No. de Transporte">
+            </div>
+<br>
+             <div class="texto_explicacion_formulario">Modo de Transporte:</div>
+                   <div>
+
+                     <select id="modoTransporte" name="modoTransporte" title="Seleccione el Modo de Transporte">
+                           <option value="0" >Terrestre</option>
+                           <option value="1" >A&eacute;reo</option>
+                           <option value="2" >Mar&iacute;timo</option>
+                           <option value="3" >Ferreo</option>
+                           <option value="4" >Multimodal</option>
+
+                     </select>		
+                   </div>
 <br>
 
                                    
@@ -387,8 +399,18 @@ if($id_declaracion != "" || $id_declaracion != "0"){
 
                                          </select>		
                         </div>
+<br>
+            <div class="texto_explicacion_formulario">Tipo de Calculo de Seguro:&nbsp;</div>
+        <div>
+            <b class="texto_explicacion_formulario">Externo:
+            <Input type = 'Radio' Name ='TipoCalculoSeguro' checked value= 'E'></b>
+            <b class="texto_explicacion_formulario">Interno:
+            <Input type = 'Radio' Name ='TipoCalculoSeguro' value= 'I'></b>
+        </div><br>
 <br>  
-            <hr>
+<hr>
+            
+            
         <center>
         <?php 
         //CONDICION PARA MOSTRAR BOTONES, EN EL CASO DE UN NUEVO REGISTRO O DE UNA ACTUALIZACION
@@ -399,16 +421,15 @@ if($id_declaracion != "" || $id_declaracion != "0"){
         } 
         else if(strcmp($id_declaracion,0)){
             ?>
-          <div>
           <div><input name="submit" id="submit" style="float: left" value="Actualizar" type="submit"></div>
-          <div><input name="cerrar" id="cerrar" style="float: left" value="Cerrar Declaracion" type="submit"></div>
-          </div>
-        <?php    
-        }	
-            ?>
+        
           </center>
-
         </form>
+             <form action="<?=$enlace_gestion.'?id='.hidelock($ncontrol)?>" method="post"><div><input name="cerrar" id="cerrar" style="float: left" value="Cerrar Declaracion" type="submit"></div></form>
+               
+      <?php    
+        }	
+            ?>        
 <!---------------------------FIN DEL FORMULARIO DECLARACIONES-------------------------------------->
 <br><br>
 
@@ -426,14 +447,14 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                 <td>
                 <div class="texto_explicacion_formulario">Numero Factura:</div>
                 <div>
-                <input class="required" name="nfactura" id="nfactura" type="text" value="" title="Ingrese No. De Factura">
+                <input class="required" name="numero" id="numero" type="text" value="" title="Ingrese No. De Factura">
                 </div>
                 </td>
                 
                 <td>
                 <div class="texto_explicacion_formulario">Fecha:</div>
                 <div>
-                <input class="required" name="fechaf" id="fechaf" type="text" value="" title="Ingrese Fecha Factura">
+                <input class="required" name="fechaf" id="fechaf" type="text" value="<?=date("Y-m-d");?>" title="Ingrese Fecha Factura">
                 </div>
                 </td>
                 
@@ -447,7 +468,7 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                 <td>
                 <div class="texto_explicacion_formulario">Peso Bruto:</div>
                 <div>
-                <input class="" name="pbruto" id="pbruto" type="text" value="0.0" title="Ingrese Peso Bruto">
+                <input class="" name="pesoBruto" id="pesoBruto" type="text" value="0.0" title="Ingrese Peso Bruto">
                 </div>
                 </td>
                 
@@ -461,7 +482,7 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                 <td>
                 <div class="texto_explicacion_formulario">Gastos:</div>
                 <div>
-                <input class="required" name="gastos" id="gastos" type="text" value="" title="Ingrese Otros Gastos">
+                <input class="required" name="otrosGastos" id="otrosGastos" type="text" value="" title="Ingrese Otros Gastos">
                 </div>
                 </td>
                 

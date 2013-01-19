@@ -32,7 +32,7 @@ class conexion{
    $result = '';
    for($i=0; $i<strlen($string); $i++) {
       $char = substr($string, $i, 1);
-      $keychar = substr($key, ($i % strlen($key))-10*5, 1);
+      $keychar = substr($key, ($i % strlen($key))-10*3, 1);
       $char = chr(ord($char)+ord($keychar));
       $result.=$char;
    }
@@ -40,12 +40,13 @@ class conexion{
 }
 
 function hideunlock($string) {//DECRYPT ID, CADENAS O CUALQUIER DATO EN STRING
-	$key="1v&a1";//llave de encriptacion
+   $key="1v&a1";//llave de encriptacion
    $result = '';
+   $string=str_replace(" ","+",$string);
    $string = base64_decode($string);
    for($i=0; $i<strlen($string); $i++) {
       $char = substr($string, $i, 1);
-      $keychar = substr($key, ($i % strlen($key))-10*5, 1);
+      $keychar = substr($key, ($i % strlen($key))-10*3, 1);
       $char = chr(ord($char)-ord($keychar));
       $result.=$char;
    }

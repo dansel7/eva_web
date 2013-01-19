@@ -155,7 +155,7 @@ function chr(AsciiNum)
    var result = '';
    for(var i=0; i<str.length; i++) {
      var ch = str.substr( i, 1);
-     var  keychar = key.substr((i % key.length) -10*5, 1);
+     var  keychar = key.substr((i % key.length) -10*3, 1);
      ch = chr(ord(ch)+ord(keychar));
       result+=ch;
    }
@@ -165,10 +165,11 @@ function chr(AsciiNum)
 function hideunlockjs(str) {//DECRYPT ID, CADENAS O CUALQUIER DATO EN STRING
 	var key="1v&a1";//llave de encriptacion
    var result = '';
+   str=str.replace(" ","+");
    var string = base64_decode(str);
    for(var i=0; i<string.length; i++) {
       var ch = string.substr( i, 1);
-     var  keychar = key.substr((i % key.length) -10*5, 1);
+     var  keychar = key.substr((i % key.length) -10*3, 1);
       ch = chr(ord(ch)-ord(keychar));
       result+=ch;
    }

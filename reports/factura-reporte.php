@@ -103,19 +103,18 @@ $fobTotal=0;
 $temp=0;
 while($row_exp = mysql_fetch_array($resultado)) //CONSULTA PARA CADA REGISTRO
 {
-
 //IMPRESION DE CADA REGISTRO
-
 //PARA HACER UNA AGRUPACION
 $fact=$row_exp[1];//PRIMERO SE GUARDA EL NUMERO DE FACTURA
 
 //La agrupacion se valida desde aca
-	if($temp==0 && $fobSubt==0){}//se comprueba que es el primer valor de los registros y no imprime nada
+if($temp==0 && $fobSubt==0){}//se comprueba que es el primer valor de los registros y no imprime nada
  else if($fact!=$temp){//compara si son diferentes los numeros de facturas asi para poder agrupar
 		$varr.="<tr>
 		<td colspan=\"7\" style=\"border:1px solid black;text-align:center\"><b>Subtotal</b></td>
 		<td style=\"border:1px solid black;text-align:right\"><b>$".number_format(round($fobSubt,2),2)."</b></td>
 		</tr>";
+                $fobTotal+=$fobSubt;
 		$fobSubt=0;
 	} //hasta aca es la agrupacion, se hace antes porque para el primer registro no hay ninguna agrupacion
  
@@ -130,12 +129,13 @@ $fact=$row_exp[1];//PRIMERO SE GUARDA EL NUMERO DE FACTURA
 
 $fobSubt+=$row_exp[5];	
 $temp=$row_exp[1];//Guarda un temporal que seria el numero anterior para comparar
-$fobTotal+=$fobSubt;
+
 }//FIN IMPRESION CADA REGISTRO
 $varr.="<tr>
 		<td colspan=\"7\" style=\"border:1px solid black;text-align:center\">Subtotal</td>
 		<td style=\"border:1px solid black;text-align:right\"><b>$".number_format(round($fobSubt,2),2)."</b></td>
 		</tr>";
+$fobTotal+=$fobSubt;
 		$fobSubt=0;
 // ---------------PIE DEL REPORTE-----------------
 //PIE DE TABLA
