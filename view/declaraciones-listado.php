@@ -66,8 +66,11 @@ $_SESSION['timeout'] = time();
         
         <script>
         $(document).ready(function(){
+            
+        //Validacion para enlace para nueva declaracion
         var hrefOrig=$("#agreg1").attr("href");
 				$("#Empresas").change(function(){
+                                    //-------LOGO PROVISIONAL-----
 					if($("#Empresas").val()=="YWdiZWJoYWNnZ2FhYmQ="){
 					$("#logo").html("<center><img src='../images/logos/siman.jpg'></center>");
 					}else if($("#Empresas").val()=="YWdiZWJiYWlhYWJhZGM="){
@@ -75,17 +78,31 @@ $_SESSION['timeout'] = time();
 					}else if($("#Empresas").val()=="YWdiZWJnYWdhZmJhZGo="){
 					$("#logo").html("<center><img height='60px' src='../images/logos/coprodisa.jpeg'></center><br>");
 					}else{$("#logo").html("");}
-					
+				    //-------------------------------
+                                    
 					$("#cargar").html("<center><img width='50px' height='50px' src='../images/load.gif'></center>"); 
+                                    //----AGREGA EL ID (NIT) DE LA EMPRESA PARA LA NUEVA DECLARACION    
 					$("#agreg1").attr("href",hrefOrig+"&idn="+$("#Empresas").val())
 					$("#agreg2").attr("href",hrefOrig+"&idn="+$("#Empresas").val())
+                                        
+                                        //VARIABLES PARA AJAX, Y GENERACION DE LISTADO
 					$.post("../includes/declaraciones_empresas.php",
-							{id: $(this).val()},
+							{id: $(this).val(),numero:$("#busqIdDeclaracion").val()},
 						   function(data){
 						   $("#cargar").html(data);  
 					 })
-				})       
-			})
+				}) 
+                                
+                                $("#btnBusqueda").click(function(){
+                                    $("#cargar").html("<center><img width='50px' height='50px' src='../images/load.gif'></center>"); 
+                                    $.post("../includes/declaraciones_empresas.php",
+							{id: $("#Empresas").val(),numero:$("#busqIdDeclaracion").val()},
+						   function(data){
+						   $("#cargar").html(data);  
+					 })
+                                })
+			});
+                        
 			
                         
 		$(function() {
@@ -230,7 +247,7 @@ $_SESSION['timeout'] = time();
                     <tbody><tr>
                       <td valign="top" align="center">
                       	<span class="texto_ok">Seleccione una Empresa</span><br/>
-						<select name="Empresas" id="Empresas" >
+			<select name="Empresas" id="Empresas" >
                         <option value="-1" disabled selected>Seleccione una Empresa</option>
                         <?
                         	$result = mysql_query("SELECT * FROM empresas ORDER BY nombre", $link);
@@ -239,12 +256,10 @@ $_SESSION['timeout'] = time();
 							<? }
 						?>
                         </select>
-                      <br />
-                      	<!--<a href="#" id="desplegar" class="ui-state-default ui-corner-all">.::Opciones Avanzadas ::.</a><br/><br/>
-                        <div id="avanzadas" class="ui-widget-content ui-corner-all" style="text-align:left">
-                        	<a href="#" id="cerrar" class="ui-state-default ui-corner-all" style="float:right;">&nbsp;x&nbsp;</a><br/><br/>
-                        	<input type="text" name="Fdesde" id="Fdesde" style=""/>
-						</div>-->
+                      <br /><br>
+                      <span class="texto_ok">Ingrese Numero Declaracion</span><br/>
+                      <input type="textbox" id="busqIdDeclaracion" name="busqIdDeclaracion">
+                      <input type="button" id="btnBusqueda" name="busqIdDeclaracion" value="Buscar">
                       </td>
                     </tr>
                   </tbody></table> 

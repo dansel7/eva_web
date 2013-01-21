@@ -8,8 +8,8 @@ error_reporting(0);
 	}
 	
 	if(isset($_SESSION["usuario"])){
-			$link = "Location:index.php";
-			header($link);
+		$link = "Location:index.php";
+		header($link);
 	}
 	
 	include_once("clases/config.php");

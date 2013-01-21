@@ -67,7 +67,7 @@ if (isset($_POST['submit'])){
 //Funcion para poder hacer el insert, o update de declaracion
 if($_POST['submit']=='Actualizar'){
         $_POST["fechaModificado"]=date("Y-m-d H:i:s");
-        $resultado = $clase_database->formToDB($link,'retaceo','post','', 'submit, frm, nretaceo, ','update','numero="'.$_POST['numero'].'"');
+        $resultado = $clase_database->formToDB($link,'retaceo','post','', 'submit, frm, ','update','numero="'.$_POST['numero'].'"');
 
 }else if($_POST['submit']=='Guardar'){
         $_POST["idRetaceo"]=$clase_database->GenerarNuevoId($link, "idRetaceo", "retaceo", "");
@@ -76,7 +76,7 @@ if($_POST['submit']=='Actualizar'){
         $_POST["fechaCreado"]=date("Y-m-d H:i:s");
         $_POST["fechaModificado"]=date("Y-m-d H:i:s");
         
-        $resultado = $clase_database->formToDB($link,'retaceo','post','', 'submit, frm, nretaceo, ','insert','');       
+        $resultado = $clase_database->formToDB($link,'retaceo','post','', 'submit, frm, ','insert','');       
 }
 
 if ($resultado){ 
@@ -90,13 +90,13 @@ if ($resultado){
 
 //AGREGAR DATOS NUEVOS DE FACTURAS
 if(isset($_POST['addf'])){
-    $idFacNuevo=$clase_database->GenerarNuevoId($link, "idFactura", "factura","where numeroRetaceo='".$_SESSION["n_declaracion"]."'");
+    $idFacNuevo=$clase_database->GenerarNuevoId($link, "idFactura", "factura","where numeroRetaceo='".hideunlock($_SESSION["n_declaracion"])."'");
     $_POST["idFactura"]=($idFacNuevo=="") ? 1 : $idFacNuevo;    
-    //REVISAR PORQUE NO ESTA DANDO UN ID VALIDO
+ 
     $_POST["numeroRetaceo"]=  hideunlock($_SESSION["n_declaracion"]);
     $_POST["fecha"]=  $_POST["fechaf"];
-        
-        $resultado = $clase_database->formToDB($link,'factura','post','', 'addf, frmf, npag, fechaf, ','insert','');
+    $_POST["numero"]=strtoupper(  $_POST["numero"]);
+    $resultado = $clase_database->formToDB($link,'factura','post','', 'addf, frmf, npag, fechaf, ','insert','');
 }
 
 
@@ -108,11 +108,13 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                 $nitempresa = $fila['NIT'];
                 $ncontrol=$fila['numero'];
                 $fecha= substr($fila['fecha'],0,10);
-                $nretaceo="####";
+                $nretaceo=$fila['numRegistro'];
                 $modelodeclaracion= $fila['modeloDeclaracion'];
                 $modotransporte= $fila['modoTransporte'];
                 $numdoctransporte= $fila['numeroDocumentoTransporte'];
                 $flete= $fila['flete'];
+                $TipoCalcSeguro= $fila['TipoCalculoSeguro'];
+                $CalcSeguro= $fila['calcularSeguro'];
         }
 
               //consulta que genera un preview de las facturas de un retaceo definido
@@ -324,7 +326,7 @@ if($id_declaracion != "" || $id_declaracion != "0"){
 <br>
                           <div class="texto_explicacion_formulario">N&uacute;mero de Retaceo:</div>
                                 <div>
-                                <input class="required" name="nretaceo" id="nretaceo" rows="1" value="<? echo isset($nretaceo) ? $nretaceo : "";?>" type="text" title="Ingrese el numero de Retaceo de la Empresa">
+                                <input class="required" name="numRegistro" id="numRegistro" rows="1" value="<? echo isset($nretaceo) ? $nretaceo : "";?>" type="text" title="Ingrese el numero de Retaceo de la Empresa">
 
                                 </div>
 <br>
@@ -399,15 +401,23 @@ if($id_declaracion != "" || $id_declaracion != "0"){
 
                                          </select>		
                         </div>
+<br>           
+            <div class="texto_explicacion_formulario">Calcular Seguro:&nbsp;</div>
+             <div>
+                  <Input type='hidden' Name='calcularSeguro' value="N">
+                  <Input id='calcularSeguro' type='Checkbox' <? if(isset($CalcSeguro)){if($CalcSeguro=="S")echo "Checked";}?> Name='calcularSeguro' value="S">
+                 
+             </div>
 <br>
-            <div class="texto_explicacion_formulario">Tipo de Calculo de Seguro:&nbsp;</div>
+        <div class="texto_explicacion_formulario">Tipo de Calculo de Seguro:&nbsp;</div>
         <div>
             <b class="texto_explicacion_formulario">Externo:
-            <Input type = 'Radio' Name ='TipoCalculoSeguro' checked value= 'E'></b>
+            <Input type = 'Radio' Name ='TipoCalculoSeguro' <? if(isset($TipoCalcSeguro)){if($TipoCalcSeguro=="E")echo "Checked";}else{echo "Checked";} ?> value= 'E'></b>
             <b class="texto_explicacion_formulario">Interno:
-            <Input type = 'Radio' Name ='TipoCalculoSeguro' value= 'I'></b>
-        </div><br>
-<br>  
+            <Input type = 'Radio' Name ='TipoCalculoSeguro' <? if(isset($TipoCalcSeguro)){if($TipoCalcSeguro=="I")echo "Checked";} ?> value= 'I'></b>
+        </div>
+            
+<br><br>  
 <hr>
             
             
