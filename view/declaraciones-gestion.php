@@ -94,9 +94,11 @@ if(isset($_POST['addf'])){
     $_POST["idFactura"]=($idFacNuevo=="") ? 1 : $idFacNuevo;    
  
     $_POST["numeroRetaceo"]=  hideunlock($_SESSION["n_declaracion"]);
-    $_POST["fecha"]=  $_POST["fechaf"];
-    $_POST["numero"]=strtoupper(  $_POST["numero"]);
-    $resultado = $clase_database->formToDB($link,'factura','post','', 'addf, frmf, npag, fechaf, ','insert','');
+    $_POST["fecha"]=  $_POST["fechaf"];//SE LE PUSO OTRO NOMBRE A LOS DATOS, YA QUE EL FORM RETACEO POSEE UN CAMPO LLAMADO FECHA.
+    $_POST["numero"]=strtoupper($_POST["numero"]);
+    $resultado = $clase_database->formToDB($link,'datosIniciales','post','', 'addf, frmf, npag, fechaf, ','insert','');
+    $resultado = $clase_database->formToDB($link,'factura','post','','bultos, pesoBruto, cuantia, fob, npag, fechaf, addf, frmf, npag, ','insert','');
+
 }
 
 
@@ -118,7 +120,7 @@ if($id_declaracion != "" || $id_declaracion != "0"){
         }
 
               //consulta que genera un preview de las facturas de un retaceo definido
-             $facturas = mysql_query("SELECT * FROM factura WHERE numeroretaceo ='".$id_declaracion."'", $link);
+             $facturas = mysql_query("SELECT * FROM datosIniciales WHERE numeroretaceo ='".$id_declaracion."'", $link);
 }
 
 
@@ -451,7 +453,7 @@ if($id_declaracion != "" || $id_declaracion != "0"){
 <!--------------------------INCIIO DEL FORM PARA INGRESAR DATOS DE FACTURAS ----------------------->             
 <form name="frmf" id="frmf" action="<?=$_SERVER['REQUEST_URI'];?>" method="post" style="margin:0px;"> 
                  
-              <h4 style="font-family:helvetica">Agregar Datos de Nueva Factura</h4>
+              <h4 style="font-family:helvetica">Agregar Datos Iniciales de Factura</h4>
               
              <table><tr>
                 <td>
@@ -565,7 +567,7 @@ if($id_declaracion != "" || $id_declaracion != "0"){
             <tr bgcolor="#6990BA">
                     <td bgcolor="#6990BA" colspan="6" class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">TOTAL</td>
                     <td class="tabla_titulo" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226); border-right: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle">
-                                <b>$<?echo $total;?></b>
+                                <b>$<?echo number_format(round($total,2),2);?></b>
                     </td>
             </tr>
             </tbody></table> <? }?>
