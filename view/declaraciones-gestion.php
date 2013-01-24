@@ -242,7 +242,7 @@ if($id_declaracion != "" || $id_declaracion != "0"){
               <tbody><tr>
                 <td width="8"><img src="../images/transparente.gif" height="1" width="8"></td>
                 <td valign="middle">
-                  <a href="declaraciones-listado.php"><img src="../images/icono-afp.gif" border="0"></a>
+                  <a href="index.php"><img src="../images/icono-afp.gif" border="0"></a>
                 </td>
                 <td width="20"><img src="../images/transparente.gif" height="1" width="20"></td>
                 <td class="titulo_modulo" align="left" width="100%">Gesti&oacute;n de Declaraciones</td>
