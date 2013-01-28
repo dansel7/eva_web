@@ -451,7 +451,7 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                 ?>
 
 <!--------------------------INCIIO DEL FORM PARA INGRESAR DATOS DE FACTURAS ----------------------->             
-<form name="frmf" id="frmf" action="<?=$_SERVER['REQUEST_URI'];?>" method="post" style="margin:0px;"> 
+<form class="frmspecial" name="frmf" id="frmf" action="<?=$_SERVER['REQUEST_URI'];?>" method="post" style="margin:0px;"> 
                  
               <h4 style="font-family:helvetica">Agregar Datos Iniciales de Factura</h4>
               
@@ -512,7 +512,7 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                 <input class=""  name="npag" id="npag" type="text" value="1" title="Ingrese Numero Paginas">
                 </div></td>
                 
-                <td><div><input name="addf" id="addf" style="float: right" value="Agregar Factura" type="submit"></div></td> 
+                <td><div><input name="addf" id="addf" style="float: right;" value="Agregar Factura" type="submit"></div></td> 
             </tr>
              </table>
           </form>

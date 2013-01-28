@@ -94,7 +94,7 @@ $rsd='
 }
 
 //$resultado=mysql_query("select * from factura where numeroretaceo='jor301'",$link);
-//NOFUNCIONA CONSULTA ABAJO REVISAR
+
 $resultado=mysql_query("select item.idItem, item.numeroFactura as factura, item.partidaArancelaria as partida, item.descripcion , " .
                 " item.cuantia as cuantia, (item.cuantia * item.precioUnitario) as fob ".
                 "from factura inner join item on factura.numero=item.numeroFactura where item.numeroRetaceo='".hideunlock($_SESSION["n_declaracion"])."' order by factura.idFactura,item.numerofactura,item.iditem",$link);

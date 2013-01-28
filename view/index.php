@@ -100,12 +100,12 @@ if(isset($_SESSION["n_declaracion"])){
 				
               <td class="menu_separador_1"><img src="../images/transparente.gif" height="1" width="14"></td>
 
-			  <td align="center" valign="top">
-			  	<div><img src="../images/transparente(1).gif" height="8" width="1"></div>
+			   <td align="center" valign="top"><div><img src="../images/transparente(1).gif" height="8" width="1"></div>
 
-				<div align="center"><a target="_blank" href="../reports/factura_ordenadas.php"><img src="../images/icono-articulos.gif" border="0"></a></div>
-				
-				<div style="height:30px;"><a target="_blank" href="../reports/factura_ordenadas.php" class="modulo_titulo">Facturas Ordenadas</a></div>
+				<div align="center"><a target="_blank" href="../reports/factura_diniciales.php"><img src="../images/icono-menus.gif" border="0"></a></div>
+
+				<div style="height:30px;"><a target="_blank" href="../reports/factura_diniciales.php" class="modulo_titulo">Facturas Datos Iniciales</a></div>
+
 			  </td>
 
 		  	  <td class="menu_separador_1"><img src="../images/transparente.gif" height="1" width="14"></td>
@@ -113,14 +113,15 @@ if(isset($_SESSION["n_declaracion"])){
 			                    
 
               <td class="menu_separador_1"><img src="../images/transparente.gif" height="1" width="14"></td>
+                         
+                         <td align="center" valign="top">
+			  	<div><img src="../images/transparente(1).gif" height="8" width="1"></div>
 
-			  <td align="center" valign="top"><div><img src="../images/transparente(1).gif" height="8" width="1"></div>
-
-				<div align="center"><a target="_blank" href="../reports/factura_diniciales.php"><img src="../images/icono-menus.gif" border="0"></a></div>
-
-				<div style="height:30px;"><a target="_blank" href="../reports/factura_diniciales.php" class="modulo_titulo">Facturas Datos Iniciales</a></div>
-
+				<div align="center"><a target="_blank" href="../reports/factura_ordenadas.php"><img src="../images/icono-articulos.gif" border="0"></a></div>
+				
+				<div style="height:30px;"><a target="_blank" href="../reports/factura_ordenadas.php" class="modulo_titulo">Facturas Ordenadas</a></div>
 			  </td>
+			 
 
 		  	  <td class="menu_separador_1"><img src="../images/transparente.gif" height="1" width="14"></td>
 

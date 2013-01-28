@@ -38,7 +38,11 @@ body {
 	color: #DDD;
 }
 
+/* fin */
 
+.frmspecial input{
+    width:130px;
+}
 
 a{text-decoration:none;color:white}
 
