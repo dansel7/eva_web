@@ -75,7 +75,17 @@ if($_POST['submit']=='Actualizar'){
         $_POST["estado"]="0";
         $_POST["fechaCreado"]=date("Y-m-d H:i:s");
         $_POST["fechaModificado"]=date("Y-m-d H:i:s");
-        
+        $_POST["bultos"]=0.0;
+        $_POST["pesoBruto"]=0.0;
+        $_POST["cuantia"]=0.0;
+        $_POST["FOB"]=0.0;
+        $_POST["otrosGastos"]=0.0;
+        $_POST["seguro"]=0.0;
+        $_POST["CIF"]=0.0;
+        $_POST["DAI"]=0.0;
+        $_POST["IVA"]=0.0;
+        $_POST["aPago"]=0.0;
+        $_POST["total"]=0.0;
         $resultado = $clase_database->formToDB($link,'retaceo','post','', 'submit, frm, ','insert','');       
 }
 
@@ -96,9 +106,34 @@ if(isset($_POST['addf'])){
     $_POST["numeroRetaceo"]=  hideunlock($_SESSION["n_declaracion"]);
     $_POST["fecha"]=  $_POST["fechaf"];//SE LE PUSO OTRO NOMBRE A LOS DATOS, YA QUE EL FORM RETACEO POSEE UN CAMPO LLAMADO FECHA.
     $_POST["numero"]=strtoupper($_POST["numero"]);
+    
+    //COMPROBAR SI EL NUMERO DE FACTURA YA EXISTE.
+    $result = mysql_query("SELECT * FROM factura WHERE numero ='".$_POST["numero"]."' and numeroRetaceo='".hideunlock($_SESSION["n_declaracion"])."'", $link);
+  if(mysql_affected_rows()==1){
+       $resultado=true; 
+    $mensaje = "Numero de Factura Ya Existe";
+    $clase_css = "texto_error";}
+  
+  else{ //SINO EXISTE LO INGRESA 
+  
     $resultado = $clase_database->formToDB($link,'datosIniciales','post','', 'addf, frmf, npag, fechaf, ','insert','');
-    $resultado = $clase_database->formToDB($link,'factura','post','','bultos, pesoBruto, cuantia, fob, npag, fechaf, addf, frmf, npag, ','insert','');
+    $_POST["bultos"]=0.0;
+    $_POST["pesoBruto"]=0.0;
+    $_POST["cuantia"]=0.0;
+    $_POST["fob"]=0.0;
+    $_POST["total"]=0.0;
+    $_POST["pesoNeto"]=0.0;
+    $resultado = $clase_database->formToDB($link,'factura','post','','npag, fechaf, addf, frmf, npag, ','insert','');
 
+    if ($resultado){ 
+        $mensaje = "Informacion Almacenada Exitosamente";
+        $clase_css = "texto_ok";
+    }else{
+        $mensaje = "Error al Almacenar Informacion";
+        $clase_css = "texto_error";
+    }
+
+  }
 }
 
 
@@ -165,6 +200,20 @@ if($id_declaracion != "" || $id_declaracion != "0"){
 
                     $("#frm :input").tooltip();
                     $("#frmf :input").tooltip();
+                    
+                    
+                    $("#fob").focus(function(){
+                        if($(this).val()=="" || $(this).val()=="0.0") $(this).val("")
+                    }); 
+                    $("#fob").blur(function(){
+                        if($(this).val()=="") $(this).val("0.0")
+                    });
+                    $("#otrosGastos").focus(function(){
+                       if($(this).val()=="" || $(this).val()=="0.0") $(this).val("")
+                    });
+                    $("#otrosGastos").blur(function(){
+                       if($(this).val()=="") $(this).val("0.0")
+                    });
 
                 });    
 
@@ -494,14 +543,14 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                 <td>
                 <div class="texto_explicacion_formulario">Gastos:</div>
                 <div>
-                <input class="required" name="otrosGastos" id="otrosGastos" type="text" value="" title="Ingrese Otros Gastos">
+                <input class="required" name="otrosGastos" id="otrosGastos" type="text" value="0.0" title="Ingrese Otros Gastos">
                 </div>
                 </td>
                 
                 <td>
                 <div class="texto_explicacion_formulario">FOB:</div>
                 <div>
-                <input class="required" name="fob" id="fob" type="text" value="" title="Ingrese FOB">
+                <input class="required" name="fob" id="fob" type="text" value="0.0" title="Ingrese FOB">
                 </div>
                 </td>  
                 </tr>

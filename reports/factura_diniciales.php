@@ -101,6 +101,10 @@ $gastosTotal+=$row_exp[9];
 }//FIN IMPRESION CADA REGISTRO
 
 // ---------------PIE DEL REPORTE-----------------
+// 
+$subTotal=$flete+$fobTotal+$gastosTotal;
+$montoAsegurado=$subTotal*1.1;
+$seguro=$montoAsegurado*0.0025;
 //PIE DE TABLA
 $fin=$rsd.$varr."
     <tr>
@@ -114,34 +118,34 @@ $fin=$rsd.$varr."
 		<td ><hr></td>
 	</tr>
         <tr>
-		<td >TOTAL FOB:</td>
+		<td ><b>TOTAL FOB:</b></td>
                 <td ></td>
 		<td >$".number_format(round($fobTotal,2),2)."</td>
 	</tr>
         <tr>
-		<td >TOTAL GASTOS:</td>
+		<td ><b>TOTAL GASTOS:</b></td>
                 <td >$".number_format(round($gastosTotal,2),2)."</td>
 		<td ></td>
 	</tr>
         <tr>
-		<td >FLETE:</td>
+		<td ><b>FLETE:</b></td>
                 <td >$".number_format(round($flete,2),2)."</td>
 		<td ></td>
 	</tr>
         <tr>
-		<td >SUB-TOTAL:</td>
+		<td ><b>SUB-TOTAL:</b></td>
                 <td ></td>
-		<td >$".number_format(round(($flete+$fobTotal+$gastosTotal),2),2)."</td>
+		<td >$".number_format(round($subTotal,2),2)."</td>
 	</tr>
         <tr>
-		<td >MONTO ASEGURADO:</td>
+		<td ><b>MONTO ASEGURADO:</b></td>
                 <td ></td>
-		<td >$".number_format(round(($flete+$fobTotal+$gastosTotal)*1.1,2),2)."</td>
+		<td >$".number_format(round($montoAsegurado,2),2)."</td>
 	</tr>
         <tr>
-		<td >SEGURO:</td>
+		<td ><b>SEGURO:</b></td>
                 <td ></td>
-		<td >$".number_format(round(($flete+$fobTotal+$gastosTotal)*0.00275,2),2)."</td>
+		<td >$".number_format(round($seguro,2),2)."</td>
 	</tr>
 </table>
 <br><br>
