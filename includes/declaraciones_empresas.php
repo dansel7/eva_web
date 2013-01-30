@@ -17,7 +17,7 @@
 	$id = hideunlock($_POST["id"]);
 	$numero = $_POST["numero"];
         
-  	$sql_empresas = "SELECT * FROM retaceo WHERE NIT='".$id."' and numero like '%".$numero."%' order by fechaCreado desc";
+  	$sql_empresas = "SELECT * FROM retaceo WHERE NIT like '%".$id."%' and numero like '%".$numero."%' order by fechaCreado desc";
 	$result = mysql_query($sql_empresas,$linkCombos);
 	$contador = 0;
 	while($filas = mysql_fetch_array($result)){

@@ -71,11 +71,14 @@ $rsd='
 </tr>
 </table>	
 <br>
-<table border="0" width="100%" cellpadding="2" cellspacing="0">
+<table border="0" width="100%" cellpadding="3" cellspacing="0">
 <tr>	
-		<td  ><b>Numero Factura</b></td>
-		<td  ><b>Otros Gastos</b></td>
-		<td ><b>FOB</b></td>
+		<td align="right"><b>Numero Factura</b></td>
+                <td></td>
+		<td align="right"><b>Otros Gastos</b></td>
+                <td></td>
+		<td align="right"><b>FOB</b></td>
+                <td></td>
 </tr>';
 }
 
@@ -90,9 +93,12 @@ while($row_exp = mysql_fetch_array($resultado)) //CONSULTA PARA CADA REGISTRO
 //IMPRESION DE CADA REGISTRO
 
  $varr.="<tr>
-		<td >".htmlentities($row_exp[3])."</td>
-		<td >".number_format(round($row_exp[9],2),2)."</td>
-		<td >".number_format(round($row_exp[8],2),2)."</td>
+		<td align=\"right\">".htmlentities($row_exp[3])."</td>
+                    <td></td>
+		<td align=\"right\">".number_format(round($row_exp[9],2),2)."</td>
+                    <td></td>
+		<td align=\"right\">".number_format(round($row_exp[8],2),2)."</td>
+                    <td></td>
 	</tr>";
 
 $fobTotal+=$row_exp[8];	
@@ -109,43 +115,62 @@ $seguro=$montoAsegurado*0.0025;
 $fin=$rsd.$varr."
     <tr>
 		<td ></td>
+                <td></td>
                 <td ></td>
 		<td ></td>
+                <td></td>
 	</tr>
         <tr>
-		<td ><hr></td>
-                <td ><hr></td>
-		<td ><hr></td>
+		<td colspan=\"6\"><hr></td>
+                
 	</tr>
         <tr>
 		<td ><b>TOTAL FOB:</b></td>
+                <td></td>
                 <td ></td>
-		<td >$".number_format(round($fobTotal,2),2)."</td>
+                <td></td>
+		<td align=\"right\">".number_format(round($fobTotal,2),2)."</td>
+                <td></td>
 	</tr>
         <tr>
 		<td ><b>TOTAL GASTOS:</b></td>
-                <td >$".number_format(round($gastosTotal,2),2)."</td>
+                <td></td>
+                <td align=\"right\">".number_format(round($gastosTotal,2),2)."</td>
+                <td></td>
 		<td ></td>
+                <td></td>
 	</tr>
         <tr>
 		<td ><b>FLETE:</b></td>
-                <td >$".number_format(round($flete,2),2)."</td>
+                <td></td>
+                <td align=\"right\">".number_format(round($flete,2),2)."</td>
+                <td></td>
 		<td ></td>
+                <td></td>
 	</tr>
         <tr>
 		<td ><b>SUB-TOTAL:</b></td>
+                <td></td>
                 <td ></td>
-		<td >$".number_format(round($subTotal,2),2)."</td>
+                <td></td>
+		<td align=\"right\">".number_format(round($subTotal,2),2)."</td>
+                <td></td>
 	</tr>
         <tr>
 		<td ><b>MONTO ASEGURADO:</b></td>
+                <td></td>
                 <td ></td>
-		<td >$".number_format(round($montoAsegurado,2),2)."</td>
+                <td></td>
+		<td align=\"right\">".number_format(round($montoAsegurado,2),2)."</td>
+                <td></td>
 	</tr>
         <tr>
 		<td ><b>SEGURO:</b></td>
+                <td></td>
                 <td ></td>
-		<td >$".number_format(round($seguro,2),2)."</td>
+                <td></td>
+		<td align=\"right\">".number_format(round($seguro,2),2)."</td>
+                <td></td>
 	</tr>
 </table>
 <br><br>

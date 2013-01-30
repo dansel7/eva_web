@@ -214,6 +214,28 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                     $("#otrosGastos").blur(function(){
                        if($(this).val()=="") $(this).val("0.0")
                     });
+                    
+                    $('#factini tr').click(function()
+                    {
+                        
+                    var tds=$(this).find("td");
+                 
+                    if(tds.eq(0).html()!="Id Factura" && tds.eq(0).html()!="TOTAL"){
+                     $('#frmf #numero').val(tds.eq(1).html().replace(" ",""));
+                     $('#frmf #fechaf').val(tds.eq(2).html());
+                     $('#frmf #bultos').val(tds.eq(3).html());
+                     $('#frmf #pesoBruto').val(tds.eq(4).html());
+                     $('#frmf #cuantia').val(tds.eq(5).html());
+                     $('#frmf #otrosGastos').val(tds.eq(6).html());
+                     $('#frmf #fob').val(tds.eq(7).html());
+                     $('#frmf #addf').attr("value","Actualizar Datos");
+                     $('#frmf #addf').attr("name","updf");
+                     $('#frmf #addf').attr("id","updf");
+                     //SOLO FALTA QUE ACTUALICE EN LA FUNCION DE PHP
+                     }   
+                    });
+
+                    
 
                 });    
 
@@ -569,8 +591,9 @@ if($id_declaracion != "" || $id_declaracion != "0"){
 
 
             <div style="float:center" class="texto_explicacion_formulario">Detalles de Facturas:</div>
-            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
+            <table id="factini" align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
               <tbody><tr bgcolor="#6990BA" >
+                <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">Id Factura</td>
                 <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">Numero Factura</td>
                 <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">Fecha</td>                              
                 <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">Bultos</td>
@@ -582,12 +605,16 @@ if($id_declaracion != "" || $id_declaracion != "0"){
 
 
         //imprime las facturas del retaceo que pertenece
-        $total=0;
+        $FOBtotal=0;
+        $GASTOStotal=0;
             while($fact = mysql_fetch_array($facturas)){
                 ?>
 
-                <tr >
-                <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">
+                <tr>
+                <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="70">
+                <?=$fact["idFactura"]?>
+                </td>
+                <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="70">
                 <?=$fact["numero"]?>
                 </td>
                 <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">
@@ -603,10 +630,10 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                 <?=$fact["cuantia"]?>
                 </td>
                 <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">
-                $<?=$fact["otrosGastos"]?>
+                <? $GASTOStotal+=$fact["otrosGastos"];echo $fact["otrosGastos"];?>
                 </td>
                 <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">
-                $<? $total+=$fact["FOB"];echo $fact["FOB"];?>
+                <? $FOBtotal+=$fact["FOB"];echo $fact["FOB"];?>
                 </td>
             </tr>
                                         <?
@@ -616,7 +643,10 @@ if($id_declaracion != "" || $id_declaracion != "0"){
             <tr bgcolor="#6990BA">
                     <td bgcolor="#6990BA" colspan="6" class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">TOTAL</td>
                     <td class="tabla_titulo" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226); border-right: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle">
-                                <b>$<?echo number_format(round($total,2),2);?></b>
+                                <b>$<?echo number_format(round($GASTOStotal,2),2);?></b>
+                    </td>
+                    <td class="tabla_titulo" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226); border-right: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle">
+                                <b>$<?echo number_format(round($FOBtotal,2),2);?></b>
                     </td>
             </tr>
             </tbody></table> <? }?>
