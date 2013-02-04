@@ -137,6 +137,21 @@ if(isset($_POST['addf'])){
 }
 
 
+//MODIFICAR DATOS NUEVOS DE FACTURAS
+if(isset($_POST['updf'])){
+ $_POST["fecha"]=  $_POST["fechaf"];
+ $resultado = $clase_database->formToDB($link,'datosIniciales','post','', 'fechaf, idFactura, updf, npag, ','update','idFactura="'.$_POST['idFactura'].'"');
+  
+ if ($resultado){ 
+        $mensaje = "Informacion Almacenada Exitosamente";
+        $clase_css = "texto_ok";
+    }else{
+        $mensaje = "Error al Almacenar Informacion";
+        $clase_css = "texto_error";
+  }    
+}
+
+
 //CARGA DE DATOS DESDE BD
 if($id_declaracion != "" || $id_declaracion != "0"){
                         $result = mysql_query("SELECT * FROM retaceo WHERE numero ='".$id_declaracion."'", $link);
@@ -215,22 +230,28 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                        if($(this).val()=="") $(this).val("0.0")
                     });
                     
-                    $('#factini tr').click(function()
+                    
+                    
+                    $('#factini tr').dblclick(function()
                     {
                         
                     var tds=$(this).find("td");
-                 
+                 //funcion para actualizar datos iniciales de facturas
                     if(tds.eq(0).html()!="Id Factura" && tds.eq(0).html()!="TOTAL"){
-                     $('#frmf #numero').val(tds.eq(1).html().replace(" ",""));
+                        
+                     $('#frmf #idFactura').val(tds.eq(0).html())
+                     $('#frmf #numero').val(tds.eq(1).html());
                      $('#frmf #fechaf').val(tds.eq(2).html());
                      $('#frmf #bultos').val(tds.eq(3).html());
                      $('#frmf #pesoBruto').val(tds.eq(4).html());
                      $('#frmf #cuantia').val(tds.eq(5).html());
                      $('#frmf #otrosGastos').val(tds.eq(6).html());
                      $('#frmf #fob').val(tds.eq(7).html());
+                     
                      $('#frmf #addf').attr("value","Actualizar Datos");
                      $('#frmf #addf').attr("name","updf");
                      $('#frmf #addf').attr("id","updf");
+                     $('#cancel').css("display","block");
                      //SOLO FALTA QUE ACTUALICE EN LA FUNCION DE PHP
                      }   
                     });
@@ -244,7 +265,6 @@ if($id_declaracion != "" || $id_declaracion != "0"){
     
     
           <?
-
         //SI LA OPCION ES NUEVA SOLAMENTE SE GENERA UN NUEVO NUMERO DE CONTROL
         if(!strcmp($opc, 'nuevo')){
 
@@ -525,7 +545,8 @@ if($id_declaracion != "" || $id_declaracion != "0"){
 <form class="frmspecial" name="frmf" id="frmf" action="<?=$_SERVER['REQUEST_URI'];?>" method="post" style="margin:0px;"> 
                  
               <h4 style="font-family:helvetica">Agregar Datos Iniciales de Factura</h4>
-              
+              <input class="required" name="idFactura" id="idFactura" type="hidden" value="" title="">
+                
              <table><tr>
                 <td>
                 <div class="texto_explicacion_formulario">Numero Factura:</div>
@@ -583,14 +604,20 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                 <input class=""  name="npag" id="npag" type="text" value="1" title="Ingrese Numero Paginas">
                 </div></td>
                 
-                <td><div><input name="addf" id="addf" style="float: right;" value="Agregar Factura" type="submit"></div></td> 
+                <td><div><input name="addf" id="addf" style="float: right;" value="Agregar Factura" type="submit"></div>
+                  
+                </td> 
             </tr>
              </table>
           </form>
+<form method="Post">
+<input name="cancel" id="cancel" style="display:none;float: right;" value="Cancelar" type="submit">
+</form>
+<br>
 <!---------------------------FIN DEL FORMULARIO-------------------------------------->
 
 
-            <div style="float:center" class="texto_explicacion_formulario">Detalles de Facturas:</div>
+            <div style="float:center" class="texto_explicacion_formulario">Detalles de Facturas: (De doble click para editar)</div>
             <table id="factini" align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
               <tbody><tr bgcolor="#6990BA" >
                 <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">Id Factura</td>

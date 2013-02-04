@@ -132,7 +132,7 @@ if(isset($_SESSION["n_declaracion"])){
 
 <?php
 }else{?>
-      <h2>Para visualizar una factura Debe Abrir una Declaracion.<br> <a href="declaraciones-listado.php">Abrir</a></h2>    
+      <h2>Para visualizar un Reporte debe Abrir una Declaracion.<br> <a href="declaraciones-listado.php">Abrir</a></h2>    
 <?php 
 }
 ?>
@@ -278,9 +278,9 @@ if(isset($_SESSION["n_declaracion"])){
 
 			  <td align="center" valign="top"><div><img src="../images/transparente(1).gif" height="8" width="1"></div>
 
-				<div align="center"><a href="facturas-listado.php.php"><img src="../images/icono-tienda.gif" border="0"></a></div>
+				<div align="center"><a href="facturas-listado.php"><img src="../images/icono-tienda.gif" border="0"></a></div>
 
-				<div style="height:30px;"><a href="facturas-listado.php.php" class="modulo_titulo">Gesti&oacute;n de <br>Facturas</a></div>
+				<div style="height:30px;"><a href="facturas-listado.php" class="modulo_titulo">Gesti&oacute;n de <br>Facturas</a></div>
 
 			  </td>
 

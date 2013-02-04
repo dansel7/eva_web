@@ -21,24 +21,15 @@ $_SESSION['timeout'] = time();
 	include_once("../clases/conexion.php");
 	include_once("../clases/database.php");
 	
-	$enlace_listado = "empresas-listado.php";
-	$enlace_gestion = "empresas-gestion.php";
+	$enlace_listado = "facturas-listado.php";
+	$enlace_gestion = "facturas-gestion.php";
 	$resultado = "";
 	
 	$conexion = new conexion();
 	$link = $conexion->conectar();
 	$clase_database = new database();
 	
-	if(isset($_GET['accion']) && $_GET['accion'] == "eliminar"){
-		$resultado = $clase_database->Eliminar($link,'empresas',' NIT = "' . hideunlock($_GET['id']).'"');
-		if ($resultado){ 
-			$mensaje = "Empresa Eliminada Exitosamente";
-			$clase_css = "texto_ok";
-		}else{
-			$mensaje = "Error al Eliminar Empresa";
-			$clase_css = "texto_error";
-		}	
-	}
+       
 	
 ?>
 <html>
@@ -46,14 +37,39 @@ $_SESSION['timeout'] = time();
 		<meta http-equiv="X-UA-Compatible" content="IE=7" >
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 		<meta name="Author" content="Villatoro Asociados">
-		<title><? echo $title; ?> - Listado de Empresas</title>
+		<title><? echo $title; ?> - Listado de facturas</title>
 		<link rel="stylesheet" href="../css/estilos.css" type="text/css">
 	<link href="../css/redmond/jquery-ui-1.9.2.custom.css" rel="stylesheet">
 	<script src="../js/jquery-1.8.3.js"></script>
 	<script src="../js/jquery-ui-1.9.2.custom.js"></script>
 </head>
-	<body>
-		<center>
+ <? $id_declaracion = isset($_SESSION["n_declaracion"]) ? hideunlock($_SESSION["n_declaracion"]) : 0;
+       
+ if($id_declaracion=="0"){
+   
+         ?>
+<script>
+  $(function() {
+ 
+    $( "#errorMSJ" ).dialog({
+      height: 180,
+      modal: true,
+      close: function( event, ui ) {location.href="declaraciones-listado.php";}
+    });
+  });
+  </script>
+  
+  <body>
+<div id="errorMSJ" title="Alerta">
+    <center>
+  <p>Para poder iniciar la edicion de facturas, debe abrir un retaceo</p>
+  <br> <a style="color:blue" href="declaraciones-listado.php">Abrir</a>
+  </center>
+</div>
+      <? }else{ ?>
+<body>  
+    <? }?>
+<center>
 <table border="0" cellpadding="0" cellspacing="0">
   <tbody><tr><td height="22">&nbsp;</td></tr>
   
@@ -90,10 +106,10 @@ $_SESSION['timeout'] = time();
                               <tbody><tr>
                                 <td width="8"><img src="../images/transparente.gif" height="1" width="8"></td>
                                 <td valign="middle">
-                                  <a href="index.php"><img src="../images/icono-empresas.gif" border="0"></a>
+                                  <a href="index.php"><img src="../images/icono-tienda.gif" border="0"></a>
                                 </td>
                                 <td width="20"><img src="../images/transparente.gif" height="1" width="20"></td>
-                                <td class="titulo_modulo" align="left" width="100%">Listado de Empresas</td>
+                                <td class="titulo_modulo" align="left" width="100%">Listado de Facturas</td>
                                 <td align="right" valign="middle">   
                                 
   <table border="0" cellpadding="0" cellspacing="0">
@@ -104,10 +120,13 @@ $_SESSION['timeout'] = time();
       <td style="padding-left: 10px; padding-right: 10px;" align="center"><a id="agreg2" href="<?=$enlace_gestion."?opc=".hidelock("nuevo")?>" class="menu_opcion"><nobr>Agregar Nuevo</nobr></a></td>
     </tr>
   </tbody></table>
-  
+                                    
                                 </td>
                               </tr>
                             </tbody></table>
+                              <br>
+                                    Numero de Retaceo: <?=$id_declaracion?>
+  &nbsp;&nbsp;&nbsp;Fob Total: 0.0
                           </td>
                         </tr>
                         <tr>
@@ -166,25 +185,50 @@ $_SESSION['timeout'] = time();
     
 <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
   <tbody><tr bgcolor="#EBEBEB">
-    <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="50">#</td>
-    <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="365">NOMBRE</td>
-    <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="50">NIT</td>
-    <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="65">EDITAR</td>
-    <td class="tabla_titulo" style="border: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="75">ELIMINAR</td>
+    <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="30">Id Factura</td>
+    <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="20">Numero Factura</td>
+    <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="90">Fecha</td>                              
+    <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">Bultos</td>
+    <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">Peso Bruto</td>
+    <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">Cuantia</td>                                
+    <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="90">Gastos</td>
+   <td class="tabla_titulo" style="border: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">FOB</td><td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="50">EDITAR</td>
+   <td class="tabla_titulo" style="border: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="60">ELIMINAR</td>
   </tr>
 <?
-  	$sql_empresas = "SELECT nombre,nit FROM empresas ORDER BY nombre";
-	$result = mysql_query($sql_empresas,$link);
-	$contador = 0;
-	while($filas = mysql_fetch_array($result)){
-		$contador++;
+  	$sql_facturas = "SELECT * FROM factura WHERE numeroretaceo ='".$id_declaracion."'";
+	$result = mysql_query($sql_facturas,$link);
+	
+	while($fact = mysql_fetch_array($result)){
+		
 	?>
 	
-              <tr bgcolor="#FBFBFB">
-        <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle"><? echo $contador;?></td>
-        <td class="tabla_filas" style="padding-left: 20px; border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="left" height="34" valign="middle"><? echo $filas['nombre'];?></td>
-        <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle"><? echo $filas['nit'];?></td>
-        <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle"><a href="empresas-gestion.php?id=<? echo hidelock($filas['nit']);?>"><img src="../images/icono-editar.gif" border="0"></a></td>
+           <tr>
+                <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="70">
+                <?=$fact["idFactura"]?>
+                </td>
+                <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="70">
+                <?=$fact["numero"]?>
+                </td>
+                <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">
+                <?=substr($fact["fecha"],0,10)?>
+                </td>
+                <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">
+                <?=$fact["bultos"]?>
+                </td>
+                 <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">
+                <?=$fact["pesoBruto"]?>
+                </td>
+                <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">
+                <?=$fact["cuantia"]?>
+                </td>
+                <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">
+                <? $GASTOStotal+=$fact["otrosGastos"];echo $fact["otrosGastos"];?>
+                </td>
+                <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">
+                <? $FOBtotal+=$fact["FOB"];echo $fact["FOB"];?>
+                </td>
+        <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle"><a href="facturas-gestion.php?id=<? echo hidelock($filas['nit']);?>"><img src="../images/icono-editar.gif" border="0"></a></td>
         <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226); border-right: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle"><a href="javascript:eliminar('<? echo hidelock($filas['nit']);?>');"><img src="../images/icono-eliminar.gif" border="0"></a></td>
       </tr>
     
@@ -221,7 +265,7 @@ $_SESSION['timeout'] = time();
   {
 	if (confirm('�Desea realmente eliminar el registro seleccionado?'))
 	{
-      document.location.href='empresas-listado.php?accion=eliminar&id='+id;
+      document.location.href='facturas-listado.php?accion=eliminar&id='+id;
 	}
   }
 </script>
