@@ -62,7 +62,7 @@ $_SESSION['timeout'] = time();
   <body>
 <div id="errorMSJ" title="Alerta">
     <center>
-  <p>Para poder iniciar la edicion de facturas, debe abrir un retaceo</p>
+  <p>Para poder iniciar la edicion de facturas, debe abrir una Declaracion</p>
   <br> <a style="color:blue" href="declaraciones-listado.php">Abrir</a>
   </center>
 </div>
@@ -111,15 +111,7 @@ $_SESSION['timeout'] = time();
                                 <td width="20"><img src="../images/transparente.gif" height="1" width="20"></td>
                                 <td class="titulo_modulo" align="left" width="100%">Listado de Facturas</td>
                                 <td align="right" valign="middle">   
-                                
-  <table border="0" cellpadding="0" cellspacing="0">
-    <tbody><tr>
-      <td style="padding-left: 10px; padding-right: 10px;" align="center"><a id="agreg1" href="<?=$enlace_gestion."?opc=".hidelock("nuevo")?>"><img src="../images/menu-crear.gif" border="0"></a></td>
-    </tr>
-    <tr>
-      <td style="padding-left: 10px; padding-right: 10px;" align="center"><a id="agreg2" href="<?=$enlace_gestion."?opc=".hidelock("nuevo")?>" class="menu_opcion"><nobr>Agregar Nuevo</nobr></a></td>
-    </tr>
-  </tbody></table>
+ 
                                     
                                 </td>
                               </tr>

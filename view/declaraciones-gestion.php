@@ -100,6 +100,7 @@ if ($resultado){
 
 //AGREGAR DATOS NUEVOS DE FACTURAS
 if(isset($_POST['addf'])){
+    
     $idFacNuevo=$clase_database->GenerarNuevoId($link, "idFactura", "factura","where numeroRetaceo='".hideunlock($_SESSION["n_declaracion"])."'");
     $_POST["idFactura"]=($idFacNuevo=="") ? 1 : $idFacNuevo;    
  
@@ -110,52 +111,70 @@ if(isset($_POST['addf'])){
     //COMPROBAR SI EL NUMERO DE FACTURA YA EXISTE.
     $result = mysql_query("SELECT * FROM factura WHERE numero ='".$_POST["numero"]."' and numeroRetaceo='".hideunlock($_SESSION["n_declaracion"])."'", $link);
   if(mysql_affected_rows()==1){
-       $resultado=true; 
-    $mensaje = "Numero de Factura Ya Existe";
-    $clase_css = "texto_error";}
-  
-  else{ //SINO EXISTE LO INGRESA 
-  
-    $resultado = $clase_database->formToDB($link,'datosIniciales','post','', 'addf, frmf, npag, fechaf, ','insert','');
-    $_POST["bultos"]=0.0;
-    $_POST["pesoBruto"]=0.0;
-    $_POST["cuantia"]=0.0;
-    $_POST["fob"]=0.0;
-    $_POST["total"]=0.0;
-    $_POST["pesoNeto"]=0.0;
-    $resultado = $clase_database->formToDB($link,'factura','post','','npag, fechaf, addf, frmf, npag, ','insert','');
-
-    if ($resultado){ 
-        $mensaje = "Informacion Almacenada Exitosamente";
-        $clase_css = "texto_ok";
-    }else{
-        $mensaje = "Error al Almacenar Informacion";
+      
+        $resultado=true; 
+        $mensaje = "Numero de Factura Ya Existe";
         $clase_css = "texto_error";
-    }
+        
+   }
+  else
+   { //SINO EXISTE LO INGRESA    
+  
+        $resultado = $clase_database->formToDB($link,'datosIniciales','post','', 'addf, frmf, npag, fechaf, ','insert','');
+        $_POST["bultos"]=0.0;
+        $_POST["pesoBruto"]=0.0;
+        $_POST["cuantia"]=0.0;
+        $_POST["fob"]=0.0;
+        $_POST["total"]=0.0;
+        $_POST["pesoNeto"]=0.0;
+        $resultado = $clase_database->formToDB($link,'factura','post','','npag, fechaf, addf, frmf, npag, ','insert','');
+
+        if ($resultado){ 
+            $mensaje = "Informacion Almacenada Exitosamente";
+            $clase_css = "texto_ok";
+        }else{
+            $mensaje = "Error al Almacenar Informacion";
+            $clase_css = "texto_error";
+        }
 
   }
+  
 }
 
 
 //MODIFICAR DATOS NUEVOS DE FACTURAS
 if(isset($_POST['updf'])){
- $_POST["fecha"]=  $_POST["fechaf"];
- $resultado = $clase_database->formToDB($link,'datosIniciales','post','', 'fechaf, idFactura, updf, npag, ','update','idFactura="'.$_POST['idFactura'].'"');
-  
- if ($resultado){ 
-        $mensaje = "Informacion Almacenada Exitosamente";
-        $clase_css = "texto_ok";
-    }else{
-        $mensaje = "Error al Almacenar Informacion";
+ //COMPROBAR SI EL NUMERO DE FACTURA YA EXISTE.
+    $result = mysql_query("SELECT * FROM factura WHERE numero ='". str_replace(" ","",$_POST["numero"])."' and numeroRetaceo='".hideunlock($_SESSION["n_declaracion"])."'", $link);
+    if(mysql_affected_rows()==1){
+      
+        $resultado=true; 
+        $mensaje = "Numero de Factura Ya Existe";
         $clase_css = "texto_error";
-  }    
+        
+   }
+  else
+   { //SINO EXISTE LO INGRESA 
+ $_POST["fecha"]=  $_POST["fechaf"];
+ $resultado = $clase_database->formToDB($link,'datosIniciales','post','', 'fechaf, idFactura, updf, npag, ','update','idFactura="'.$_POST['idFactura'].'" and numeroRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');
+ $resultado = $clase_database->formToDB($link,'factura','post','', 'fechaf, idFactura, updf, npag, bultos, cuantia, pesoBruto, fob, ','update','idFactura="'.$_POST['idFactura'].'" and numeroRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');
+  
+     if ($resultado){ 
+            $mensaje = "Informacion Almacenada Exitosamente";
+            $clase_css = "texto_ok";
+        }else{
+            $mensaje = "Error al Almacenar Informacion";
+            $clase_css = "texto_error";
+      }    
+   }
+
 }
 
 
 //CARGA DE DATOS DESDE BD
 if($id_declaracion != "" || $id_declaracion != "0"){
                         $result = mysql_query("SELECT * FROM retaceo WHERE numero ='".$id_declaracion."'", $link);
-                        while($fila = mysql_fetch_array($result)){
+        while($fila = mysql_fetch_array($result)){
 
                 $nitempresa = $fila['NIT'];
                 $ncontrol=$fila['numero'];
@@ -171,6 +190,8 @@ if($id_declaracion != "" || $id_declaracion != "0"){
 
               //consulta que genera un preview de las facturas de un retaceo definido
              $facturas = mysql_query("SELECT * FROM datosIniciales WHERE numeroretaceo ='".$id_declaracion."'", $link);
+
+             
 }
 
 
