@@ -27,13 +27,11 @@ $_SESSION['timeout'] = time();
 	$resultado = "";
 
 
-//VERIFICAR SI HAY UN RETACEO ABIERTO Y REDIRECCIONAR AL FORMULARIO DE EDICION.
+//VERIFICAR SI HAY UNA DECLARACION ABIERTA Y REDIRECCIONA A LA PANTALLA DE GESTION.
 	
    if(isset($_SESSION['n_declaracion']) ) {
     header ("Location: ../view/".$enlace_gestion."?id=".$_SESSION['n_declaracion']);
 }     
-        
-        
         
 	$conexion = new conexion();
 	$link = $conexion->conectar();
@@ -258,10 +256,10 @@ $_SESSION['timeout'] = time();
                         <option value="-1" disabled selected>Seleccione una Empresa</option>
                         <?
                         	$result = mysql_query("SELECT * FROM empresas ORDER BY nombre", $link);
-							while($fila = mysql_fetch_array($result)){ ?>
-								<option value="<?=hidelock($fila['nit'])?>" ><?=$fila['nombre']?></option>								
-							<? }
-						?>
+				while($fila = mysql_fetch_array($result)){ ?>
+				<option value="<?=hidelock($fila['nit'])?>" ><?=$fila['nombre']?></option>								
+				<? }
+			?>
                         </select>
                       
                       </td>

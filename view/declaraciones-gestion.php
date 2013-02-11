@@ -1,4 +1,5 @@
 <?
+
 session_start();
 error_reporting(0);
 // 10 mins in seconds
@@ -43,9 +44,9 @@ $conexion = new conexion();
 $link = $conexion->conectar();
 $clase_database = new database();
 
-//SE CREA UNA VARIABLE DE SESION PARA EL RETACEO CON EL QUE SE ESTARA TRABAJANDO
+
 $id_declaracion = isset($_GET['id']) ? hideunlock($_GET['id']) : 0;
-        
+//SE CREA UNA VARIABLE DE SESION PARA LA DECLARACION CON LA QUE SE ESTARA TRABAJANDO        
 if(isset($_GET['id']) && $_GET['id']!="" && !isset($_SESSION["n_declaracion"])){
     $_SESSION["n_declaracion"]=$_GET['id'];
 }
@@ -219,9 +220,10 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                 $(document).ready(function(){
                     $("#frm").validate();
                     $("#frmf").validate();   
-
+//funcion para poner el valor retornado de la BD
                     $("#modotransporte ").val('<?=$modotransporte?>');
                     var modeldec="<?=$modelodeclaracion?>";
+                    //y sino deja seleccionado por default im4
                     if(modeldec=="")modeldec="IM4";
                     $("#modelodeclaracion ").val(modeldec);
 
@@ -431,24 +433,27 @@ if($id_declaracion != "" || $id_declaracion != "0"){
         <?php    
         }	
        ?>
-<!--INICIO DE LOS CAMPOS DEL FORMULARIO-------------->
+<!------------INICIO DE LOS CAMPOS DEL FORMULARIO-------------->
+<CENTER>
+<TABLE border="1">
+<TR><TD WIDTH="230">
                          
                <div class="texto_explicacion_formulario">N&uacute;mero de Control:</div>
                <div>
                <input style="background-color:#F0F0F0" class="required" name="numero" id="numero" readonly rows="1" value="<? echo isset($ncontrol) ? $ncontrol : "";?>" type="text" title="Numero de Control de Declaraciones">
                </div>
-<br>
+</TD><TD WIDTH="230">
                           <div class="texto_explicacion_formulario">N&uacute;mero de Retaceo:</div>
                                 <div>
                                 <input class="required" name="numRegistro" id="numRegistro" rows="1" value="<? echo isset($nretaceo) ? $nretaceo : "";?>" type="text" title="Ingrese el numero de Retaceo de la Empresa">
 
                                 </div>
-<br>
-   <div class="texto_explicacion_formulario">Nombre de Empresa:</div>
+</TD><TD WIDTH="230">
+                <div class="texto_explicacion_formulario">Nombre de Empresa:</div>
 
-                <div>
+                 <div>
 
-                <select class="required" id="NIT" name="NIT" title="Seleccione la Empresa">
+                     <select class="required" id="NIT" name="NIT" title="Seleccione la Empresa">
                         <?
 
                                 $result = mysql_query("SELECT * FROM empresas ORDER BY nombre", $link);
@@ -466,38 +471,41 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                 </div>
 
 
-<br>
+</TD></TR>
+<TR><TD>
                           <div class="texto_explicacion_formulario">Fecha:</div>
                                         <div>
                                                 <input class="required" name="fecha" readonly id="fecha" rows="1" value="<? echo isset($fecha) ? $fecha : date("Y-m-d");?>" type="text" title="">
                                         </div>
-<br>                        
+</TD><TD>                      
 
             <div class="texto_explicacion_formulario">Numero de Documento de Transporte:</div>
             <div>
             <input class="required" name="numeroDocumentoTransporte" id="numeroDocumentoTransporte" rows="1" value="<? echo isset($numdoctransporte) ? $numdoctransporte : "";?>" type="text" title="Ingrese No. de Transporte">
             </div>
-<br>
-             <div class="texto_explicacion_formulario">Modo de Transporte:</div>
-                   <div>
-
-                     <select id="modoTransporte" name="modoTransporte" title="Seleccione el Modo de Transporte">
-                           <option value="0" >Terrestre</option>
-                           <option value="1" >A&eacute;reo</option>
-                           <option value="2" >Mar&iacute;timo</option>
-                           <option value="3" >Ferreo</option>
-                           <option value="4" >Multimodal</option>
-
-                     </select>		
-                   </div>
-<br>
-
-                                   
+</TD><TD>
          <div class="texto_explicacion_formulario">Flete:</div>
         <div>
         <input class="required" name="flete" id="flete" rows="1" type="text" value="<? echo isset($flete) ? $flete : "";?>" title="Ingrese el Valor de Flete">
         </div>
-<br>
+         
+</TD></TR>
+<TR><TD>
+                                   
+         <div class="texto_explicacion_formulario">Modo de Transporte:</div>
+         <div>
+
+         <select id="modoTransporte" name="modoTransporte" title="Seleccione el Modo de Transporte">
+               <option value="0" >Terrestre</option>
+               <option value="1" >A&eacute;reo</option>
+               <option value="2" >Mar&iacute;timo</option>
+               <option value="3" >Ferreo</option>
+               <option value="4" >Multimodal</option>
+
+         </select>		
+        </div>
+         
+</TD><TD>
             <div class="texto_explicacion_formulario">Modelo de Declaraci&oacute;n:</div>
 
             <div>
@@ -515,14 +523,16 @@ if($id_declaracion != "" || $id_declaracion != "0"){
 
                                          </select>		
                         </div>
-<br>           
+</TD></TR>           
             <div class="texto_explicacion_formulario">Calcular Seguro:&nbsp;</div>
              <div>
                   <Input type='hidden' Name='calcularSeguro' value="N">
                   <Input id='calcularSeguro' type='Checkbox' <? if(isset($CalcSeguro)){if($CalcSeguro=="S")echo "Checked";}?> Name='calcularSeguro' value="S">
                  
              </div>
-<br>
+
+
+<TR><TD COLSPAN="3">
         <div class="texto_explicacion_formulario">Tipo de Calculo de Seguro:&nbsp;</div>
         <div>
             <b class="texto_explicacion_formulario">Externo:
@@ -530,7 +540,9 @@ if($id_declaracion != "" || $id_declaracion != "0"){
             <b class="texto_explicacion_formulario">Interno:
             <Input type = 'Radio' Name ='TipoCalculoSeguro' <? if(isset($TipoCalcSeguro)){if($TipoCalcSeguro=="I")echo "Checked";} ?> value= 'I'></b>
         </div>
-            
+ </TD></TR>       
+</TABLE>
+</CENTER>        
 <br><br>  
 <hr>
             
@@ -553,7 +565,8 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                
       <?php    
         }	
-            ?>        
+            ?>   
+             
 <!---------------------------FIN DEL FORMULARIO DECLARACIONES-------------------------------------->
 <br><br>
 

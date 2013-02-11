@@ -46,6 +46,7 @@ $_SESSION['timeout'] = time();
  <? $id_declaracion = isset($_SESSION["n_declaracion"]) ? hideunlock($_SESSION["n_declaracion"]) : 0;
        
  if($id_declaracion=="0"){
+     //SE VERIFICA SI NO HAY UN RETACEO ABIERTO, PARA MOSTRAR MENSAJE DE ADVERTENCIA
    
          ?>
 <script>
@@ -66,7 +67,7 @@ $_SESSION['timeout'] = time();
   <br> <a style="color:blue" href="declaraciones-listado.php">Abrir</a>
   </center>
 </div>
-      <? }else{ ?>
+      <? }else{ //SI HAY UNO ABIERTO SE MUESTRA EL CONTENIDO ?>
 <body>  
     <? }?>
 <center>
@@ -100,27 +101,39 @@ $_SESSION['timeout'] = time();
                         <tbody><tr>
                           <td height="12"></td>
                         </tr>
-                        <tr>
-                          <td valign="middle">
-                            <table border="0" cellpadding="0" cellspacing="0" height="80" width="100%">
-                              <tbody><tr>
-                                <td width="8"><img src="../images/transparente.gif" height="1" width="8"></td>
-                                <td valign="middle">
-                                  <a href="index.php"><img src="../images/icono-tienda.gif" border="0"></a>
-                                </td>
-                                <td width="20"><img src="../images/transparente.gif" height="1" width="20"></td>
-                                <td class="titulo_modulo" align="left" width="100%">Listado de Facturas</td>
-                                <td align="right" valign="middle">   
- 
-                                    
-                                </td>
-                              </tr>
-                            </tbody></table>
-                              <br>
-                                    Numero de Retaceo: <?=$id_declaracion?>
-  &nbsp;&nbsp;&nbsp;Fob Total: 0.0
-                          </td>
-                        </tr>
+                <tr>
+                  <td valign="middle">
+                    <table border="0" cellpadding="0" cellspacing="0" height="80" width="100%">
+                      <tbody><tr>
+                        <td width="8"><img src="../images/transparente.gif" height="1" width="8"></td>
+                        <td valign="middle">
+                          <a href="index.php"><img src="../images/icono-tienda.gif" border="0"></a>
+                        </td>
+                        <td width="20"><img src="../images/transparente.gif" height="1" width="20"></td>
+                        <td class="titulo_modulo" align="left" width="100%">Listado de Facturas</td>
+                        <td align="right" valign="middle">   
+
+
+                        </td>
+                      </tr>
+                    </tbody></table>
+                      <br>
+                <center>      
+                    <table style="border:1px solid #cccccc;text-align:center;font-family: arial;font-size: 14px">
+                      
+                      <tr style="color: #371e05"><td width="325" colspan="2">Numero de Control: <?=$id_declaracion?></td><td width="325" colspan="3">Numero de Retaceo: <?=$id_declaracion?></td></tr>
+                  <tr style="background-color: #785635;color:white"><td colspan="5">Totales</td></tr>
+                  
+                  <tr style="background-color: #6990BA ;color:white"><td width="130">Bultos</td><td width="130">Peso Bruto</td><td width="130">Cuantia</td><td width="130">FOB</td><td width="130">Otros Gastos</td></tr>
+                  <tr><td>0.0</td><td></td><td></td><td></td><td></td></tr>
+                  
+                  <tr style="background-color: #6990BA ;color:white"><td>Seguro</td><td>CIF</td><td>DAI</td><td>IVA</td><td>A Pago</td></tr>
+                  <tr><td>0.0</td><td></td><td></td><td></td><td></td></tr> 
+                  
+                  </table>
+               </center>
+                  </td>
+                </tr>
                         <tr>
                           <td height="12"></td>
                         </tr>
