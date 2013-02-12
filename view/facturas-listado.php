@@ -118,20 +118,46 @@ $_SESSION['timeout'] = time();
                       </tr>
                     </tbody></table>
                       <br>
-                <center>      
-                    <table style="border:1px solid #cccccc;text-align:center;font-family: arial;font-size: 14px">
+        
+   <?php
+   $result = mysql_query("SELECT flete,bultos,pesoBruto,cuantia,seguro,CIF,DAI,IVA,FOB,otrosGastos,aPago,numRegistro FROM retaceo WHERE numero='". hideunlock($_SESSION["n_declaracion"])."'", $link);
+                while($fila = mysql_fetch_array($result)){
+                    //SE OBTIENEN LOS DATOS DE LA DECLARACION, DE LA TABLA RETACEO
+                  
+   ?>                   
                       
-                      <tr style="color: #371e05"><td width="325" colspan="2">Numero de Control: <?=$id_declaracion?></td><td width="325" colspan="3">Numero de Retaceo: <?=$id_declaracion?></td></tr>
-                  <tr style="background-color: #785635;color:white"><td colspan="5">Totales</td></tr>
+                <center>      
+                  <table style="border:1px solid #cccccc;text-align:center;font-family: arial;font-size: 14px">
+                      
+                  <tr style="color: #371e05;text-align:left">
+                      <td width="325" colspan="2"><b>Numero de Control:</b> <?=$id_declaracion?></td>
+                      <td width="325" colspan="2"><b>Numero de Retaceo:</b> <?=$fila['numRegistro'];?></td>
+                      <td><b>Flete:</b> <?=$fila['flete'];?></td>
+                  </tr>
+                  <tr style="background-color: #785635;color:white"><td colspan="5">Totales</td></tr>  
+<tr style="background-color: #6990BA ;color:white"><td width="130">Bultos</td><td width="130">Peso Bruto</td><td width="130">Cuantia</td><td width="130">FOB</td><td width="130">Otros Gastos</td></tr>
+                  <tr><td><?=$fila['bultos'];?></td>
+                      <td><?=$fila['pesoBruto'];?></td>
+                      <td><?=$fila['cuantia'];?></td>
+                      <td><?=$fila['FOB'];?></td>
+                      <td><?=$fila['otrosGastos'];?></td>
+                  </tr>
                   
-                  <tr style="background-color: #6990BA ;color:white"><td width="130">Bultos</td><td width="130">Peso Bruto</td><td width="130">Cuantia</td><td width="130">FOB</td><td width="130">Otros Gastos</td></tr>
-                  <tr><td>0.0</td><td></td><td></td><td></td><td></td></tr>
-                  
-                  <tr style="background-color: #6990BA ;color:white"><td>Seguro</td><td>CIF</td><td>DAI</td><td>IVA</td><td>A Pago</td></tr>
-                  <tr><td>0.0</td><td></td><td></td><td></td><td></td></tr> 
+<tr style="background-color: #6990BA ;color:white"><td>DAI</td><td>IVA</td><td>A Pago</td><td>Seguro</td><td>CIF</td></tr>
+                  <tr><td><?=$fila['DAI'];?></td>
+                      <td><?=$fila['IVA'];?></td>
+                      <td><?=$fila['aPago'];?></td>
+                      <td><?=$fila['seguro'];?></td>
+                      <td><?=$fila['CIF'];?></td>
+                  </tr> 
                   
                   </table>
                </center>
+                       
+  <?php
+                }
+  ?>
+                        
                   </td>
                 </tr>
                         <tr>

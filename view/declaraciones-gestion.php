@@ -292,22 +292,24 @@ if($id_declaracion != "" || $id_declaracion != "0"){
         if(!strcmp($opc, 'nuevo')){
 
                 $f=false;
+                
                 while($f!=TRUE){
                 $result = mysql_query("SELECT prefijo,correlativo FROM usuarios WHERE usuario ='".$_SESSION["usu"]."'", $link);
 
-                while($fila = mysql_fetch_array($result)){//existe usuario y obtiene correlativos
+                while($fila = mysql_fetch_array($result)){
+                      //existe usuario y obtiene correlativos
                         $prefijo = strtoupper($fila['prefijo']);
                         $correlativo=$fila['correlativo'];
                 }
                 //busca si ya existe un retaceo con ese correlativo
                 $result = mysql_query("SELECT numero FROM retaceo WHERE numero ='".$prefijo.$correlativo."'", $link);
+                
                 if(mysql_affected_rows($result)==0){
                         //se asigna el valor del nuevo retaceo
                         $ncontrol=$prefijo.$correlativo;
                         $f=true;
                 //se actualiza el correlativo del usuario
                 $resultado = $clase_database->formToDB($link,'usuarios','','correlativo='.($correlativo+1),'','update',"usuario='".$_SESSION["usu"]."'");
-
                 }
 
                 }
@@ -435,21 +437,21 @@ if($id_declaracion != "" || $id_declaracion != "0"){
        ?>
 <!------------INICIO DE LOS CAMPOS DEL FORMULARIO-------------->
 <CENTER>
-<TABLE border="1">
-<TR><TD WIDTH="230">
+<TABLE cellpadding="5" >
+<TR><TD WIDTH="150">
                          
-               <div class="texto_explicacion_formulario">N&uacute;mero de Control:</div>
+        <div class="texto_explicacion_formulario">N&uacute;mero de Control:&nbsp;</div><br><br>
                <div>
-               <input style="background-color:#F0F0F0" class="required" name="numero" id="numero" readonly rows="1" value="<? echo isset($ncontrol) ? $ncontrol : "";?>" type="text" title="Numero de Control de Declaraciones">
+               <input style="background-color:#F0F0F0;width:80px" class="required" name="numero" id="numero" readonly rows="1" value="<? echo isset($ncontrol) ? $ncontrol : "";?>" type="text" title="Numero de Control de Declaraciones">
                </div>
-</TD><TD WIDTH="230">
-                          <div class="texto_explicacion_formulario">N&uacute;mero de Retaceo:</div>
+</TD><TD WIDTH="200">
+                          <div class="texto_explicacion_formulario">N&uacute;mero de Retaceo:&nbsp;</div><br><br>
                                 <div>
                                 <input class="required" name="numRegistro" id="numRegistro" rows="1" value="<? echo isset($nretaceo) ? $nretaceo : "";?>" type="text" title="Ingrese el numero de Retaceo de la Empresa">
 
                                 </div>
-</TD><TD WIDTH="230">
-                <div class="texto_explicacion_formulario">Nombre de Empresa:</div>
+</TD><TD WIDTH="250">
+                <div class="texto_explicacion_formulario">Nombre de Empresa:&nbsp;</div><br><br>
 
                  <div>
 
@@ -473,18 +475,18 @@ if($id_declaracion != "" || $id_declaracion != "0"){
 
 </TD></TR>
 <TR><TD>
-                          <div class="texto_explicacion_formulario">Fecha:</div>
+                          <div class="texto_explicacion_formulario">Fecha:&nbsp;</div><br><br>
                                         <div>
                                                 <input class="required" name="fecha" readonly id="fecha" rows="1" value="<? echo isset($fecha) ? $fecha : date("Y-m-d");?>" type="text" title="">
                                         </div>
 </TD><TD>                      
 
-            <div class="texto_explicacion_formulario">Numero de Documento de Transporte:</div>
+            <div class="texto_explicacion_formulario">Numero de Documento de Transporte:&nbsp;</div><br><br>
             <div>
             <input class="required" name="numeroDocumentoTransporte" id="numeroDocumentoTransporte" rows="1" value="<? echo isset($numdoctransporte) ? $numdoctransporte : "";?>" type="text" title="Ingrese No. de Transporte">
             </div>
 </TD><TD>
-         <div class="texto_explicacion_formulario">Flete:</div>
+         <div class="texto_explicacion_formulario">Flete:&nbsp;</div><br><br>
         <div>
         <input class="required" name="flete" id="flete" rows="1" type="text" value="<? echo isset($flete) ? $flete : "";?>" title="Ingrese el Valor de Flete">
         </div>
@@ -492,7 +494,7 @@ if($id_declaracion != "" || $id_declaracion != "0"){
 </TD></TR>
 <TR><TD>
                                    
-         <div class="texto_explicacion_formulario">Modo de Transporte:</div>
+         <div class="texto_explicacion_formulario">Modo de Transporte:&nbsp;</div><br><br>
          <div>
 
          <select id="modoTransporte" name="modoTransporte" title="Seleccione el Modo de Transporte">
@@ -506,7 +508,7 @@ if($id_declaracion != "" || $id_declaracion != "0"){
         </div>
          
 </TD><TD>
-            <div class="texto_explicacion_formulario">Modelo de Declaraci&oacute;n:</div>
+            <div class="texto_explicacion_formulario">Modelo de Declaraci&oacute;n:&nbsp;</div><br><br>
 
             <div>
 
@@ -523,27 +525,30 @@ if($id_declaracion != "" || $id_declaracion != "0"){
 
                                          </select>		
                         </div>
-</TD></TR>           
+ </TD><TD>          
             <div class="texto_explicacion_formulario">Calcular Seguro:&nbsp;</div>
              <div>
                   <Input type='hidden' Name='calcularSeguro' value="N">
                   <Input id='calcularSeguro' type='Checkbox' <? if(isset($CalcSeguro)){if($CalcSeguro=="S")echo "Checked";}?> Name='calcularSeguro' value="S">
                  
-             </div>
+             </div><br><br>
 
-
-<TR><TD COLSPAN="3">
-        <div class="texto_explicacion_formulario">Tipo de Calculo de Seguro:&nbsp;</div>
+</TD></TR>
+<TR><td >&nbsp;</td>
+    <TD COLSPAN="2">
+        <div class="texto_explicacion_formulario">Tipo de Calculo de Seguro:&nbsp;</div><br><br>
         <div>
             <b class="texto_explicacion_formulario">Externo:
             <Input type = 'Radio' Name ='TipoCalculoSeguro' <? if(isset($TipoCalcSeguro)){if($TipoCalcSeguro=="E")echo "Checked";}else{echo "Checked";} ?> value= 'E'></b>
             <b class="texto_explicacion_formulario">Interno:
             <Input type = 'Radio' Name ='TipoCalculoSeguro' <? if(isset($TipoCalcSeguro)){if($TipoCalcSeguro=="I")echo "Checked";} ?> value= 'I'></b>
         </div>
- </TD></TR>       
+    </TD>
+    
+</TR>       
 </TABLE>
 </CENTER>        
-<br><br>  
+
 <hr>
             
             
@@ -552,27 +557,29 @@ if($id_declaracion != "" || $id_declaracion != "0"){
         //CONDICION PARA MOSTRAR BOTONES, EN EL CASO DE UN NUEVO REGISTRO O DE UNA ACTUALIZACION
         if(!strcmp($opc, 'nuevo')){	
             ?>
-          <div><input name="submit" id="submit" style="text-align: center" value="Guardar" type="submit"></div>
+          <div><input name="submit" id="submit" style="float: center" value="Guardar" type="submit"></div>
         <?php
         } 
         else if(strcmp($id_declaracion,0)){
             ?>
-          <div><input name="submit" id="submit" style="float: left" value="Actualizar" type="submit"></div>
+          <div><input name="submit" id="submit" style="float: center" value="Actualizar" type="submit"></div>
         
-          </center>
         </form>
-             <form action="<?=$enlace_gestion.'?id='.hidelock($ncontrol)?>" method="post"><div><input name="cerrar" id="cerrar" style="float: left" value="Cerrar Declaracion" type="submit"></div></form>
-               
+         <!--FORMULARIO, AL HACER SUBMIT CIERRA LA DECLARACION    -->
+        <form action="<?=$enlace_gestion.'?id='.hidelock($ncontrol)?>" method="post">
+        <div><input name="cerrar" id="cerrar" style="float: center" value="Cerrar Declaracion" type="submit"></div>
+        </form>
+               </center>   
       <?php    
         }	
-            ?>   
+      ?>   
              
 <!---------------------------FIN DEL FORMULARIO DECLARACIONES-------------------------------------->
-<br><br>
 
           <?php
            //si es un retaceo existente que muestre sus facturas si es que tiene
-           if($id_declaracion != "" || $id_declaracion !="0"){
+           if($id_declaracion != "" || $id_declaracion !="0")
+               {
                 ?>
 
 <!--------------------------INCIIO DEL FORM PARA INGRESAR DATOS DE FACTURAS ----------------------->             
