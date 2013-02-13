@@ -99,7 +99,7 @@ if ($resultado){
 }	
 }
 
-//AGREGAR DATOS NUEVOS DE FACTURAS
+//----AGREGAR DATOS NUEVOS DE FACTURAS
 if(isset($_POST['addf'])){
     
     $idFacNuevo=$clase_database->GenerarNuevoId($link, "idFactura", "factura","where numeroRetaceo='".hideunlock($_SESSION["n_declaracion"])."'");
@@ -137,13 +137,17 @@ if(isset($_POST['addf'])){
             $mensaje = "Error al Almacenar Informacion";
             $clase_css = "texto_error";
         }
-
+        
+         //ACTUALIZA EL VALOR DE OTROSGASTOS DE LA TABLA DE RETACEO Y EL CIF
+       $resultado = $clase_database->formToDB($link,'retaceo','','otrosGastos=(SELECT SUM(otrosGastos) from factura where numeroRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'")','','update','numero="'.hideunlock($_SESSION["n_declaracion"]).'"');
+      $resultado = $clase_database->formToDB($link,'retaceo','','CIF=flete+otrosGastos', '','update','numero="'.hideunlock($_SESSION["n_declaracion"]).'"');
+ 
   }
   
 }
 
 
-//MODIFICAR DATOS NUEVOS DE FACTURAS
+//-----MODIFICAR DATOS NUEVOS DE FACTURAS
 if(isset($_POST['updf'])){
  //COMPROBAR SI EL NUMERO DE FACTURA YA EXISTE.
     $result = mysql_query("SELECT * FROM factura WHERE numero ='". str_replace(" ","",$_POST["numero"])."' and numeroRetaceo='".hideunlock($_SESSION["n_declaracion"])."'", $link);
@@ -151,8 +155,7 @@ if(isset($_POST['updf'])){
       
         $resultado=true; 
         $mensaje = "Numero de Factura Ya Existe";
-        $clase_css = "texto_error";
-        
+        $clase_css = "texto_error";    
    }
   else
    { //SINO EXISTE LO INGRESA 
@@ -166,7 +169,12 @@ if(isset($_POST['updf'])){
         }else{
             $mensaje = "Error al Almacenar Informacion";
             $clase_css = "texto_error";
-      }    
+      } 
+      //ACTUALIZA EL VALOR DE OTROSGASTOS DE LA TABLA DE RETACEO Y EL CIF
+      $resultado = $clase_database->formToDB($link,'retaceo','','otrosGastos=(SELECT SUM(otrosGastos) from factura where numeroRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'")','','update','numero="'.hideunlock($_SESSION["n_declaracion"]).'"');
+      $resultado = $clase_database->formToDB($link,'retaceo','','CIF=flete+otrosGastos', '','update','numero="'.hideunlock($_SESSION["n_declaracion"]).'"');
+ 
+
    }
 
 }

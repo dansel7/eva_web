@@ -57,31 +57,32 @@
 	  }
 	  else if ($sql_tipo=='update')
 	  {//ejecucion cuando es un update
-	 	   	if($recepcionDatos=="post"){
-	  		   foreach ($_POST as $campo => $valor)
-	  		{
-			if (!preg_match("/$campo, /", $excepciones))
-				{
-			 	$campos .= "$campo='".trim(addslashes($valor))."', ";
-				}
-	  		}
-	  		$campos = preg_replace('/, $/', '', $campos);//para quitar la coma del final de la cadena
-			
-			if ($sql_condicion=="")//por seguridad, si se llegara a dejar vacio que no ejecute la consulta,sino hara un update barrido
-			{
-		  	return false;
-			}
-			$sql = "UPDATE ".$tabla." SET ".$campos." WHERE ".$sql_condicion;
-                         //echo $sql;
+                    if($recepcionDatos=="post"){
+                       foreach ($_POST as $campo => $valor)
+                    {
+                    if (!preg_match("/$campo, /", $excepciones))
+                            {
+                            $campos .= "$campo='".trim(addslashes($valor))."', ";
+                            }
+                    }
+                    $campos = preg_replace('/, $/', '', $campos);//para quitar la coma del final de la cadena
+
+                    if ($sql_condicion=="")//por seguridad, si se llegara a dejar vacio que no ejecute la consulta,sino hara un update barrido
+                    {
+                    return false;
+                    }
+                    $sql = "UPDATE ".$tabla." SET ".$campos." WHERE ".$sql_condicion;
+                     //echo $sql;
 	  
 	  	 }else{
-	  	 	
-	  	 	if ($sql_condicion=="")//por seguridad, si se llegara a dejar vacio que no ejecuta la consulta,sino hara un update barrido
-			{
-		  	return false;
-			} 	
+	  	 
+                    if ($sql_condicion=="")//por seguridad, si se llegara a dejar vacio que no ejecuta la consulta,sino hara un update barrido
+                    {
+                    return false;
+                    } 	
 		    $sql = "UPDATE ".$tabla." SET ".$valores." WHERE ".$sql_condicion;
-	  }
+                    //echo $sql;
+	         }
 	}
 	  else
 	  {
