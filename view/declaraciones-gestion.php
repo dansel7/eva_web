@@ -150,15 +150,15 @@ if(isset($_POST['addf'])){
 //-----MODIFICAR DATOS NUEVOS DE FACTURAS
 if(isset($_POST['updf'])){
  //COMPROBAR SI EL NUMERO DE FACTURA YA EXISTE.
-    $result = mysql_query("SELECT * FROM factura WHERE numero ='". str_replace(" ","",$_POST["numero"])."' and numeroRetaceo='".hideunlock($_SESSION["n_declaracion"])."'", $link);
-    if(mysql_affected_rows()==1){
-      
-        $resultado=true; 
-        $mensaje = "Numero de Factura Ya Existe";
-        $clase_css = "texto_error";    
-   }
-  else
-   { //SINO EXISTE LO INGRESA 
+//    $result = mysql_query("SELECT * FROM factura WHERE numero ='". str_replace(" ","",$_POST["numero"])."' and numeroRetaceo='".hideunlock($_SESSION["n_declaracion"])."'", $link);
+//    if(mysql_affected_rows()==1){
+//      
+//        $resultado=true; 
+//        $mensaje = "Numero de Factura Ya Existe";
+//        $clase_css = "texto_error";    
+//   }
+//  else
+//   { //SINO EXISTE LO INGRESA 
  $_POST["fecha"]=  $_POST["fechaf"];
  $resultado = $clase_database->formToDB($link,'datosIniciales','post','', 'fechaf, idFactura, updf, npag, ','update','idFactura="'.$_POST['idFactura'].'" and numeroRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');
  $resultado = $clase_database->formToDB($link,'factura','post','', 'fechaf, idFactura, updf, npag, bultos, cuantia, pesoBruto, fob, ','update','idFactura="'.$_POST['idFactura'].'" and numeroRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');
@@ -175,7 +175,7 @@ if(isset($_POST['updf'])){
       $resultado = $clase_database->formToDB($link,'retaceo','','CIF=flete+otrosGastos', '','update','numero="'.hideunlock($_SESSION["n_declaracion"]).'"');
  
 
-   }
+//   }
 
 }
 
