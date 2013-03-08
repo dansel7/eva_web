@@ -140,7 +140,7 @@ if(isset($_POST['addf'])){
         
          //ACTUALIZA EL VALOR DE OTROSGASTOS DE LA TABLA DE RETACEO Y EL CIF
        $resultado = $clase_database->formToDB($link,'retaceo','','otrosGastos=(SELECT SUM(otrosGastos) from factura where numeroRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'")','','update','numero="'.hideunlock($_SESSION["n_declaracion"]).'"');
-      $resultado = $clase_database->formToDB($link,'retaceo','','CIF=flete+otrosGastos', '','update','numero="'.hideunlock($_SESSION["n_declaracion"]).'"');
+      $resultado = $clase_database->formToDB($link,'retaceo','','CIF=flete+otrosGastos+seguro', '','update','numero="'.hideunlock($_SESSION["n_declaracion"]).'"');
  
   }
   
@@ -150,18 +150,30 @@ if(isset($_POST['addf'])){
 //-----MODIFICAR DATOS NUEVOS DE FACTURAS
 if(isset($_POST['updf'])){
  //COMPROBAR SI EL NUMERO DE FACTURA YA EXISTE.
-//    $result = mysql_query("SELECT * FROM factura WHERE numero ='". str_replace(" ","",$_POST["numero"])."' and numeroRetaceo='".hideunlock($_SESSION["n_declaracion"])."'", $link);
-//    if(mysql_affected_rows()==1){
-//      
-//        $resultado=true; 
-//        $mensaje = "Numero de Factura Ya Existe";
-//        $clase_css = "texto_error";    
-//   }
-//  else
-//   { //SINO EXISTE LO INGRESA 
+    //PROGRAMACION CON LOGICA NEGADA
+    //FUNCION TRIM UTILIZADA PARA QUITAR LOS ESPACIOS 
+    //AL OBTENER LOS VALORES DE LA TABLA QUE SE INSERTARON EN LOS CAMPOS INPUT
+    $idf=0;
+    $valid=true;
+    $result = mysql_query("SELECT idFactura FROM factura WHERE numero ='". trim($_POST["numero"])."' and numeroRetaceo='".hideunlock($_SESSION["n_declaracion"])."'", $link);   
+    if(mysql_affected_rows()>=1){
+       $idf = mysql_fetch_row($result);      
+        if($idf[0]!=trim($_POST['idFactura'])){
+            $valid=false;
+
+        } 
+   }
+   if(!$valid){
+    $resultado=true; 
+    $mensaje = "Numero de Factura Ya Existe";
+    $clase_css = "texto_error";    
+    
+  }else{ //SINO EXISTE LO INGRESA 
+      
+ $_POST["numero"]=strtoupper($_POST["numero"]);
  $_POST["fecha"]=  $_POST["fechaf"];
- $resultado = $clase_database->formToDB($link,'datosIniciales','post','', 'fechaf, idFactura, updf, npag, ','update','idFactura="'.$_POST['idFactura'].'" and numeroRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');
- $resultado = $clase_database->formToDB($link,'factura','post','', 'fechaf, idFactura, updf, npag, bultos, cuantia, pesoBruto, fob, ','update','idFactura="'.$_POST['idFactura'].'" and numeroRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');
+ $resultado = $clase_database->formToDB($link,'datosIniciales','post','', 'fechaf, idFactura, updf, npag, ','update','idFactura="'.trim($_POST['idFactura']).'" and numeroRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');
+ $resultado = $clase_database->formToDB($link,'factura','post','', 'fechaf, idFactura, updf, npag, bultos, cuantia, pesoBruto, fob, ','update','idFactura="'.trim($_POST['idFactura']).'" and numeroRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');
   
      if ($resultado){ 
             $mensaje = "Informacion Almacenada Exitosamente";
@@ -172,10 +184,10 @@ if(isset($_POST['updf'])){
       } 
       //ACTUALIZA EL VALOR DE OTROSGASTOS DE LA TABLA DE RETACEO Y EL CIF
       $resultado = $clase_database->formToDB($link,'retaceo','','otrosGastos=(SELECT SUM(otrosGastos) from factura where numeroRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'")','','update','numero="'.hideunlock($_SESSION["n_declaracion"]).'"');
-      $resultado = $clase_database->formToDB($link,'retaceo','','CIF=flete+otrosGastos', '','update','numero="'.hideunlock($_SESSION["n_declaracion"]).'"');
+      $resultado = $clase_database->formToDB($link,'retaceo','','CIF=flete+otrosGastos+seguro', '','update','numero="'.hideunlock($_SESSION["n_declaracion"]).'"');
  
 
-//   }
+   }
 
 }
 
@@ -262,14 +274,14 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                     });
                     
                     
-                    
+                    //AL DAR DOBLE CLICK EN EL REGISTRO SE MODIFICARA EL VALOR
                     $('#factini tr').dblclick(function()
                     {
                         
                     var tds=$(this).find("td");
                  //funcion para actualizar datos iniciales de facturas
                     if(tds.eq(0).html()!="Id Factura" && tds.eq(0).html()!="TOTAL"){
-                        
+                    
                      $('#frmf #idFactura').val(tds.eq(0).html())
                      $('#frmf #numero').val(tds.eq(1).html());
                      $('#frmf #fechaf').val(tds.eq(2).html());
@@ -285,9 +297,8 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                      $('#cancel').css("display","block");
                      //SOLO FALTA QUE ACTUALICE EN LA FUNCION DE PHP
                      }   
-                    });
-
-                    
+                     
+                    });                    
 
                 });    
 
@@ -454,8 +465,8 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                </div>
 </TD><TD WIDTH="200">
                           <div class="texto_explicacion_formulario">N&uacute;mero de Retaceo:&nbsp;</div><br><br>
-                                <div>
-                                <input class="required" name="numRegistro" id="numRegistro" rows="1" value="<? echo isset($nretaceo) ? $nretaceo : "";?>" type="text" title="Ingrese el numero de Retaceo de la Empresa">
+                          <div>
+                               <input class="required" name="numRegistro" id="numRegistro" rows="1" value="<? echo isset($nretaceo) ? $nretaceo : "";?>" type="text" title="Ingrese el numero de Retaceo de la Empresa">
 
                                 </div>
 </TD><TD WIDTH="250">
@@ -590,7 +601,7 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                {
                 ?>
 
-<!--------------------------INCIIO DEL FORM PARA INGRESAR DATOS DE FACTURAS ----------------------->             
+<!--------------------------INCIIO DEL FORM PARA INGRESAR DATOS INICIALES DE FACTURAS ----------------------->             
 <form class="frmspecial" name="frmf" id="frmf" action="<?=$_SERVER['REQUEST_URI'];?>" method="post" style="margin:0px;"> 
                  
               <h4 style="font-family:helvetica">Agregar Datos Iniciales de Factura</h4>
@@ -653,7 +664,7 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                 <input class=""  name="npag" id="npag" type="text" value="1" title="Ingrese Numero Paginas">
                 </div></td>
                 
-                <td><div><input name="addf" id="addf" style="float: right;" value="Agregar Factura" type="submit"></div>
+                <td><div class="texto_explicacion_formulario">&nbsp</div><div><input name="addf" id="addf" style="float: right;" value="Agregar Factura" type="submit"></div>
                   
                 </td> 
             </tr>

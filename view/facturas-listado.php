@@ -213,7 +213,7 @@ $_SESSION['timeout'] = time();
                       <table align="center" border="0" cellpadding="0" cellspacing="0" width="928">  
                         <tbody><tr>
                           <td valign="top">
-    
+                              <h3 class="texto_explicacion_formulario">Para editar una factura de Doble Click</h3>
 <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
   <tbody><tr bgcolor="#EBEBEB">
     <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="30">Id Factura</td>
