@@ -18,26 +18,11 @@ header("Location: ../clases/cerrar_sesion.php");
 }
 $_SESSION['timeout'] = time();
 
-function LlenarMeses($mes=0){
-$meses = array("Enero" , "Febrero", "Marzo", "Abril" , "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
-for($i=1; $i<=12; $i++){
-        if($mes == $i){
-        ?>
-                <option value="<?=$i?>" selected><?=$meses[$i-1]?></option>
-        <?	
-        }else{
-        ?>
-                <option value="<?=$i?>"><?=$meses[$i-1]?></option>
-        <?	
-        }
-}
-}
-
 include_once("../configuracion/configuracion.php");
 include_once("../clases/conexion.php");
 include_once("../clases/database.php");
-$enlace_listado = "declaraciones-listado.php";
-$enlace_gestion = "declaraciones-gestion.php";
+$enlace_listado = "facturas-listado.php";
+$enlace_gestion = "facturas-gestion.php";
 $resultado = "";
 
 $conexion = new conexion();
@@ -45,15 +30,9 @@ $link = $conexion->conectar();
 $clase_database = new database();
 
 
-$id_declaracion = isset($_GET['id']) ? hideunlock($_GET['id']) : 0;
-//SE CREA UNA VARIABLE DE SESION PARA LA DECLARACION CON LA QUE SE ESTARA TRABAJANDO        
-if(isset($_GET['id']) && $_GET['id']!="" && !isset($_SESSION["n_declaracion"])){
-    $_SESSION["n_declaracion"]=$_GET['id'];
-}
-
+$id_factura = isset($_GET['id']) ? hideunlock($_GET['id']) : 0;
 
 $opc = isset($_GET['opc']) ? hideunlock($_GET['opc']) : 0;//variable que define la opcion nuevo,actualizar
-
 
 //ACCION AL CERRAR UNA DECLARACION, ELIMINA DE LA SESION Y REDIRECCIONA PARA ABRIR OTRO.
 if (isset($_POST['cerrar'])){
@@ -141,7 +120,6 @@ if(isset($_POST['addf'])){
          //ACTUALIZA EL VALOR DE OTROSGASTOS DE LA TABLA DE RETACEO Y EL CIF
        $resultado = $clase_database->formToDB($link,'retaceo','','otrosGastos=(SELECT SUM(otrosGastos) from factura where numeroRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'")','','update','numero="'.hideunlock($_SESSION["n_declaracion"]).'"');
       $resultado = $clase_database->formToDB($link,'retaceo','','CIF=flete+otrosGastos+seguro', '','update','numero="'.hideunlock($_SESSION["n_declaracion"]).'"');
- 
   }
   
 }
@@ -185,34 +163,33 @@ if(isset($_POST['updf'])){
       //ACTUALIZA EL VALOR DE OTROSGASTOS DE LA TABLA DE RETACEO Y EL CIF
       $resultado = $clase_database->formToDB($link,'retaceo','','otrosGastos=(SELECT SUM(otrosGastos) from factura where numeroRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'")','','update','numero="'.hideunlock($_SESSION["n_declaracion"]).'"');
       $resultado = $clase_database->formToDB($link,'retaceo','','CIF=flete+otrosGastos+seguro', '','update','numero="'.hideunlock($_SESSION["n_declaracion"]).'"');
- 
 
    }
 
 }
+
 //VARIABLE QUE VERIFICA SI LA DECLARACION EXISTE Y ES VALIDA.
-$dec_valid=0;
+$fac_valid=0;
 //CARGA DE DATOS DESDE BD
-if($id_declaracion != "" || $id_declaracion != "0"){
-        $result = mysql_query("SELECT * FROM retaceo WHERE numero ='".$id_declaracion."'", $link);
-        $dec_valid= mysql_num_rows($result);
+if($id_factura != "" || $id_factura != "0"){
+        $result = mysql_query("SELECT * FROM factura WHERE numeroRetaceo='".hideunlock($_SESSION["n_declaracion"])."' and idFactura ='".$id_factura."'", $link);
+        $fac_valid= mysql_num_rows($result);
         
         while($fila = mysql_fetch_array($result)){
 
-                $nitempresa = $fila['NIT'];
-                $ncontrol=$fila['numero'];
+                $nfact = $fila['numero'];
                 $fecha= substr($fila['fecha'],0,10);
-                $nretaceo=$fila['numRegistro'];
-                $modelodeclaracion= $fila['modeloDeclaracion'];
-                $modotransporte= $fila['modoTransporte'];
-                $numdoctransporte= $fila['numeroDocumentoTransporte'];
-                $flete= $fila['flete'];
-                $TipoCalcSeguro= $fila['TipoCalculoSeguro'];
-                $CalcSeguro= $fila['calcularSeguro'];
+                $bultos=$fila['bultos'];
+                $pesoBruto= $fila['pesoBruto'];
+                $pesoNeto=$fila['pesoNeto'];
+                $cuantiaT= $fila['cuantia'];
+                $fob= $fila['FOB'];
+                $otrosGastos= $fila['otrosGastos'];
+                $total= $fila['total'];
         }
 
-              //consulta que genera un preview de las facturas de un retaceo definido
-             $facturas = mysql_query("SELECT * FROM datosIniciales WHERE numeroretaceo ='".$id_declaracion."'", $link);
+              //consulta que genera un preview de los items de un retaceo definido
+             $items = mysql_query("SELECT * FROM item WHERE numeroRetaceo='".hideunlock($_SESSION["n_declaracion"])."' and numeroFactura ='".$nfact."'", $link);
 
              
 }
@@ -222,7 +199,7 @@ if($id_declaracion != "" || $id_declaracion != "0"){
 <html><head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <meta name="Author" content="V&A">
-<title><? echo $title; ?> - Gesti&oacute;n de Declaraciones</title>
+<title><? echo $title; ?> - Gesti&oacute;n de facturas</title>
 <link rel="stylesheet" href="../css/estilos.css" type="text/css">
 
 <link href="../css/redmond/jquery-ui-1.9.2.custom.css" rel="stylesheet">
@@ -248,14 +225,11 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                     //y sino deja seleccionado por default im4
                     if(modeldec=="")modeldec="IM4";
                     $("#modelodeclaracion ").val(modeldec);
-
-
                                        
                     $('#fechaf').datepicker({
                             dateFormat: "yy-mm-dd"
                     });
                     $('#fechaf').mask("9999-99-99")
-                    
                     
 
                     $("#frm :input").tooltip();
@@ -358,7 +332,7 @@ if($id_declaracion != "" || $id_declaracion != "0"){
   
 <table border="0" cellpadding="0" cellspacing="0">
 <tbody><tr><td height="10"></td></tr>
-<tr><td style="padding-right: 14px;" align="right"><table align="right" border="0" cellpadding="0" cellspacing="0"><tbody><tr><td height="20" valign="middle"><a href="index.php"><img src="../images/volver-menu.gif" border="0" height="16" width="14"></a></td><td style="padding-right: 40px;" height="20" valign="middle"><a href="declaraciones-listado.php" class="texto_volver_inicio">&nbsp;Volver a la P&aacute;gina de Declaraciones</a></td><td height="20" valign="middle"><a href="../clases/cerrar_sesion.php"><img src="../images/menu-cerrar-sesion.gif" border="0" height="18" width="18"></a></td><td height="20" valign="middle"><a href="../clases/cerrar_sesion.php" class="texto_volver_inicio">&nbsp;Cerrar sesi&oacute;n</a></td></tr></tbody></table></td></tr>
+<tr><td style="padding-right: 14px;" align="right"><table align="right" border="0" cellpadding="0" cellspacing="0"><tbody><tr><td height="20" valign="middle"><a href="index.php"><img src="../images/volver-menu.gif" border="0" height="16" width="14"></a></td><td style="padding-right: 40px;" height="20" valign="middle"><a href="facturas-listado.php" class="texto_volver_inicio">&nbsp;Volver a la P&aacute;gina de facturas</a></td><td height="20" valign="middle"><a href="../clases/cerrar_sesion.php"><img src="../images/menu-cerrar-sesion.gif" border="0" height="18" width="18"></a></td><td height="20" valign="middle"><a href="../clases/cerrar_sesion.php" class="texto_volver_inicio">&nbsp;Cerrar sesi&oacute;n</a></td></tr></tbody></table></td></tr>
 <tr><td class="menu_interior_arriba">&nbsp;</td></tr>
 <tr>
 <td align="center" valign="top">
@@ -379,10 +353,10 @@ if($id_declaracion != "" || $id_declaracion != "0"){
               <tbody><tr>
                 <td width="8"><img src="../images/transparente.gif" height="1" width="8"></td>
                 <td valign="middle">
-                  <a href="index.php"><img src="../images/icono-afp.gif" border="0"></a>
+                  <a href="index.php"><img src="../images/icono-tienda.gif" border="0"></a>
                 </td>
                 <td width="20"><img src="../images/transparente.gif" height="1" width="20"></td>
-                <td class="titulo_modulo" align="left" width="100%">Gesti&oacute;n de Declaraciones</td>
+                <td class="titulo_modulo" align="left" width="100%">Gesti&oacute;n de facturas</td>
                 </tr>
             </tbody></table>
           </td>
@@ -450,123 +424,96 @@ if($id_declaracion != "" || $id_declaracion != "0"){
          <form name="frm" id="frm" action="<?=$enlace_gestion.'?id='.hidelock($ncontrol)?>" method="post" style="margin:0px;"> 
         <?php
         } 
-        else if(strcmp($dec_valid,0)){
+        else if(strcmp($fac_valid,0)){
             ?>
          <form name="frm" id="frm" action="<?=$_SERVER['REQUEST_URI'];?>" method="post" style="margin:0px;"> 
         <?php    
         }	
        ?>
 <!------------INICIO DE LOS CAMPOS DEL FORMULARIO-------------->
+
+
 <CENTER>
-<TABLE cellpadding="5" >
-<TR><TD WIDTH="150">
+<TABLE cellpadding="0" >
+<TR><TD WIDTH="100" rowspan="4">
+&nbsp;
+</TD>
+<TD WIDTH="150">
                          
-        <div class="texto_explicacion_formulario">N&uacute;mero de Control:&nbsp;</div><br><br>
-               <div>
-               <input style="background-color:#F0F0F0;width:80px" class="required" name="numero" id="numero" readonly rows="1" value="<? echo isset($ncontrol) ? $ncontrol : "";?>" type="text" title="Numero de Control de Declaraciones">
-               </div>
-</TD><TD WIDTH="200">
-                          <div class="texto_explicacion_formulario">N&uacute;mero de Retaceo:&nbsp;</div><br><br>
-                          <div>
-                               <input class="required" name="numRegistro" id="numRegistro" rows="1" value="<? echo isset($nretaceo) ? $nretaceo : "";?>" type="text" title="Ingrese el numero de Retaceo de la Empresa">
-
-                                </div>
-</TD><TD WIDTH="250">
-                <div class="texto_explicacion_formulario">Nombre de Empresa:&nbsp;</div><br><br>
-
-                 <div>
-
-                     <select class="required" id="NIT" name="NIT" title="Seleccione la Empresa">
-                        <?
-
-                                $result = mysql_query("SELECT * FROM empresas ORDER BY nombre", $link);
-                                while($fila = mysql_fetch_array($result)){
-                                        if((isset($_GET["idn"]) && $fila['nit'] == hideunlock($_GET["idn"])) || (isset($nitempresa) && $fila['nit'] == $nitempresa)){
-                                        ?>
-                                                <option value="<?=hidelock($fila['nit'])?>" selected="selected" ><?=$fila['nombre']?></option>
-                                        <?
-                                        }else{ ?>
-                                                <option value="<?=hidelock($fila['nit'])?>" ><?=$fila['nombre']?></option>
-                                        <? }
-                                }
-                ?>
-                </select>
-                </div>
-
-
-</TD></TR>
-<TR><TD>
-                          <div class="texto_explicacion_formulario">Fecha:&nbsp;</div><br><br>
-                                        <div>
-                                                <input class="required" name="fecha" readonly id="fecha" rows="1" value="<? echo isset($fecha) ? $fecha : date("Y-m-d");?>" type="text" title="">
-                                        </div>
-</TD><TD>                      
-
-            <div class="texto_explicacion_formulario">Numero de Documento de Transporte:&nbsp;</div><br><br>
-            <div>
-            <input class="required" name="numeroDocumentoTransporte" id="numeroDocumentoTransporte" rows="1" value="<? echo isset($numdoctransporte) ? $numdoctransporte : "";?>" type="text" title="Ingrese No. de Transporte">
-            </div>
-</TD><TD>
-         <div class="texto_explicacion_formulario">Flete:&nbsp;</div><br><br>
+        <div class="texto_explicacion_formulario">N&uacute;mero de Factura:&nbsp;</div><br><br>
         <div>
-        <input class="required" name="flete" id="flete" rows="1" type="text" value="<? echo isset($flete) ? $flete : "";?>" title="Ingrese el Valor de Flete">
+        <input class="required read" name="numero" id="numero" readonly rows="1" value="<? echo isset($nfact) ? $nfact : "";?>" type="text" title="Numero de Control de facturas">
+        </div>
+</TD>
+<TD WIDTH="200">
+&nbsp;
+</TD>
+<TD width="250px">
+       <div class="texto_explicacion_formulario">Fecha:&nbsp;</div><br><br>
+       <div>
+       <input class="required read" name="fecha" readonly id="fecha" rows="1" value="<? echo isset($fecha) ? $fecha : date("Y-m-d");?>" type="text" title="">
+       </div>
+</TD></TR>
+
+<TR><TD>
+         <div class="texto_explicacion_formulario">Bultos:&nbsp;</div><br><br>
+        <div>
+        <input class="required" name="bultos" id="bultos" rows="1" type="text" value="<? echo isset($bultos) ? $bultos : "";?>" title="Ingrese el Valor de Flete">
         </div>
          
-</TD></TR>
-<TR><TD>
-                                   
-         <div class="texto_explicacion_formulario">Modo de Transporte:&nbsp;</div><br><br>
-         <div>
-
-         <select id="modoTransporte" name="modoTransporte" title="Seleccione el Modo de Transporte">
-               <option value="0" >Terrestre</option>
-               <option value="1" >A&eacute;reo</option>
-               <option value="2" >Mar&iacute;timo</option>
-               <option value="3" >Ferreo</option>
-               <option value="4" >Multimodal</option>
-
-         </select>		
+</TD>
+<TD>
+         <div class="texto_explicacion_formulario">Peso Bruto:&nbsp;</div><br><br>
+        <div>
+        <input class="required" name="pesoBruto" id="pesoBruto" rows="1" type="text" value="<? echo isset($pesoBruto) ? $pesoBruto : "";?>" title="Ingrese el Valor de Flete">
         </div>
          
-</TD><TD>
-            <div class="texto_explicacion_formulario">Modelo de Declaraci&oacute;n:&nbsp;</div><br><br>
-
-            <div>
-
-              <select id="modeloDeclaracion" name="modeloDeclaracion" title="Seleccione Modelo de Declaracion">
-
-                <option value="EX1" >EX1 Exportacion</option>
-                                                <option value="EX2" >EX2 Exportacion Temporal</option>
-                                                <option value="EX3" >EX3 ReExportacion</option>
-                                                <option value="IM4" selected="selected" >IM4 Importacion a Pago</option>
-                                                <option value="IM5" >IM5 Admision Importacion Temporal</option>
-                                                <option value="IM6" >IM6 ReImportacion</option>
-                                                <option value="IM7" >IM7 Declaracion de Deposito</option>
-                                                <option value="IM8" >IM8 Importacion a Franquicia</option>	
-
-                                         </select>		
-                        </div>
- </TD><TD>          
-            <div class="texto_explicacion_formulario">Calcular Seguro:&nbsp;</div>
-             <div>
-                  <Input type='hidden' Name='calcularSeguro' value="N">
-                  <Input id='calcularSeguro' type='Checkbox' <? if(isset($CalcSeguro)){if($CalcSeguro=="S")echo "Checked";}?> Name='calcularSeguro' value="S">
-                 
-             </div><br><br>
-
-</TD></TR>
-<TR><td >&nbsp;</td>
-    <TD COLSPAN="2">
-        <div class="texto_explicacion_formulario">Tipo de Calculo de Seguro:&nbsp;</div><br><br>
+</TD>
+<TD>
+         <div class="texto_explicacion_formulario">Peso Neto:&nbsp;</div><br><br>
         <div>
-            <b class="texto_explicacion_formulario">Externo:
-            <Input type = 'Radio' Name ='TipoCalculoSeguro' <? if(isset($TipoCalcSeguro)){if($TipoCalcSeguro=="E")echo "Checked";}else{echo "Checked";} ?> value= 'E'></b>
-            <b class="texto_explicacion_formulario">Interno:
-            <Input type = 'Radio' Name ='TipoCalculoSeguro' <? if(isset($TipoCalcSeguro)){if($TipoCalcSeguro=="I")echo "Checked";} ?> value= 'I'></b>
+        <input class="required" name="pesoNeto" id="pesoNeto" rows="1" type="text" value="<? echo isset($pesoNeto) ? $pesoNeto : "";?>" title="Ingrese el Valor de Flete">
         </div>
-    </TD>
-    
-</TR>       
+         
+</TD>
+</TR>
+
+<TR>
+<TD>
+         <div class="texto_explicacion_formulario">Cuantia:&nbsp;</div><br><br>
+        <div>
+        <input class="required read" name="cuantia" id="cuantia" readonly rows="1" type="text" value="<? echo isset($cuantiaT) ? $cuantiaT : "";?>" title="Ingrese el Valor de Flete">
+        </div>
+         
+</TD>
+<TD>
+         <div class="texto_explicacion_formulario">FOB:&nbsp;</div><br><br>
+        <div>
+        <input class="required read" name="fob" id="fob" rows="1" readonly type="text" value="<? echo isset($fob) ? $fob : "";?>" title="Ingrese el Valor de Flete">
+        </div>
+         
+</TD>
+<TD>
+         <div class="texto_explicacion_formulario">Otros Gastos:&nbsp;</div><br><br>
+        <div>
+        <input class="required read" name="otrosGastos" id="otrosGastos" readonly rows="1" type="text" value="<? echo isset($otrosGastos) ? $otrosGastos : "";?>" title="Ingrese el Valor de Flete">
+        </div>
+         
+</TD>
+</TR>  
+<TR>
+<TD>
+&nbsp;
+</TD>
+<TD>
+        <div class="texto_explicacion_formulario">Total:&nbsp;</div><br><br>
+        <div>
+        <input class="required read" name="total" id="total" rows="1" readonly type="text" value="<? echo isset($total) ? $total : "";?>" title="Ingrese el Valor de Flete">
+        </div>
+
+         
+</TD>
+</TR> 
 </TABLE>
 </CENTER>        
 
@@ -581,7 +528,7 @@ if($id_declaracion != "" || $id_declaracion != "0"){
           <div><input name="submit" id="submit" style="float: center" value="Guardar" type="submit"></div>
         <?php
         } 
-        else if(strcmp($dec_valid,0)){
+        else if(strcmp($fac_valid,0)){
             ?>
           <div><input name="submit" id="submit" style="float: center" value="Actualizar" type="submit"></div>
         
@@ -595,18 +542,18 @@ if($id_declaracion != "" || $id_declaracion != "0"){
         }	
       ?>   
              
-<!---------------------------FIN DEL FORMULARIO DECLARACIONES-------------------------------------->
+<!---------------------------FIN DEL FORMULARIO facturas-------------------------------------->
 
           <?php
            //si es un retaceo existente que muestre sus facturas si es que tiene
-           if($dec_valid != "" || $dec_valid !="0")
+           if($fac_valid != "" || $fac_valid !="0")
                {
                 ?>
 
 <!--------------------------INCIIO DEL FORM PARA INGRESAR DATOS INICIALES DE FACTURAS ----------------------->             
 <form class="frmspecial" name="frmf" id="frmf" action="<?=$_SERVER['REQUEST_URI'];?>" method="post" style="margin:0px;"> 
                  
-              <h4 style="font-family:helvetica">Agregar Datos Iniciales de Factura</h4>
+              <h4 style="font-family:helvetica">Agregar Items a la Factura</h4>
               <input class="required" name="idFactura" id="idFactura" type="hidden" value="" title="">
                 
              <table><tr>
@@ -682,47 +629,42 @@ if($id_declaracion != "" || $id_declaracion != "0"){
             <div style="float:center" class="texto_explicacion_formulario">Detalles de Facturas: (De doble click para editar)</div>
             <table id="factini" align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
               <tbody><tr bgcolor="#6990BA" >
-                <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">Id Factura</td>
-                <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">Numero Factura</td>
-                <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">Fecha</td>                              
+                <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="40">Id Item</td>
+                <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="350">Descripcion</td>                            
                 <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">Bultos</td>
                 <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">Peso Bruto</td>
                 <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">Cuantia</td>                                
-                <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">Gastos</td>
-                <td class="tabla_titulo" style="border: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">FOB</td></tr>
+                <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">Precio Unitario</td>
+                <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="70">Total</td>
            <?php
 
 
-        //imprime las facturas del retaceo que pertenece
-        $FOBtotal=0;
-        $GASTOStotal=0;
-            while($fact = mysql_fetch_array($facturas)){
+        //IMPRIME LOS ITEMS DE LA DECLARACION A QUIEN PERTENECE
+
+
+            while($fact = mysql_fetch_array($items)){
                 ?>
 
                 <tr>
-                <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="70">
-                <?=$fact["idFactura"]?>
+                <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle">
+                <?=$fact["idItem"]?>
                 </td>
-                <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="70">
-                <?=$fact["numero"]?>
+                <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle">
+                <?=$fact["descripcion"]?>
                 </td>
-                <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">
-                <?=substr($fact["fecha"],0,10)?>
-                </td>
-                <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">
+                <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle">
                 <?=$fact["bultos"]?>
                 </td>
-                 <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">
+                 <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" >
                 <?=$fact["pesoBruto"]?>
                 </td>
-                <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">
+                <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle">
                 <?=$fact["cuantia"]?>
                 </td>
-                <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">
-                <? $GASTOStotal+=$fact["otrosGastos"];echo $fact["otrosGastos"];?>
-                </td>
-                <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">
-                <? $FOBtotal+=$fact["FOB"];echo $fact["FOB"];?>
+                <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" >
+                <?=number_format(round($fact["precioUnitario"],2),2)?>
+                <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" >
+                <?=number_format(round($fact["precioTotal"],2),2)?>
                 </td>
             </tr>
                                         <?
@@ -731,9 +673,6 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                                         ?>
             <tr bgcolor="#6990BA">
                     <td bgcolor="#6990BA" colspan="6" class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">TOTAL</td>
-                    <td class="tabla_titulo" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226); border-right: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle">
-                                <b>$<?echo number_format(round($GASTOStotal,2),2);?></b>
-                    </td>
                     <td class="tabla_titulo" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226); border-right: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle">
                                 <b>$<?echo number_format(round($FOBtotal,2),2);?></b>
                     </td>

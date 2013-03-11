@@ -40,6 +40,11 @@ body {
 
 /* fin */
 
+.read{
+    background-color:#F0F0F0;
+    width:125px;
+}
+
 .frmspecial input{
     width:130px;
 }

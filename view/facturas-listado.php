@@ -43,6 +43,23 @@ $_SESSION['timeout'] = time();
 	<script src="../js/jquery-1.8.3.js"></script>
 	<script src="../js/jquery-ui-1.9.2.custom.js"></script>
 </head>
+<script>
+  $(document).ready(function(){
+  $('#facts tr').dblclick(function()
+    {
+                     
+                    var tds=$(this).find("td");
+                 //funcion para actualizar datos iniciales de facturas
+                    if(tds.eq(0).html()!="Id Factura"){
+                     $(location).attr('href',"facturas-gestion.php?id="+hidelockjs(tds.eq(0).html()));   
+                    }
+   });
+ });
+  </script>
+
+
+
+
  <? $id_declaracion = isset($_SESSION["n_declaracion"]) ? hideunlock($_SESSION["n_declaracion"]) : 0;
        
  if($id_declaracion=="0"){
@@ -51,7 +68,6 @@ $_SESSION['timeout'] = time();
          ?>
 <script>
   $(function() {
- 
     $( "#errorMSJ" ).dialog({
       height: 180,
       modal: true,
@@ -67,7 +83,9 @@ $_SESSION['timeout'] = time();
   <br> <a style="color:blue" href="declaraciones-listado.php">Abrir</a>
   </center>
 </div>
-      <? }else{ //SI HAY UNO ABIERTO SE MUESTRA EL CONTENIDO ?>
+      <?
+}else{ //SI HAY UNO ABIERTO SE MUESTRA EL CONTENIDO ?>
+      
 <body>  
     <? }?>
 <center>
@@ -214,7 +232,7 @@ $_SESSION['timeout'] = time();
                         <tbody><tr>
                           <td valign="top">
                               <h3 class="texto_explicacion_formulario">Para editar una factura de Doble Click</h3>
-<table align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
+<table id="facts" name="facts" align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
   <tbody><tr bgcolor="#EBEBEB">
     <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="30">Id Factura</td>
     <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="20">Numero Factura</td>
@@ -259,8 +277,8 @@ $_SESSION['timeout'] = time();
                 <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">
                 <? $FOBtotal+=$fact["FOB"];echo $fact["FOB"];?>
                 </td>
-        <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle"><a href="facturas-gestion.php?id=<? echo hidelock($filas['nit']);?>"><img src="../images/icono-editar.gif" border="0"></a></td>
-        <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226); border-right: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle"><a href="javascript:eliminar('<? echo hidelock($filas['nit']);?>');"><img src="../images/icono-eliminar.gif" border="0"></a></td>
+        <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle"><a href="facturas-gestion.php?id=<? echo hidelock($fact['idFactura']);?>"><img src="../images/icono-editar.gif" border="0"></a></td>
+        <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226); border-right: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle"><a href="javascript:eliminar('<? echo hidelock($fact['idFactura']);?>');"><img src="../images/icono-eliminar.gif" border="0"></a></td>
       </tr>
     
 	<?
