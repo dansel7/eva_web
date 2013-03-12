@@ -256,7 +256,7 @@ if($id_factura != "" || $id_factura != "0"){
                         
                     var tds=$(this).find("td");
                  //funcion para actualizar datos iniciales de facturas
-                    if(tds.eq(0).html()!="Id Factura" && tds.eq(0).html()!="TOTAL"){
+                    if(tds.eq(0).html()!="Id Item" && tds.eq(0).html()!="TOTAL"){
                     
                      $('#frmf #idFactura').val(tds.eq(0).html())
                      $('#frmf #numero').val(tds.eq(1).html());
@@ -434,7 +434,7 @@ if($id_factura != "" || $id_factura != "0"){
 
 
 <CENTER>
-<TABLE cellpadding="0" >
+<TABLE cellpadding="0" cellspacing="0" >
 <TR><TD WIDTH="100" rowspan="4">
 &nbsp;
 </TD>
@@ -533,14 +533,11 @@ if($id_factura != "" || $id_factura != "0"){
           <div><input name="submit" id="submit" style="float: center" value="Actualizar" type="submit"></div>
         
         </form>
-         <!--FORMULARIO, AL HACER SUBMIT CIERRA LA DECLARACION    -->
-        <form action="<?=$enlace_gestion.'?id='.hidelock($ncontrol)?>" method="post">
-        <div><input name="cerrar" id="cerrar" style="float: center" value="Cerrar Declaracion" type="submit"></div>
-        </form>
                </center>   
       <?php    
         }	
       ?>   
+
              
 <!---------------------------FIN DEL FORMULARIO facturas-------------------------------------->
 
@@ -558,62 +555,59 @@ if($id_factura != "" || $id_factura != "0"){
                 
              <table><tr>
                 <td>
-                <div class="texto_explicacion_formulario">Numero Factura:</div>
+                <div class="texto_explicacion_formulario">Cantidad de Bultos:</div>
                 <div>
-                <input class="required" name="numero" id="numero" type="text" value="" title="Ingrese No. De Factura">
-                </div>
-                </td>
-                
-                <td>
-                <div class="texto_explicacion_formulario">Fecha:</div>
-                <div>
-                <input class="required" name="fechaf" id="fechaf" type="text" value="<?=date("Y-m-d");?>" title="Ingrese Fecha Factura">
-                </div>
-                </td>
-                
-                <td>
-                <div class="texto_explicacion_formulario">Bultos:</div>
-                <div>
-                <input class="" name="bultos" id="bultos" type="text" value="0.0" title="Ingrese Bultos">
+                <input class="required" name="bultos" id="bultos" style="width:100px" type="text" value="0.0" title="Ingrese Bultos">
                 </div>
                 </td>
                 
                 <td>
                 <div class="texto_explicacion_formulario">Peso Bruto:</div>
                 <div>
-                <input class="" name="pesoBruto" id="pesoBruto" type="text" value="0.0" title="Ingrese Peso Bruto">
+                <input class="required" name="pesoBruto" id="pesoBruto" style="width:100px" type="text" value="0.0" title="Ingrese Peso Bruto">
                 </div>
                 </td>
-                
+                <td>
+                <div class="texto_explicacion_formulario">Peso Neto:</div>
+                <div>
+                <input class="required" name="pesoNeto" id="pesoNeto" style="width:100px" type="text" value="0.0" title="Ingrese Peso Neto">
+                </div>
+                </td>
                 <td>
                 <div class="texto_explicacion_formulario">Cuantia:</div>
                 <div>
-                <input class="" name="cuantia" id="cuantia" type="text" value="0.0" title="Ingrese Cuantia">
+                <input class="required" name="cuantia" id="cuantia" style="width:100px" type="text" value="0.0" title="Ingrese Cuantia">
                 </div>
                 </td>
                 
                 <td>
-                <div class="texto_explicacion_formulario">Gastos:</div>
+                <div class="texto_explicacion_formulario">Unidades:</div>
                 <div>
-                <input class="required" name="otrosGastos" id="otrosGastos" type="text" value="0.0" title="Ingrese Otros Gastos">
-                </div>
+                    <select name="unidades" id="unidades" title="Seleccione una Unidad">
+                <?php
+                        $result = mysql_query("SELECT * from unidades", $link);
+                while($fila = mysql_fetch_array($result)){
+                
+                      echo  '<option value="'.$fila["codigo"].'"  >'.$fila["codigo"].' '.$fila["cantidad"].'</option>';       
+                 }
+                ?>
+                    </select> </div>
                 </td>
                 
                 <td>
                 <div class="texto_explicacion_formulario">FOB:</div>
                 <div>
-                <input class="required" name="fob" id="fob" type="text" value="0.0" title="Ingrese FOB">
+                <input class="required" name="fob" id="fob" style="width:100px" type="text" value="0.0" title="Ingrese FOB">
                 </div>
                 </td>  
                 </tr>
             <tr>
-                <td colspan="5"></td>
-                <td><div class="texto_explicacion_formulario">No. Paginas:</div>
-                <div>
-                <input class=""  name="npag" id="npag" type="text" value="1" title="Ingrese Numero Paginas">
-                </div></td>
+                <td colspan="6"></td>
                 
-                <td><div class="texto_explicacion_formulario">&nbsp</div><div><input name="addf" id="addf" style="float: right;" value="Agregar Factura" type="submit"></div>
+                <td>
+                    <div class="texto_explicacion_formulario">&nbsp</div>
+                    <div><input name="addf" id="addf" style="float: right;" value="Agregar Factura" type="submit">
+                    </div>
                   
                 </td> 
             </tr>
