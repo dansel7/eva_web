@@ -46,6 +46,7 @@ $clase_database = new database();
 
 
 $id_declaracion = isset($_GET['id']) ? hideunlock($_GET['id']) : 0;
+
 //SE CREA UNA VARIABLE DE SESION PARA LA DECLARACION CON LA QUE SE ESTARA TRABAJANDO        
 if(isset($_GET['id']) && $_GET['id']!="" && !isset($_SESSION["n_declaracion"])){
     $_SESSION["n_declaracion"]=$_GET['id'];
@@ -66,12 +67,20 @@ if (isset($_POST['submit'])){
     $_POST['NIT']=  hideunlock($_POST['NIT']);
     
 //Funcion para poder hacer el insert, o update de declaracion
-if($_POST['submit']=='Actualizar'){
+if($_POST['submit']=='Actualizar'){//ACTUALIZAR
+    
         $_POST["fechaModificado"]=date("Y-m-d H:i:s");
-        $resultado = $clase_database->formToDB($link,'retaceo','post','', 'submit, frm, ','update','numero="'.$_POST['numero'].'"');
-
-}else if($_POST['submit']=='Guardar'){
-        $_POST["idRetaceo"]=$clase_database->GenerarNuevoId($link, "idRetaceo", "retaceo", "");
+        $resultado = $clase_database->formToDB($link,'retaceo','post','', 'submit, frm, ','update','idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');
+if ($resultado){ 
+            $mensaje = "Informacion Almacenada Exitosamente";
+            $clase_css = "texto_ok";
+        }else{
+            $mensaje = "Error al Almacenar Informacion";
+            $clase_css = "texto_error";
+        }
+}
+else if($_POST['submit']=='Guardar'){//GUARDAR NUEVO
+    
         $_POST["usuario"]=$_SESSION["usu"];
         $_POST["estado"]="0";
         $_POST["fechaCreado"]=date("Y-m-d H:i:s");
@@ -87,30 +96,44 @@ if($_POST['submit']=='Actualizar'){
         $_POST["IVA"]=0.0;
         $_POST["aPago"]=0.0;
         $_POST["total"]=0.0;
-        $resultado = $clase_database->formToDB($link,'retaceo','post','', 'submit, frm, ','insert','');       
-}
-
+        $resultado = $clase_database->formToDB($link,'retaceo','post','', 'submit, frm, ','insert',''); 
+        $idRetNuevo=hidelock(mysql_insert_id());
+ 
 if ($resultado){ 
+        header("Location: http://".$_SERVER['HTTP_HOST'].$_SERVER["PHP_SELF"]."?id=".$idRetNuevo."&xm=1");
+       
+}else{
+        header("Location: http://".$_SERVER['HTTP_HOST'].$_SERVER["PHP_SELF"]."?xm=2");
+ 
+}       
+}
+	
+}//LUEGO DE INGRESADO LA NUEVA DECLARACION SE REDIRECCIONA Y SE COMPRUEBA PARA MOSTRAR MSJ
+if(isset($_GET["xm"])){
+   if($_GET["xm"]==1 && isset($_GET["id"])) {  
+       $resultado=true;
         $mensaje = "Informacion Almacenada Exitosamente";
         $clase_css = "texto_ok";
-}else{
+        }else if($_GET["xm"]==2){
         $mensaje = "Error al Almacenar Informacion";
         $clase_css = "texto_error";
-}	
+        }
 }
 
+
+//-------------------------------------------------------------------------------
 //----AGREGAR DATOS NUEVOS DE FACTURAS
 if(isset($_POST['addf'])){
     
-    $idFacNuevo=$clase_database->GenerarNuevoId($link, "idFactura", "factura","where numeroRetaceo='".hideunlock($_SESSION["n_declaracion"])."'");
-    $_POST["idFactura"]=($idFacNuevo=="") ? 1 : $idFacNuevo;    
+    $idFacNuevo=$clase_database->GenerarNuevoId($link, "idFactRetaceo", "factura","where idRetaceo='".hideunlock($_SESSION["n_declaracion"])."'");
+    $_POST["idFactRetaceo"]=($idFacNuevo=="") ? 1 : $idFacNuevo;    
  
-    $_POST["numeroRetaceo"]=  hideunlock($_SESSION["n_declaracion"]);
+    $_POST["idRetaceo"]=hideunlock($_SESSION["n_declaracion"]);
     $_POST["fecha"]=  $_POST["fechaf"];//SE LE PUSO OTRO NOMBRE A LOS DATOS, YA QUE EL FORM RETACEO POSEE UN CAMPO LLAMADO FECHA.
     $_POST["numero"]=strtoupper($_POST["numero"]);
     
     //COMPROBAR SI EL NUMERO DE FACTURA YA EXISTE.
-    $result = mysql_query("SELECT * FROM factura WHERE numero ='".$_POST["numero"]."' and numeroRetaceo='".hideunlock($_SESSION["n_declaracion"])."'", $link);
+    $result = mysql_query("SELECT * FROM factura WHERE numero ='".$_POST["numero"]."' and idRetaceo='".hideunlock($_SESSION["n_declaracion"])."'", $link);
   if(mysql_affected_rows()==1){
       
         $resultado=true; 
@@ -120,15 +143,15 @@ if(isset($_POST['addf'])){
    }
   else
    { //SINO EXISTE LO INGRESA    
-  
-        $resultado = $clase_database->formToDB($link,'datosIniciales','post','', 'addf, frmf, npag, fechaf, ','insert','');
+        
+        $resultado = $clase_database->formToDB($link,'datosIniciales','post','', 'addf, frmf, paginas, fechaf, ','insert','');
         $_POST["bultos"]=0.0;
         $_POST["pesoBruto"]=0.0;
         $_POST["cuantia"]=0.0;
         $_POST["fob"]=0.0;
         $_POST["total"]=0.0;
         $_POST["pesoNeto"]=0.0;
-        $resultado = $clase_database->formToDB($link,'factura','post','','npag, fechaf, addf, frmf, npag, ','insert','');
+        $resultado = $clase_database->formToDB($link,'factura','post','','fechaf, addf, frmf, ','insert','');
 
         if ($resultado){ 
             $mensaje = "Informacion Almacenada Exitosamente";
@@ -139,8 +162,8 @@ if(isset($_POST['addf'])){
         }
         
          //ACTUALIZA EL VALOR DE OTROSGASTOS DE LA TABLA DE RETACEO Y EL CIF
-       $resultado = $clase_database->formToDB($link,'retaceo','','otrosGastos=(SELECT SUM(otrosGastos) from factura where numeroRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'")','','update','numero="'.hideunlock($_SESSION["n_declaracion"]).'"');
-      $resultado = $clase_database->formToDB($link,'retaceo','','CIF=flete+otrosGastos+seguro', '','update','numero="'.hideunlock($_SESSION["n_declaracion"]).'"');
+       $resultado = $clase_database->formToDB($link,'retaceo','','otrosGastos=(SELECT SUM(otrosGastos) from factura where idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'")','','update','idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');
+      $resultado = $clase_database->formToDB($link,'retaceo','','CIF=flete+otrosGastos+seguro', '','update','idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');
  
   }
   
@@ -155,10 +178,10 @@ if(isset($_POST['updf'])){
     //AL OBTENER LOS VALORES DE LA TABLA QUE SE INSERTARON EN LOS CAMPOS INPUT
     $idf=0;
     $valid=true;
-    $result = mysql_query("SELECT idFactura FROM factura WHERE numero ='". trim($_POST["numero"])."' and numeroRetaceo='".hideunlock($_SESSION["n_declaracion"])."'", $link);   
+    $result = mysql_query("SELECT idFactRetaceo FROM factura WHERE numero ='". trim($_POST["numero"])."' and idRetaceo='".hideunlock($_SESSION["n_declaracion"])."'", $link);   
     if(mysql_affected_rows()>=1){
        $idf = mysql_fetch_row($result);      
-        if($idf[0]!=trim($_POST['idFactura'])){
+        if($idf[0]!=trim($_POST['idFactRetaceo'])){
             $valid=false;
 
         } 
@@ -172,8 +195,8 @@ if(isset($_POST['updf'])){
       
  $_POST["numero"]=strtoupper($_POST["numero"]);
  $_POST["fecha"]=  $_POST["fechaf"];
- $resultado = $clase_database->formToDB($link,'datosIniciales','post','', 'fechaf, idFactura, updf, npag, ','update','idFactura="'.trim($_POST['idFactura']).'" and numeroRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');
- $resultado = $clase_database->formToDB($link,'factura','post','', 'fechaf, idFactura, updf, npag, bultos, cuantia, pesoBruto, fob, ','update','idFactura="'.trim($_POST['idFactura']).'" and numeroRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');
+ $resultado = $clase_database->formToDB($link,'datosIniciales','post','', 'fechaf, idFactRetaceo, updf, paginas, ','update','idFactRetaceo="'.trim($_POST['idFactRetaceo']).'" and idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');
+ $resultado = $clase_database->formToDB($link,'factura','post','', 'fechaf, idFactRetaceo, updf, bultos, cuantia, pesoBruto, fob, ','update','idFactRetaceo="'.trim($_POST['idFactRetaceo']).'" and idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');
   
      if ($resultado){ 
             $mensaje = "Informacion Almacenada Exitosamente";
@@ -183,22 +206,22 @@ if(isset($_POST['updf'])){
             $clase_css = "texto_error";
       } 
       //ACTUALIZA EL VALOR DE OTROSGASTOS DE LA TABLA DE RETACEO Y EL CIF
-      $resultado = $clase_database->formToDB($link,'retaceo','','otrosGastos=(SELECT SUM(otrosGastos) from factura where numeroRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'")','','update','numero="'.hideunlock($_SESSION["n_declaracion"]).'"');
-      $resultado = $clase_database->formToDB($link,'retaceo','','CIF=flete+otrosGastos+seguro', '','update','numero="'.hideunlock($_SESSION["n_declaracion"]).'"');
+      $resultado = $clase_database->formToDB($link,'retaceo','','otrosGastos=(SELECT SUM(otrosGastos) from factura where idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'")','','update','idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');
+      $resultado = $clase_database->formToDB($link,'retaceo','','CIF=flete+otrosGastos+seguro', '','update','idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');
  
 
    }
 
-}
+}//------OBTIENE LOS DATOS DE LA DECLARACION DESDE LA BD-------
 //VARIABLE QUE VERIFICA SI LA DECLARACION EXISTE Y ES VALIDA.
 $dec_valid=0;
 //CARGA DE DATOS DESDE BD
 if($id_declaracion != "" || $id_declaracion != "0"){
-        $result = mysql_query("SELECT * FROM retaceo WHERE numero ='".$id_declaracion."'", $link);
+        $result = mysql_query("SELECT * FROM retaceo WHERE idRetaceo='".$id_declaracion."'", $link);
         $dec_valid= mysql_num_rows($result);
-        
+       
         while($fila = mysql_fetch_array($result)){
-
+                
                 $nitempresa = $fila['NIT'];
                 $ncontrol=$fila['numero'];
                 $fecha= substr($fila['fecha'],0,10);
@@ -212,7 +235,7 @@ if($id_declaracion != "" || $id_declaracion != "0"){
         }
 
               //consulta que genera un preview de las facturas de un retaceo definido
-             $facturas = mysql_query("SELECT * FROM datosIniciales WHERE numeroretaceo ='".$id_declaracion."'", $link);
+             $facturas = mysql_query("SELECT * FROM datosIniciales WHERE idRetaceo ='".$id_declaracion."'", $link);
 
              
 }
@@ -284,7 +307,7 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                  //funcion para actualizar datos iniciales de facturas
                     if(tds.eq(0).html()!="Id Factura" && tds.eq(0).html()!="TOTAL"){
                     
-                     $('#frmf #idFactura').val(tds.eq(0).html())
+                     $('#frmf #idFactRetaceo').val(tds.eq(0).html())
                      $('#frmf #numero').val(tds.eq(1).html());
                      $('#frmf #fechaf').val(tds.eq(2).html());
                      $('#frmf #bultos').val(tds.eq(3).html());
@@ -309,7 +332,8 @@ if($id_declaracion != "" || $id_declaracion != "0"){
     
     
           <?
-        //SI LA OPCION ES NUEVA SOLAMENTE SE GENERA UN NUEVO NUMERO DE CONTROL
+        //SI LA OPCION ES NUEVA SOLAMENTE 
+        //------SE GENERA UN NUEVO NUMERO DE CONTROL------
         if(!strcmp($opc, 'nuevo')){
 
                 $f=false;
@@ -332,7 +356,7 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                 //se actualiza el correlativo del usuario
                 $resultado = $clase_database->formToDB($link,'usuarios','','correlativo='.($correlativo+1),'','update',"usuario='".$_SESSION["usu"]."'");
                 }
-
+                
                 }
 
         }
@@ -447,7 +471,7 @@ if($id_declaracion != "" || $id_declaracion != "0"){
       //O SINO REDIRECCIONARLO AL MISMO A LA HORA DE ACTUALIZAR
         if(!strcmp($opc, 'nuevo')){	
             ?>
-         <form name="frm" id="frm" action="<?=$enlace_gestion.'?id='.hidelock($ncontrol)?>" method="post" style="margin:0px;"> 
+         <form name="frm" id="frm" action="<?=$enlace_gestion?>" method="post" style="margin:0px;"> 
         <?php
         } 
         else if(strcmp($dec_valid,0)){
@@ -607,7 +631,7 @@ if($id_declaracion != "" || $id_declaracion != "0"){
 <form class="frmspecial" name="frmf" id="frmf" action="<?=$_SERVER['REQUEST_URI'];?>" method="post" style="margin:0px;"> 
                  
               <h4 style="font-family:helvetica">Agregar Datos Iniciales de Factura</h4>
-              <input class="required" name="idFactura" id="idFactura" type="hidden" value="" title="">
+              <input class="required" name="idFactRetaceo" id="idFactRetaceo" type="hidden" value="" title="">
                 
              <table><tr>
                 <td>
@@ -663,7 +687,7 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                 <td colspan="5"></td>
                 <td><div class="texto_explicacion_formulario">No. Paginas:</div>
                 <div>
-                <input class=""  name="npag" id="npag" type="text" value="1" title="Ingrese Numero Paginas">
+                <input class=""  name="paginas" id="paginas" type="text" value="1" title="Ingrese Numero Paginas">
                 </div></td>
                 
                 <td><div class="texto_explicacion_formulario">&nbsp</div><div><input name="addf" id="addf" style="float: right;" value="Agregar Factura" type="submit"></div>
@@ -701,7 +725,7 @@ if($id_declaracion != "" || $id_declaracion != "0"){
 
                 <tr>
                 <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="70">
-                <?=$fact["idFactura"]?>
+                <?=$fact["idFactRetaceo"]?>
                 </td>
                 <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="70">
                 <?=$fact["numero"]?>

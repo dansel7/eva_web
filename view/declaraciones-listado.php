@@ -39,8 +39,9 @@ $_SESSION['timeout'] = time();
 	
 //CODIGO DE ELIMINACION
 	if(isset($_GET['id']) && isset($_GET['accion']) && $_GET['accion'] == "eliminar"){
-		$resultado = $clase_database->Eliminar($link,'retaceo',' numero ="' . hideunlock($_GET['id']).'"');
+		$resultado = $clase_database->Eliminar($link,'retaceo',' idRetaceo ="' . hideunlock($_GET['id']).'"');
 		if ($resultado){ 
+                    
 			$mensaje = "Registro Eliminado Exitosamente";
 			$clase_css = "texto_ok";
 		}else{

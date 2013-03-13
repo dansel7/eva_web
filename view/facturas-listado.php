@@ -138,7 +138,7 @@ $_SESSION['timeout'] = time();
                       <br>
         
    <?php
-   $result = mysql_query("SELECT flete,bultos,pesoBruto,cuantia,seguro,CIF,DAI,IVA,FOB,otrosGastos,aPago,numRegistro FROM retaceo WHERE numero='". hideunlock($_SESSION["n_declaracion"])."'", $link);
+   $result = mysql_query("SELECT numero,flete,bultos,pesoBruto,cuantia,seguro,CIF,DAI,IVA,FOB,otrosGastos,aPago,numRegistro FROM retaceo WHERE idRetaceo='". hideunlock($_SESSION["n_declaracion"])."'", $link);
                 while($fila = mysql_fetch_array($result)){
                     //SE OBTIENEN LOS DATOS DE LA DECLARACION, DE LA TABLA RETACEO
                   
@@ -148,7 +148,7 @@ $_SESSION['timeout'] = time();
                   <table style="border:1px solid #cccccc;text-align:center;font-family: arial;font-size: 14px">
                       
                   <tr style="color: #371e05;text-align:left">
-                      <td width="325" colspan="2"><b>Numero de Control:</b> <?=$id_declaracion?></td>
+                      <td width="325" colspan="2"><b>Numero de Control:</b> <?=$fila['numero']?></td>
                       <td width="325" colspan="2"><b>Numero de Retaceo:</b> <?=$fila['numRegistro'];?></td>
                       <td><b>Flete:</b> <?=$fila['flete'];?></td>
                   </tr>
@@ -245,7 +245,7 @@ $_SESSION['timeout'] = time();
    <td class="tabla_titulo" style="border: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="60">ELIMINAR</td>
   </tr>
 <?
-  	$sql_facturas = "SELECT * FROM factura WHERE numeroretaceo ='".$id_declaracion."'";
+  	$sql_facturas = "SELECT * FROM factura WHERE idRetaceo ='".$id_declaracion."'";
 	$result = mysql_query($sql_facturas,$link);
 	
 	while($fact = mysql_fetch_array($result)){
@@ -254,7 +254,7 @@ $_SESSION['timeout'] = time();
 	
            <tr>
                 <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="70">
-                <?=$fact["idFactura"]?>
+                <?=$fact["idFactRetaceo"]?>
                 </td>
                 <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="70">
                 <?=$fact["numero"]?>
@@ -277,8 +277,8 @@ $_SESSION['timeout'] = time();
                 <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">
                 <? $FOBtotal+=$fact["FOB"];echo $fact["FOB"];?>
                 </td>
-        <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle"><a href="facturas-gestion.php?id=<? echo hidelock($fact['idFactura']);?>"><img src="../images/icono-editar.gif" border="0"></a></td>
-        <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226); border-right: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle"><a href="javascript:eliminar('<? echo hidelock($fact['idFactura']);?>');"><img src="../images/icono-eliminar.gif" border="0"></a></td>
+        <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle"><a href="facturas-gestion.php?id=<? echo hidelock($fact['idFactRetaceo']);?>"><img src="../images/icono-editar.gif" border="0"></a></td>
+        <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226); border-right: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle"><a href="javascript:eliminar('<? echo hidelock($fact['idFactRetaceo']);?>');"><img src="../images/icono-eliminar.gif" border="0"></a></td>
       </tr>
     
 	<?
