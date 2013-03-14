@@ -57,7 +57,7 @@ $orientacion="vertical";
 //ARREGLO DE MESES PARA MOSTRAR
 $meses=array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
 // ---------------INICIO DEL REPORTE-----------------
-$result=mysql_query("select * from retaceo  where numero='".hideunlock($_SESSION["n_declaracion"])."'",$link);
+$result=mysql_query("select r.*,e.nombre from retaceo r inner join empresas e on r.nit=e.nit where r.idRetaceo='".hideunlock($_SESSION["n_declaracion"])."'",$link);
 
 while($rows_e = mysql_fetch_array($result)){ //CONSULTA PARA ENCABEZADO
 $pdf->addpage($orientacion,'legal');//AGREGA NUEVA PAGINA POR CADA MES
@@ -66,19 +66,14 @@ $rsd='
 <table width="100%">
 <tr><td colspan="3" style="text-align:center"><b>REPORTE INCISO</b></td></tr>
 <tr>
-	<td colspan="3"><b>No. Retaceo:</b> '.$rows_e[0].' </td>
+	<td width="300px"><b>No. Retaceo:</b> '.$rows_e["numRegistro"].' </td>
+        <td width="200px"><b>Fecha:</b> '.$rows_e["fecha"].'</td>
+        <td width="200px"><b>No.Control:</b> '.$rows_e["numero"].'</td> 
 </tr>
 <tr>
-	<td colspan="2"><b>No.Control:</b> '.$rows_e[1].'</td>
-	<td><b>Usuario:</b> '.$rows_e[2].'</td>
-</tr>
-<tr>
-	<td><b>NIT:</b> '.$rows_e[3].'</td>
-	<td><b>Fecha:</b> '.$rows_e[4].'</td>
-	<td><b>GIRO:</b> '.$rows_e[5].'</td>
-</tr>
-<tr>
-	<td colspan="2"><b>'.strtoupper($meses[$rows_e[0]-1]).' A&Ntilde;O: '.$rows_e[1].'</b></td>
+	<td><b>Empresa:</b> '.$rows_e["nombre"].'</td>
+	<td><b>NIT:</b> '.$rows_e["NIT"].'</td>
+	<td><b>A&Ntilde;O: '.  substr($rows_e["fecha"], 0,4).'</b></td>
 </tr>
 </table>	
 <br>
@@ -95,9 +90,9 @@ $rsd='
 
 //$resultado=mysql_query("select * from factura where numeroretaceo='jor301'",$link);
 
-$resultado=mysql_query("select item.idItem, item.numeroFactura as factura, item.partidaArancelaria as partida, item.descripcion , " .
-                " item.cuantia as cuantia, (item.cuantia * item.precioUnitario) as fob ".
-                "from factura inner join item on factura.numero=item.numeroFactura where item.numeroRetaceo='".hideunlock($_SESSION["n_declaracion"])."' order by factura.idFactura,item.numerofactura,item.iditem",$link);
+$resultado=mysql_query("select item.idItemFactura, factura.numero as factura, item.partidaArancelaria as partida, item.descripcion, " .
+                " item.cuantia as cuantia, (item.cuantia * item.precioUnitario) as fob  ".
+                " from factura inner join item on factura.idFactura=item.idFactura where item.idRetaceo='".hideunlock($_SESSION["n_declaracion"])."' order by factura.idFactura,factura.numero,item.idItemFactura",$link);
 $fobSubt=0;
 $fobTotal=0;
 $temp=0;

@@ -172,7 +172,7 @@ if(isset($_POST['updf'])){
 $fac_valid=0;
 //CARGA DE DATOS DESDE BD
 if($id_factura != "" || $id_factura != "0"){
-        $result = mysql_query("SELECT * FROM factura WHERE idRetaceo='".hideunlock($_SESSION["n_declaracion"])."' and idFactRetaceo ='".$id_factura."'", $link);
+        $result = mysql_query("SELECT * FROM factura WHERE idRetaceo='".hideunlock($_SESSION["n_declaracion"])."' and idFactura ='".$id_factura."'", $link);
         $fac_valid= mysql_num_rows($result);
         
         while($fila = mysql_fetch_array($result)){
@@ -189,8 +189,8 @@ if($id_factura != "" || $id_factura != "0"){
         }
 
               //consulta que genera un preview de los items de un retaceo definido
-             $items = mysql_query("SELECT * FROM item WHERE idRetaceo='".hideunlock($_SESSION["n_declaracion"])."' and numeroFactura ='".$nfact."'", $link);
-
+             $items = mysql_query("SELECT * FROM item WHERE idRetaceo='".hideunlock($_SESSION["n_declaracion"])."' and idFactura =".$id_factura, $link);
+echo "SELECT * FROM item WHERE idRetaceo='".hideunlock($_SESSION["n_declaracion"])."' and idFactura =".$id_factura; 
              
 }
 
@@ -641,7 +641,7 @@ if($id_factura != "" || $id_factura != "0"){
 
                 <tr>
                 <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle">
-                <?=$fact["idItem"]?>
+                <?=$fact["idItemFactura"]?>
                 </td>
                 <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle">
                 <?=$fact["descripcion"]?>

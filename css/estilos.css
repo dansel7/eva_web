@@ -39,7 +39,10 @@ body {
 }
 
 /* fin */
-
+.flink:hover{
+    cursor: pointer;
+    background-color: #f1f3f7;
+}
 .read{
     background-color:#F0F0F0;
     width:125px;

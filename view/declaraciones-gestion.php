@@ -124,7 +124,7 @@ if(isset($_GET["xm"])){
 //-------------------------------------------------------------------------------
 //----AGREGAR DATOS NUEVOS DE FACTURAS
 if(isset($_POST['addf'])){
-    
+    //SE GENERA NUEVO IDFACTRETACEO
     $idFacNuevo=$clase_database->GenerarNuevoId($link, "idFactRetaceo", "factura","where idRetaceo='".hideunlock($_SESSION["n_declaracion"])."'");
     $_POST["idFactRetaceo"]=($idFacNuevo=="") ? 1 : $idFacNuevo;    
  
@@ -195,7 +195,7 @@ if(isset($_POST['updf'])){
       
  $_POST["numero"]=strtoupper($_POST["numero"]);
  $_POST["fecha"]=  $_POST["fechaf"];
- $resultado = $clase_database->formToDB($link,'datosIniciales','post','', 'fechaf, idFactRetaceo, updf, paginas, ','update','idFactRetaceo="'.trim($_POST['idFactRetaceo']).'" and idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');
+ $resultado = $clase_database->formToDB($link,'datosIniciales','post','', 'paginas, fechaf, idFactRetaceo, updf, paginas, ','update','idFactRetaceo="'.trim($_POST['idFactRetaceo']).'" and idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');
  $resultado = $clase_database->formToDB($link,'factura','post','', 'fechaf, idFactRetaceo, updf, bultos, cuantia, pesoBruto, fob, ','update','idFactRetaceo="'.trim($_POST['idFactRetaceo']).'" and idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');
   
      if ($resultado){ 
@@ -235,9 +235,8 @@ if($id_declaracion != "" || $id_declaracion != "0"){
         }
 
               //consulta que genera un preview de las facturas de un retaceo definido
-             $facturas = mysql_query("SELECT * FROM datosIniciales WHERE idRetaceo ='".$id_declaracion."'", $link);
+             $facturas = mysql_query("SELECT d.*,f.paginas FROM datosIniciales d,factura f WHERE f.idFactRetaceo=d.idFactRetaceo and f.idRetaceo=".$id_declaracion." and d.idRetaceo =".$id_declaracion, $link);
 
-             
 }
 
 
@@ -307,14 +306,15 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                  //funcion para actualizar datos iniciales de facturas
                     if(tds.eq(0).html()!="Id Factura" && tds.eq(0).html()!="TOTAL"){
                     
-                     $('#frmf #idFactRetaceo').val(tds.eq(0).html())
+                     $('#frmf #idFactRetaceo').val(tds.eq(0).html());
                      $('#frmf #numero').val(tds.eq(1).html());
                      $('#frmf #fechaf').val(tds.eq(2).html());
-                     $('#frmf #bultos').val(tds.eq(3).html());
-                     $('#frmf #pesoBruto').val(tds.eq(4).html());
-                     $('#frmf #cuantia').val(tds.eq(5).html());
-                     $('#frmf #otrosGastos').val(tds.eq(6).html());
-                     $('#frmf #fob').val(tds.eq(7).html());
+                     $('#frmf #paginas').val(tds.eq(3).html());
+                     $('#frmf #bultos').val(tds.eq(4).html());
+                     $('#frmf #pesoBruto').val(tds.eq(5).html());
+                     $('#frmf #cuantia').val(tds.eq(6).html());
+                     $('#frmf #otrosGastos').val(tds.eq(7).html());
+                     $('#frmf #fob').val(tds.eq(8).html());
                      
                      $('#frmf #addf').attr("value","Actualizar Datos");
                      $('#frmf #addf').attr("name","updf");
@@ -573,7 +573,7 @@ if($id_declaracion != "" || $id_declaracion != "0"){
  </TD><TD>          
             <div class="texto_explicacion_formulario">Calcular Seguro:&nbsp;</div>
              <div>
-                  <Input type='hidden' Name='calcularSeguro' value="N">
+                  <Input type='hidden' Name='calcularSeguro' value="N"><br>
                   <Input id='calcularSeguro' type='Checkbox' <? if(isset($CalcSeguro)){if($CalcSeguro=="S")echo "Checked";}?> Name='calcularSeguro' value="S">
                  
              </div><br><br>
@@ -709,11 +709,13 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                 <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">Id Factura</td>
                 <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">Numero Factura</td>
                 <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">Fecha</td>                              
+                <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">Paginas</td> 
                 <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">Bultos</td>
                 <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">Peso Bruto</td>
                 <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">Cuantia</td>                                
                 <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">Gastos</td>
-                <td class="tabla_titulo" style="border: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">FOB</td></tr>
+                <td class="tabla_titulo" style="border: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">FOB</td>
+                  </tr>
            <?php
 
 
@@ -723,7 +725,7 @@ if($id_declaracion != "" || $id_declaracion != "0"){
             while($fact = mysql_fetch_array($facturas)){
                 ?>
 
-                <tr>
+                <tr class="flink">
                 <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="70">
                 <?=$fact["idFactRetaceo"]?>
                 </td>
@@ -732,6 +734,9 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                 </td>
                 <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">
                 <?=substr($fact["fecha"],0,10)?>
+                </td>
+                <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">
+                <?=$fact["paginas"]?>
                 </td>
                 <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">
                 <?=$fact["bultos"]?>
@@ -754,7 +759,7 @@ if($id_declaracion != "" || $id_declaracion != "0"){
 
                                         ?>
             <tr bgcolor="#6990BA">
-                    <td bgcolor="#6990BA" colspan="6" class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">TOTAL</td>
+                    <td bgcolor="#6990BA" colspan="7" class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">TOTAL</td>
                     <td class="tabla_titulo" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226); border-right: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle">
                                 <b>$<?echo number_format(round($GASTOStotal,2),2);?></b>
                     </td>

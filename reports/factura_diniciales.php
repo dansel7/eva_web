@@ -55,7 +55,7 @@ $pdf->SetFont('helvetica', '', 10);
 $orientacion="vertical";
 
 // ---------------INICIO DEL REPORTE-----------------
-$result=mysql_query("select numRegistro,usuario,flete from retaceo  where numero='".hideunlock($_SESSION["n_declaracion"])."'",$link);
+$result=mysql_query("select numRegistro,usuario,flete,numero from retaceo  where idRetaceo='".hideunlock($_SESSION["n_declaracion"])."'",$link);
 
 while($rows_e = mysql_fetch_array($result)){ //CONSULTA PARA ENCABEZADO
 $pdf->addpage($orientacion,'legal');//AGREGA NUEVA PAGINA POR CADA MES
@@ -66,7 +66,7 @@ $rsd='
 <tr>
 	<td ><b>No. Retaceo:</b> '.$rows_e[0].' </td>
 <td></td>	
-<td ><b>No.Control:</b> '.hideunlock($_SESSION["n_declaracion"]).'</td>
+<td ><b>No.Control:</b> '.$rows_e["numero"].'</td>
 	
 </tr>
 </table>	
@@ -84,7 +84,7 @@ $rsd='
 
 //$resultado=mysql_query("select * from factura where numeroretaceo='jor301'",$link);
 
-$resultado=mysql_query("select * from datosIniciales where numeroRetaceo='".hideunlock($_SESSION["n_declaracion"])."'",$link);
+$resultado=mysql_query("select * from datosIniciales where idRetaceo=".hideunlock($_SESSION["n_declaracion"]),$link);
 $fobTotal=0;
 $gastosTotal=0;
 

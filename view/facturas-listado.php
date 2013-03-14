@@ -245,14 +245,14 @@ $_SESSION['timeout'] = time();
    <td class="tabla_titulo" style="border: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="60">ELIMINAR</td>
   </tr>
 <?
-  	$sql_facturas = "SELECT * FROM factura WHERE idRetaceo ='".$id_declaracion."'";
+  	$sql_facturas = "SELECT * FROM factura WHERE idRetaceo =".$id_declaracion;
 	$result = mysql_query($sql_facturas,$link);
 	
 	while($fact = mysql_fetch_array($result)){
 		
 	?>
 	
-           <tr>
+           <tr class="flink">
                 <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="70">
                 <?=$fact["idFactRetaceo"]?>
                 </td>
@@ -277,7 +277,7 @@ $_SESSION['timeout'] = time();
                 <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">
                 <? $FOBtotal+=$fact["FOB"];echo $fact["FOB"];?>
                 </td>
-        <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle"><a href="facturas-gestion.php?id=<? echo hidelock($fact['idFactRetaceo']);?>"><img src="../images/icono-editar.gif" border="0"></a></td>
+        <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle"><a href="facturas-gestion.php?id=<? echo hidelock($fact['idFactura']);?>"><img src="../images/icono-editar.gif" border="0"></a></td>
         <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226); border-right: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle"><a href="javascript:eliminar('<? echo hidelock($fact['idFactRetaceo']);?>');"><img src="../images/icono-eliminar.gif" border="0"></a></td>
       </tr>
     
