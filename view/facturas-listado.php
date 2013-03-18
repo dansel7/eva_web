@@ -44,17 +44,9 @@ $_SESSION['timeout'] = time();
 	<script src="../js/jquery-ui-1.9.2.custom.js"></script>
 </head>
 <script>
-  $(document).ready(function(){
-  $('#facts tr').dblclick(function()
-    {
-                     
-                    var tds=$(this).find("td");
-                 //funcion para actualizar datos iniciales de facturas
-                    if(tds.eq(0).html()!="Id Factura"){
-                     $(location).attr('href',"facturas-gestion.php?id="+hidelockjs(tds.eq(0).html()));   
-                    }
-   });
- });
+function dbclick(id){          
+ $(location).attr('href',"facturas-gestion.php?id="+id);   
+}
   </script>
 
 
@@ -252,7 +244,7 @@ $_SESSION['timeout'] = time();
 		
 	?>
 	
-           <tr class="flink">
+           <tr class="flink" onDblClick="dbclick('<? echo hidelock($fact['idFactura']);?>')" >
                 <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="70">
                 <?=$fact["idFactRetaceo"]?>
                 </td>
@@ -278,7 +270,7 @@ $_SESSION['timeout'] = time();
                 <? $FOBtotal+=$fact["FOB"];echo $fact["FOB"];?>
                 </td>
         <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle"><a href="facturas-gestion.php?id=<? echo hidelock($fact['idFactura']);?>"><img src="../images/icono-editar.gif" border="0"></a></td>
-        <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226); border-right: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle"><a href="javascript:eliminar('<? echo hidelock($fact['idFactRetaceo']);?>');"><img src="../images/icono-eliminar.gif" border="0"></a></td>
+        <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226); border-right: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle"><a href="javascript:eliminar('<? echo hidelock($fact['idFactura']);?>');"><img src="../images/icono-eliminar.gif" border="0"></a></td>
       </tr>
     
 	<?
