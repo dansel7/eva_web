@@ -273,7 +273,15 @@ if($id_factura != "" || $id_factura != "0"){
                      //SOLO FALTA QUE ACTUALICE EN LA FUNCION DE PHP
                      }   
                      
-                    });                    
+                    });  
+                    
+                    //CALCULO DE TOTAL
+                    $('#cuantia').blur(function(){
+                        $('#precioTotal').val(parseFloat($('#cuantia').val()) * parseFloat($('#precioUnitario').val()));
+                    });
+                    $('#precioUnitario').blur(function(){
+                        $('#precioTotal').val(parseFloat($('#cuantia').val()) * parseFloat($('#precioUnitario').val()));
+                    });
 
                 });    
 
@@ -481,7 +489,7 @@ if($id_factura != "" || $id_factura != "0"){
 <TD>
          <div class="texto_explicacion_formulario">Cuantia:&nbsp;</div><br><br>
         <div>
-        <input class="required read" name="cuantia" id="cuantia" readonly rows="1" type="text" value="<? echo isset($cuantiaT) ? $cuantiaT : "";?>" title="Ingrese el Valor de Flete">
+        <input class="required read" name="cuantiaP" id="cuantiaP" readonly rows="1" type="text" value="<? echo isset($cuantiaT) ? $cuantiaT : "";?>" title="Ingrese el Valor de Flete">
         </div>
          
 </TD>
@@ -559,7 +567,7 @@ if($id_factura != "" || $id_factura != "0"){
                 <input class="required" name="bultos" id="bultos" style="width:100px" type="text" value="0.0" title="Ingrese Bultos">
                 </div>
                 </td>
-                
+                 
                 <td>
                 <div class="texto_explicacion_formulario">Peso Bruto:</div>
                 <div>
@@ -593,12 +601,45 @@ if($id_factura != "" || $id_factura != "0"){
                     </select> </div>
                 </td>
                 
+                </tr>
+            <tr>
+                
                 <td>
-                <div class="texto_explicacion_formulario">FOB:</div>
+                <div class="texto_explicacion_formulario">Descripcion:</div>
                 <div>
-                <input class="required" name="fob" id="fob" style="width:100px" type="text" value="0.0" title="Ingrese FOB">
+                <input class="required" name="Descripcion" id="Descripcion" style="width:100px" type="text" value="" title="Seleccione Descripcion">
+                <input class="required" name="descripcion2" id="descripcion2" style="width:100px" type="hidden" value="" title="">
                 </div>
                 </td>  
+                
+                  <td>
+                <div class="texto_explicacion_formulario">Partida Arancelaria:</div>
+                <div>
+                <input class="required" name="partidaArancelaria" id="partidaArancelaria" style="width:100px" type="text" value="" title="Ingrese No Partida">
+                </div>
+                </td> 
+                
+                  <td>
+                <div class="texto_explicacion_formulario">Precio Unitario:</div>
+                <div>
+                <input class="required" name="precioUnitario" id="precioUnitario" style="width:100px" type="text" value="" title="Ingrese Precio">
+                </div>
+                </td> 
+                
+                <td>
+                <div class="texto_explicacion_formulario">Total:</div>
+                <div>
+                <input readonly="readonly" class="required" name="precioTotal" id="precioTotal" style="width:100px" type="text" value="" title="">
+                </div>
+                </td> 
+                
+                <td>
+                <div class="texto_explicacion_formulario">Referencia:</div>
+                <div>
+                <input class="required" name="referencia" id="referencia" style="width:100px" type="text" value="" title="Seleccione Descripcion">
+                </div>
+                </td> 
+                
                 </tr>
             <tr>
                 <td colspan="6"></td>
