@@ -214,6 +214,7 @@ if(isset($_SESSION["n_declaracion"])){
             show: "blind",
             hide: "explode",
             width:'700',
+            position: "top",
             height: '300'
         });
  

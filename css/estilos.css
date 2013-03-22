@@ -39,6 +39,7 @@ body {
 }
 
 /* fin */
+/* estilo para los input */
 .flink:hover{
     cursor: pointer;
     background-color: #f1f3f7;
@@ -51,6 +52,69 @@ body {
 .frmspecial input{
     width:130px;
 }
+
+/*ESTILO PARA LOS SUBMIT */
+
+input[type="submit"]{
+font:normal 12px "Arial", monospace;
+color:white;
+background:#3a7ca5;
+border:3px outset #ffffff;
+box-shadow:2px 2px 5px #000000;
+-moz-box-shadow:2px 2px 5px #000000;
+-webkit-box-shadow:2px 2px 5px #000000;
+border-radius:25px 25px 25px 25px;
+-moz-border-radius:25px 25px 25px 25px;
+-webkit-border-radius:25px 25px 25px 25px;
+cursor:pointer;
+margin:0 auto;
+}
+input[type="submit"]:HOVER{
+cursor:pointer;
+position:relative;
+top:2px;
+}
+
+
+/*ESTILO PARA LOS BUTTON*/
+
+input[type="button"]{
+font:normal 12px "Arial", monospace;
+color:white;
+background: #785635;
+border:2px outset #ffffff;
+box-shadow:2px 2px 5px #000000;
+-moz-box-shadow:2px 2px 5px #000000;
+-webkit-box-shadow:2px 2px 5px #000000;
+border-radius:25px 25px 25px 25px;
+-moz-border-radius:25px 25px 25px 25px;
+-webkit-border-radius:25px 25px 25px 25px;
+cursor:pointer;
+margin:0 auto;
+}
+input[type="button"]:HOVER{
+cursor:pointer;
+position:relative;
+top:2px;
+}
+
+
+/*ESTILO PARA LOS INPUT TEXT */
+
+input[type="text"]{
+font:normal 12px "Arial", monospace;
+border:3px outset #ffffff;
+box-shadow:1px 1px 3px #001c45;
+-moz-box-shadow:1px 1px 3px #001c45;
+-webkit-box-shadow:1px 1px 3px #001c45;
+border-radius:3px 3px 3px 3px;
+-moz-border-radius:3px 3px 3px 3px;
+-webkit-border-radius:3px 3px 3px 3px;
+
+margin:0 auto;
+}
+
+
 
 a{text-decoration:none;color:white}
 
@@ -136,7 +200,9 @@ td.cabecera {
   background-repeat:no-repeat;
   width:988px;
   height:67px;
- 
+  
+
+        border:3px outset #ffffff;
 	border-top-left-radius: 26px;
 	-moz-border-top-left-radius: 26px;
 		border-top-right-radius: 26px;

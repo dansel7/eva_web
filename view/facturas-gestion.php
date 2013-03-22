@@ -277,13 +277,40 @@ if($id_factura != "" || $id_factura != "0"){
                     
                     //CALCULO DE TOTAL
                     $('#cuantia').blur(function(){
-                        $('#precioTotal').val(parseFloat($('#cuantia').val()) * parseFloat($('#precioUnitario').val()));
+                        $('#precioTotal').val((parseFloat($('#cuantia').val()) * parseFloat($('#precioUnitario').val())).toFixed(2));
                     });
                     $('#precioUnitario').blur(function(){
-                        $('#precioTotal').val(parseFloat($('#cuantia').val()) * parseFloat($('#precioUnitario').val()));
+                        $('#precioTotal').val((parseFloat($('#cuantia').val()) * parseFloat($('#precioUnitario').val())).toFixed(2));
                     });
-
-                });    
+                    
+                    //DIV DE BUSQUEDAS
+                    $( "#dialogDesc" ).dialog({
+                        autoOpen: false,
+                        show: "slide",
+                        hide: "slide",
+                        width:'500',
+                        position: "top",
+                        height: '300'
+                    });
+                    $( "#dialogAranc" ).dialog({
+                        autoOpen: false,
+                        show: "slide",
+                        hide: "slide",
+                        width:'500',
+                        position: "top",
+                        height: '300'
+                    });
+                    $( "#btnBuscarD" ).click(function() {
+                        $( "#dialogDesc" ).dialog( "open" );
+                        return false;
+                    });
+                    $( "#btnBuscarPA" ).click(function() {
+                        $( "#dialogAranc" ).dialog( "open" );
+                        return false;
+                    });
+                    //FIN DIV DE BUSQUEDAS
+                    
+});    
 
 
     </script>
@@ -441,6 +468,7 @@ if($id_factura != "" || $id_factura != "0"){
 
 
 <CENTER>
+    <h4 style="font-family:helvetica">Datos de Factura</h4>
 <TABLE cellpadding="0" cellspacing="0" >
 <TR><TD WIDTH="100" rowspan="4">
 &nbsp;
@@ -465,7 +493,7 @@ if($id_factura != "" || $id_factura != "0"){
 <TR><TD>
          <div class="texto_explicacion_formulario">Bultos:&nbsp;</div><br><br>
         <div>
-        <input class="required" name="bultos" id="bultos" rows="1" type="text" value="<? echo isset($bultos) ? $bultos : "";?>" title="Ingrese el Valor de Flete">
+        <input class="required" name="bultos" id="bultos" width rows="1" type="text" value="<? echo isset($bultos) ? $bultos : "";?>" title="Ingrese el Valor de Flete">
         </div>
          
 </TD>
@@ -523,28 +551,15 @@ if($id_factura != "" || $id_factura != "0"){
 </TR> 
 </TABLE>
 </CENTER>        
+<br>
+ <center>
 
-<hr>
-            
-            
-        <center>
-        <?php 
-        //CONDICION PARA MOSTRAR BOTONES, EN EL CASO DE UN NUEVO REGISTRO O DE UNA ACTUALIZACION
-        if(!strcmp($opc, 'nuevo')){	
-            ?>
-          <div><input name="submit" id="submit" style="float: center" value="Guardar" type="submit"></div>
-        <?php
-        } 
-        else if(strcmp($fac_valid,0)){
-            ?>
-          <div><input name="submit" id="submit" style="float: center" value="Actualizar" type="submit"></div>
-        
+          <div><input name="submit" id="submit" style="float: center" value="Calcular Pesos y Bultos" type="submit"></div
+
+        </center> 
         </form>
-               </center>   
-      <?php    
-        }	
-      ?>   
-
+             <br>
+<hr>
              
 <!---------------------------FIN DEL FORMULARIO facturas-------------------------------------->
 
@@ -559,40 +574,100 @@ if($id_factura != "" || $id_factura != "0"){
                  
               <h4 style="font-family:helvetica">Agregar Items a la Factura</h4>
               <input class="required" name="idFactRetaceo" id="idFactRetaceo" type="hidden" value="" title="">
-                
+              <center>
              <table><tr>
-                <td>
+                <td style="width:120px">
                 <div class="texto_explicacion_formulario">Cantidad de Bultos:</div>
                 <div>
-                <input class="required" name="bultos" id="bultos" style="width:100px" type="text" value="0.0" title="Ingrese Bultos">
+                <input class="required" name="bultos" id="bultos" style="width:120px" type="text" value="0" title="Ingrese Bultos">
                 </div>
                 </td>
                  
-                <td>
+                <td style="width:120px">
                 <div class="texto_explicacion_formulario">Peso Bruto:</div>
                 <div>
-                <input class="required" name="pesoBruto" id="pesoBruto" style="width:100px" type="text" value="0.0" title="Ingrese Peso Bruto">
+                <input class="required" name="pesoBruto" id="pesoBruto" style="width:120px" type="text" value="0.0" title="Ingrese Peso Bruto">
                 </div>
                 </td>
-                <td>
+                <td style="width:120px">
                 <div class="texto_explicacion_formulario">Peso Neto:</div>
                 <div>
-                <input class="required" name="pesoNeto" id="pesoNeto" style="width:100px" type="text" value="0.0" title="Ingrese Peso Neto">
+                <input class="required" name="pesoNeto" id="pesoNeto" style="width:120px" type="text" value="0.0" title="Ingrese Peso Neto">
                 </div>
-                </td>
-                <td>
+                </td >
+                <td style="width:120px">
                 <div class="texto_explicacion_formulario">Cuantia:</div>
                 <div>
-                <input class="required" name="cuantia" id="cuantia" style="width:100px" type="text" value="0.0" title="Ingrese Cuantia">
+                <input class="required" name="cuantia" id="cuantia" style="width:120px" type="text" value="0.0" title="Ingrese Cuantia">
                 </div>
                 </td>
                 
+                <td rowspan="3"> &nbsp</td>
+                
+                <td style="width:120px">
+                <div class="texto_explicacion_formulario">Precio Unitario:</div>
+                <div>
+                <input class="required" name="precioUnitario" id="precioUnitario" style="width:120px" type="text" value="0.0" title="Ingrese Precio">
+                </div>
+                </td> 
+                
+                
+                </tr>
+                <tr>
+                
+                <td colspan="2">
+                <div class="texto_explicacion_formulario">Descripcion:&nbsp</div>
+                <div>
+                <input class="required" name="Descripcion" id="Descripcion" style="width:250px" type="text" value="" title="Seleccione Descripcion">
+                <input class="required" name="descripcion2" id="descripcion2" style="width:100px" type="hidden" value="" title="">
+                </div>
+                </td>  
+                
+              
+                <td>
+                     <div class="texto_explicacion_formulario">&nbsp</div>
+                    <div style="padding-top:30px">
+                    <input style="width:100px" type="button" id="btnBuscarD" name="btnBuscarD" value="Buscar" />
+                    </div>
+                </td>
+                
+                <td>
+                <div class="texto_explicacion_formulario">Partida Arancelaria:</div>
+                <div>
+                <input class="required" name="partidaArancelaria" id="partidaArancelaria" style="width:110px" type="text" value="" title="Ingrese No Partida">
+                </div>
+                </td> 
+            
+            <td>    
+                <div class="texto_explicacion_formulario">&nbsp</div>
+                    <div style="padding-top:30px">
+                    <input style="width:100px" type="button" id="btnBuscarPA" name="btnBuscarPA" value="Buscar" />
+                    </div>
+            </td>
+            
+            
+            </tr>
+            <tr>
+            <td >
+                <div class="texto_explicacion_formulario">Referencia:&nbsp</div>
+                <div>
+                <input class="required" name="referencia" id="referencia" style="width:100px" type="text" value="" title="Seleccione Descripcion">
+                </div>
+                </td> 
+
+                <td>
+                <div class="texto_explicacion_formulario">Total:&nbsp</div>
+                <div>
+                <input readonly="readonly" class="required" name="precioTotal" id="precioTotal" style="width:110px" type="text" value="0.0" title="">
+                </div>
+                </td> 
+                
                 <td>
                 <div class="texto_explicacion_formulario">Unidades:</div>
-                <div>
+                <div style="padding-top:10px">
                     <select name="unidades" id="unidades" title="Seleccione una Unidad">
                 <?php
-                        $result = mysql_query("SELECT * from unidades", $link);
+                        $result = mysql_query("SELECT * from unidades order by codigo desc", $link);
                 while($fila = mysql_fetch_array($result)){
                 
                       echo  '<option value="'.$fila["codigo"].'"  >'.$fila["codigo"].' '.$fila["cantidad"].'</option>';       
@@ -600,58 +675,18 @@ if($id_factura != "" || $id_factura != "0"){
                 ?>
                     </select> </div>
                 </td>
+                                
                 
-                </tr>
-            <tr>
-                
-                <td>
-                <div class="texto_explicacion_formulario">Descripcion:</div>
-                <div>
-                <input class="required" name="Descripcion" id="Descripcion" style="width:100px" type="text" value="" title="Seleccione Descripcion">
-                <input class="required" name="descripcion2" id="descripcion2" style="width:100px" type="hidden" value="" title="">
-                </div>
-                </td>  
-                
-                  <td>
-                <div class="texto_explicacion_formulario">Partida Arancelaria:</div>
-                <div>
-                <input class="required" name="partidaArancelaria" id="partidaArancelaria" style="width:100px" type="text" value="" title="Ingrese No Partida">
-                </div>
-                </td> 
-                
-                  <td>
-                <div class="texto_explicacion_formulario">Precio Unitario:</div>
-                <div>
-                <input class="required" name="precioUnitario" id="precioUnitario" style="width:100px" type="text" value="" title="Ingrese Precio">
-                </div>
-                </td> 
-                
-                <td>
-                <div class="texto_explicacion_formulario">Total:</div>
-                <div>
-                <input readonly="readonly" class="required" name="precioTotal" id="precioTotal" style="width:100px" type="text" value="" title="">
-                </div>
-                </td> 
-                
-                <td>
-                <div class="texto_explicacion_formulario">Referencia:</div>
-                <div>
-                <input class="required" name="referencia" id="referencia" style="width:100px" type="text" value="" title="Seleccione Descripcion">
-                </div>
-                </td> 
-                
-                </tr>
-            <tr>
-                <td colspan="6"></td>
-                
-                <td>
+                <td colspan="3">
                     <div class="texto_explicacion_formulario">&nbsp</div>
-                    <div><input name="addf" id="addf" style="float: right;" value="Agregar Factura" type="submit">
+                    <div style="padding-top: 30px;text-align: LEFT;">
+                        <input name="addItem" id="addItem" value="Agregar Item" type="submit">
                     </div>
-                  
-                </td> 
-            </tr>
+                </td>
+                
+                </tr>
              </table>
+             </center>
           </form>
 <form method="Post">
 <input name="cancel" id="cancel" style="display:none;float: right;" value="Cancelar" type="submit">
@@ -660,7 +695,7 @@ if($id_factura != "" || $id_factura != "0"){
 <!---------------------------FIN DEL FORMULARIO-------------------------------------->
 
 
-            <div style="float:center" class="texto_explicacion_formulario">Detalles de Facturas: (De doble click para editar)</div>
+            <div style="float:LEFT" class="texto_explicacion_formulario">Detalles de Facturas: (De doble click para editar)</div>
             <table id="factini" align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
               <tbody><tr bgcolor="#6990BA" >
                 <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="40">Id Item</td>
@@ -733,6 +768,13 @@ if($id_factura != "" || $id_factura != "0"){
 <tr><td class="texto_copyright" align="right" height="44" valign="middle"> <?=$copyrigth;?></td></tr>
 </tbody></table>
 </center>
+<!-- DIV DE DESCRIPCIONES -->
+  <div id="dialogDesc" title="Buscar Descripciones" align="center">
+  </div>
+<!-- DIV DE ARANCELES -->
+  <div id="dialogAranc" title="Buscar Partidas Arancelarias" align="center">
+  </div>
+
 <? include_once("../includes/barra_menu.php");?>
 </body></html>
 <?

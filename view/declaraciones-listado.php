@@ -242,12 +242,12 @@ $_SESSION['timeout'] = time();
                 		<tr><td><div id='logo'></div></td></tr>
                 	</table>
                 	
-                  <table align="center" border="0" cellpadding="0" cellspacing="0" width="930">
+                  <table align="center" border="0" cellpadding="0" cellspacing="0" width="930" >
                     <tbody><tr>
                       <td valign="top" align="center">
                       
                       <span class="texto_ok">Ingrese Numero Declaracion</span><br/>
-                      <input type="textbox" id="busqIdDeclaracion" name="busqIdDeclaracion">
+                      <input type="text" id="busqIdDeclaracion" name="busqIdDeclaracion">
                       <input type="button" id="btnBusqueda" name="busqIdDeclaracion" value="Buscar">
                       	
                       <br /><br>

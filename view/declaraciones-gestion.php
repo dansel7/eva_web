@@ -612,7 +612,7 @@ if($id_declaracion != "" || $id_declaracion != "0"){
         </form>
          <!--FORMULARIO, AL HACER SUBMIT CIERRA LA DECLARACION    -->
         <form action="<?=$enlace_gestion.'?id='.hidelock($ncontrol)?>" method="post">
-        <div><input name="cerrar" id="cerrar" style="float: center" value="Cerrar Declaracion" type="submit"></div>
+        <div><input name="cerrar" id="cerrar" style="background:#785635;float: center" value="Cerrar Declaracion" type="submit"></div>
         </form>
                </center>   
       <?php    
