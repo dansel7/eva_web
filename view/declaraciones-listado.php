@@ -92,6 +92,12 @@ $_SESSION['timeout'] = time();
 					 })
 				}) 
                                 
+                                $("#busqIdDeclaracion").keypress(function(e) {
+                                    if(e.which == 13) {
+                                    $("#btnBusqueda").click();  
+                                    }
+                                });
+                                
                                 $("#btnBusqueda").click(function(){
                                     $("#cargar").html("<center><img width='50px' height='50px' src='../images/load.gif'></center>"); 
                                     $.post("../includes/declaraciones_empresas.php",
@@ -99,7 +105,7 @@ $_SESSION['timeout'] = time();
 						   function(data){
 						   $("#cargar").html(data);  
 					 })
-                                })
+                                });
 			});
                         
 			
@@ -241,14 +247,14 @@ $_SESSION['timeout'] = time();
                 	<table align="left" border="0" cellpadding="0" cellspacing="0" width="930">
                 		<tr><td><div id='logo'></div></td></tr>
                 	</table>
-                	
+
                   <table align="center" border="0" cellpadding="0" cellspacing="0" width="930" >
                     <tbody><tr>
                       <td valign="top" align="center">
                       
                       <span class="texto_ok">Ingrese Numero Declaracion</span><br/>
                       <input type="text" id="busqIdDeclaracion" name="busqIdDeclaracion">
-                      <input type="button" id="btnBusqueda" name="busqIdDeclaracion" value="Buscar">
+                      <input type="button" id="btnBusqueda" name="btnBusqueda" value="Buscar">
                       	
                       <br /><br>
                       
@@ -265,7 +271,7 @@ $_SESSION['timeout'] = time();
                       
                       </td>
                     </tr>
-                  </tbody></table> 
+                  </tbody></table>   
                 </td>
               </tr>
             </tbody></table> 

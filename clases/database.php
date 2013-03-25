@@ -10,7 +10,10 @@
 		$result = mysql_query("SELECT MAX(".$idcolumn.")+1 AS Ultimo FROM ". $tabla ." ".$condicion." ORDER BY ".$idcolumn." DESC LIMIT 1", $link);
         //echo "SELECT MAX(".$idcolumn.")+1 AS Ultimo FROM ". $tabla ." ".$condicion." ORDER BY ".$idcolumn." DESC LIMIT 1";
 		$fila = mysql_fetch_row($result);
-		return $fila[0];
+                if($fila[0]=="")
+		return 1;
+                else
+                return $fila[0];
 	}
         
 	

@@ -59,6 +59,7 @@ $opc = isset($_GET['opc']) ? hideunlock($_GET['opc']) : 0;//variable que define 
 //ACCION AL CERRAR UNA DECLARACION, ELIMINA DE LA SESION Y REDIRECCIONA PARA ABRIR OTRO.
 if (isset($_POST['cerrar'])){
    unset($_SESSION["n_declaracion"]);
+   unset($_SESSION["NIT_EMPRESA"]);
    header ("Location: ../view/".$enlace_listado);
 }
 
@@ -233,7 +234,10 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                 $TipoCalcSeguro= $fila['TipoCalculoSeguro'];
                 $CalcSeguro= $fila['calcularSeguro'];
         }
-
+        //CREA UNA VARIABLE DE SESION DE EL NIT DE LA EMPRESA
+        if(!isset($_SESSION["NIT_EMPRESA"])){
+        $_SESSION["NIT_EMPRESA"]=$nitempresa;
+        }
               //consulta que genera un preview de las facturas de un retaceo definido
              $facturas = mysql_query("SELECT d.*,f.paginas FROM datosIniciales d,factura f WHERE f.idFactRetaceo=d.idFactRetaceo and f.idRetaceo=".$id_declaracion." and d.idRetaceo =".$id_declaracion, $link);
 

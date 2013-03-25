@@ -30,42 +30,17 @@ $link = $conexion->conectar();
 $clase_database = new database();
 
 
-$id_factura = isset($_GET['id']) ? hideunlock($_GET['id']) : 0;
+$id_factura = isset($_REQUEST['id']) ? hideunlock($_REQUEST['id']) : 0;
 
 $opc = isset($_GET['opc']) ? hideunlock($_GET['opc']) : 0;//variable que define la opcion nuevo,actualizar
 
-//ACCION AL CERRAR UNA DECLARACION, ELIMINA DE LA SESION Y REDIRECCIONA PARA ABRIR OTRO.
-if (isset($_POST['cerrar'])){
-   unset($_SESSION["n_declaracion"]);
-   header ("Location: ../view/".$enlace_listado);
-}
 
+//CALCULO DE BULTOS Y PESOS
 if (isset($_POST['submit'])){
-//PARA QUE GUARDE EL NIT SIN ENCRIPTACION.	
-    $_POST['NIT']=  hideunlock($_POST['NIT']);
-    
-//Funcion para poder hacer el insert, o update de declaracion
-if($_POST['submit']=='Actualizar'){
-        $_POST["fechaModificado"]=date("Y-m-d H:i:s");
-        $resultado = $clase_database->formToDB($link,'retaceo','post','', 'submit, frm, ','update','numero="'.$_POST['numero'].'"');
-
-}else if($_POST['submit']=='Guardar'){
+if($_POST['submit']=='Guardar'){
         $_POST["idRetaceo"]=$clase_database->GenerarNuevoId($link, "idRetaceo", "retaceo", "");
         $_POST["usuario"]=$_SESSION["usu"];
         $_POST["estado"]="0";
-        $_POST["fechaCreado"]=date("Y-m-d H:i:s");
-        $_POST["fechaModificado"]=date("Y-m-d H:i:s");
-        $_POST["bultos"]=0.0;
-        $_POST["pesoBruto"]=0.0;
-        $_POST["cuantia"]=0.0;
-        $_POST["FOB"]=0.0;
-        $_POST["otrosGastos"]=0.0;
-        $_POST["seguro"]=0.0;
-        $_POST["CIF"]=0.0;
-        $_POST["DAI"]=0.0;
-        $_POST["IVA"]=0.0;
-        $_POST["aPago"]=0.0;
-        $_POST["total"]=0.0;
         $resultado = $clase_database->formToDB($link,'retaceo','post','', 'submit, frm, ','insert','');       
 }
 
@@ -79,36 +54,16 @@ if ($resultado){
 }
 
 //----AGREGAR DATOS NUEVOS DE FACTURAS
-if(isset($_POST['addf'])){
+if(isset($_POST['addItem'])){
     
-    $idFacNuevo=$clase_database->GenerarNuevoId($link, "idFactRetaceo", "factura","where idRetaceo='".hideunlock($_SESSION["n_declaracion"])."'");
-    $_POST["idFactRetaceo"]=($idFacNuevo=="") ? 1 : $idFacNuevo;    
- 
+    $idItemFact=$clase_database->GenerarNuevoId($link, "idItemFactura", "item","where idFactura='".$id_factura."' and idRetaceo='".hideunlock($_SESSION["n_declaracion"])."'");
+    $_POST["idFactura"]=$id_factura;
     $_POST["idRetaceo"]=  hideunlock($_SESSION["n_declaracion"]);
-    $_POST["fecha"]=  $_POST["fechaf"];//SE LE PUSO OTRO NOMBRE A LOS DATOS, YA QUE EL FORM RETACEO POSEE UN CAMPO LLAMADO FECHA.
-    $_POST["numero"]=strtoupper($_POST["numero"]);
-    
-    //COMPROBAR SI EL NUMERO DE FACTURA YA EXISTE.
-    $result = mysql_query("SELECT * FROM factura WHERE numero ='".$_POST["numero"]."' and idRetaceo='".hideunlock($_SESSION["n_declaracion"])."'", $link);
-  if(mysql_affected_rows()==1){
-      
-        $resultado=true; 
-        $mensaje = "Numero de Factura Ya Existe";
-        $clase_css = "texto_error";
-        
-   }
-  else
-   { //SINO EXISTE LO INGRESA    
-  
-        $resultado = $clase_database->formToDB($link,'datosIniciales','post','', 'addf, frmf, npag, fechaf, ','insert','');
-        $_POST["bultos"]=0.0;
-        $_POST["pesoBruto"]=0.0;
-        $_POST["cuantia"]=0.0;
-        $_POST["fob"]=0.0;
-        $_POST["total"]=0.0;
-        $_POST["pesoNeto"]=0.0;
-        $resultado = $clase_database->formToDB($link,'factura','post','','npag, fechaf, addf, frmf, npag, ','insert','');
-
+    $_POST["idItemFactura"]=$idItemFact;
+    $_POST["num_item_declaracion"]=0;
+    $_POST["nuevoUsado"]="N";
+    $_POST["tipoDescripcion"]="N";
+       $resultado = $clase_database->formToDB($link,'item','post','','addItem, ','insert','');
         if ($resultado){ 
             $mensaje = "Informacion Almacenada Exitosamente";
             $clase_css = "texto_ok";
@@ -118,41 +73,19 @@ if(isset($_POST['addf'])){
         }
         
          //ACTUALIZA EL VALOR DE OTROSGASTOS DE LA TABLA DE RETACEO Y EL CIF
-       $resultado = $clase_database->formToDB($link,'retaceo','','otrosGastos=(SELECT SUM(otrosGastos) from factura where idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'")','','update','numero="'.hideunlock($_SESSION["n_declaracion"]).'"');
-      $resultado = $clase_database->formToDB($link,'retaceo','','CIF=flete+otrosGastos+seguro', '','update','numero="'.hideunlock($_SESSION["n_declaracion"]).'"');
-  }
+      //$resultado = $clase_database->formToDB($link,'retaceo','','otrosGastos=(SELECT SUM(otrosGastos) from factura where idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'")','','update','numero="'.hideunlock($_SESSION["n_declaracion"]).'"');
+      //$resultado = $clase_database->formToDB($link,'retaceo','','CIF=flete+otrosGastos+seguro', '','update','numero="'.hideunlock($_SESSION["n_declaracion"]).'"');
   
 }
 
 
 //-----MODIFICAR DATOS NUEVOS DE FACTURAS
-if(isset($_POST['updf'])){
- //COMPROBAR SI EL NUMERO DE FACTURA YA EXISTE.
-    //PROGRAMACION CON LOGICA NEGADA
-    //FUNCION TRIM UTILIZADA PARA QUITAR LOS ESPACIOS 
-    //AL OBTENER LOS VALORES DE LA TABLA QUE SE INSERTARON EN LOS CAMPOS INPUT
-    $idf=0;
-    $valid=true;
-    $result = mysql_query("SELECT idFactRetaceo FROM factura WHERE numero ='". trim($_POST["numero"])."' and idRetaceo='".hideunlock($_SESSION["n_declaracion"])."'", $link);   
-    if(mysql_affected_rows()>=1){
-       $idf = mysql_fetch_row($result);      
-        if($idf[0]!=trim($_POST['idFactRetaceo'])){
-            $valid=false;
+if(isset($_POST['updItem'])){
 
-        } 
-   }
-   if(!$valid){
-    $resultado=true; 
-    $mensaje = "Numero de Factura Ya Existe";
-    $clase_css = "texto_error";    
-    
-  }else{ //SINO EXISTE LO INGRESA 
-      
  $_POST["numero"]=strtoupper($_POST["numero"]);
  $_POST["fecha"]=  $_POST["fechaf"];
  $resultado = $clase_database->formToDB($link,'datosIniciales','post','', 'fechaf, idFactRetaceo, updf, npag, ','update','idFactRetaceo="'.trim($_POST['idFactRetaceo']).'" and idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');
- $resultado = $clase_database->formToDB($link,'factura','post','', 'fechaf, idFactRetaceo, updf, npag, bultos, cuantia, pesoBruto, fob, ','update','idFactRetaceo="'.trim($_POST['idFactRetaceo']).'" and idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');
-  
+
      if ($resultado){ 
             $mensaje = "Informacion Almacenada Exitosamente";
             $clase_css = "texto_ok";
@@ -164,12 +97,9 @@ if(isset($_POST['updf'])){
       $resultado = $clase_database->formToDB($link,'retaceo','','otrosGastos=(SELECT SUM(otrosGastos) from factura where idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'")','','update','numero="'.hideunlock($_SESSION["n_declaracion"]).'"');
       $resultado = $clase_database->formToDB($link,'retaceo','','CIF=flete+otrosGastos+seguro', '','update','numero="'.hideunlock($_SESSION["n_declaracion"]).'"');
 
-   }
 
 }
 
-//VARIABLE QUE VERIFICA SI LA DECLARACION EXISTE Y ES VALIDA.
-$fac_valid=0;
 //CARGA DE DATOS DESDE BD
 if($id_factura != "" || $id_factura != "0"){
         $result = mysql_query("SELECT * FROM factura WHERE idRetaceo='".hideunlock($_SESSION["n_declaracion"])."' and idFactura ='".$id_factura."'", $link);
@@ -216,6 +146,8 @@ if($id_factura != "" || $id_factura != "0"){
 </style>
     <script>
                 $(document).ready(function(){
+                    
+                    
                     $("#frm").validate();
                     $("#frmf").validate();   
 //funcion para poner el valor retornado de la BD
@@ -290,63 +222,79 @@ if($id_factura != "" || $id_factura != "0"){
                         hide: "slide",
                         width:'500',
                         position: "top",
-                        height: '300'
+                        height: '350',
+                    close: function( event, ui ) {$("#resDescrip").html("");$("#busqDescripcion").val("")}
                     });
+
                     $( "#dialogAranc" ).dialog({
                         autoOpen: false,
                         show: "slide",
                         hide: "slide",
                         width:'500',
                         position: "top",
-                        height: '300'
+                        height: '350',
+                    close: function( event, ui ) { $("#resArancel").html("");$("#busqArancel").val("")}
                     });
+                    
+                    //ABREN LOS CUADROS DE DIALOGO DE BUSQUEDAS
+                    
                     $( "#btnBuscarD" ).click(function() {
-                        $( "#dialogDesc" ).dialog( "open" );
+//SI TXTBOX DESCRIPCION ESTA CON UN VALOR EL LO BUSCA INMEDIATAMENTE ANTES DE ABRIR EL CUADRO DE BUSQUEDA   
+                        if($("#Descripcion").val()!=""){
+                         $("#busqDescripcion").val($("#Descripcion").val());
+                         $("#btnBusqDesc").click(); 
+                        }
+
+                        $( "#dialogDesc" ).dialog("open");
                         return false;
                     });
+                    
                     $( "#btnBuscarPA" ).click(function() {
-                        $( "#dialogAranc" ).dialog( "open" );
+                        
+//SI TXTBOX PARTIDAARANCELARIA ESTA CON UN VALOR EL LO BUSCA INMEDIATAMENTE ANTES DE ABRIR EL CUADRO DE BUSQUEDA   
+                        if($("#partidaArancelaria").val()!=""){
+                         $("#busqArancel").val($("#partidaArancelaria").val())
+                         $("#btnBusqAranc").click(); 
+                        }
+                        
+                        $( "#dialogAranc" ).dialog("open");
                         return false;
                     });
                     //FIN DIV DE BUSQUEDAS
                     
+                    
+                //RESULTADO BUSQUEDAS                    
+                 $("#btnBusqDesc").click(function(){
+                    if($("#busqDescripcion").val()==""){ $("#resDescrip").html("Ingrese una Descripcion");}
+                    else{
+                    $("#resDescrip").html("<center><img width='50px' height='50px' src='../images/load.gif'></center>"); 
+                    $.post("../includes/descripciones-items.php",
+                    {descripcion: $("#busqDescripcion").val(),nit_empresa: '<?php echo hidelock($_SESSION["NIT_EMPRESA"]);?>'},
+                           function(data){
+                           $("#resDescrip").html(data);  
+                           })
+                    }                     
+                    
+                });
+                
+                
+                $("#btnBusqAranc").click(function(){
+                    if($("#busqArancel").val()=="") { $("#resArancel").html("Ingrese un numero de Partida Arancelaria");}
+                    else{
+                    $("#resArancel").html("<center><img width='50px' height='50px' src='../images/load.gif'></center>"); 
+                    $.post("../includes/partidasArancel-items.php",
+                    {arancel: $("#busqArancel").val()},
+                           function(data){
+                           $("#resArancel").html(data);  
+                           })
+                    }
+               
+                });
+                //FIN OBTENCION RESULTADOS BUSQUEDAS
 });    
 
 
     </script>
-    
-    
-          <?
-        //SI LA OPCION ES NUEVA SOLAMENTE SE GENERA UN NUEVO NUMERO DE CONTROL
-        if(!strcmp($opc, 'nuevo')){
-
-                $f=false;
-                
-                while($f!=TRUE){
-                $result = mysql_query("SELECT prefijo,correlativo FROM usuarios WHERE usuario ='".$_SESSION["usu"]."'", $link);
-
-                while($fila = mysql_fetch_array($result)){
-                      //existe usuario y obtiene correlativos
-                        $prefijo = strtoupper($fila['prefijo']);
-                        $correlativo=$fila['correlativo'];
-                }
-                //busca si ya existe un retaceo con ese correlativo
-                $result = mysql_query("SELECT numero FROM retaceo WHERE numero ='".$prefijo.$correlativo."'", $link);
-                
-                if(mysql_affected_rows($result)==0){
-                        //se asigna el valor del nuevo retaceo
-                        $ncontrol=$prefijo.$correlativo;
-                        $f=true;
-                //se actualiza el correlativo del usuario
-                $resultado = $clase_database->formToDB($link,'usuarios','','correlativo='.($correlativo+1),'','update',"usuario='".$_SESSION["usu"]."'");
-                }
-
-                }
-
-        }
-
-        ?>     
-
 </head>
 
 <body>
@@ -418,10 +366,11 @@ if($id_factura != "" || $id_factura != "0"){
 <tbody><tr>
 <td class="menu_fondo" align="center" valign="top">
   <table align="center" border="0" cellpadding="0" cellspacing="0" width="930">
-    <tbody><tr>
+    <tbody>
+    <tr>
       <td valign="top">
       <br />
-<span class="<? echo $clase_css; ?>"><? echo $mensaje; ?></span>
+      <span class="<? echo $clase_css; ?>"><? echo $mensaje; ?></span>
       <br />
       </td>
     </tr>
@@ -450,20 +399,8 @@ if($id_factura != "" || $id_factura != "0"){
         <tbody><tr>
           <td valign="top">
               
-      <?php 
-      //CONDICION PARA REDIRECCIONAR AL NUEVO REGISTRO, A LA HORA DE GUARDAR
-      //O SINO REDIRECCIONARLO AL MISMO A LA HORA DE ACTUALIZAR
-        if(!strcmp($opc, 'nuevo')){	
-            ?>
-         <form name="frm" id="frm" action="<?=$enlace_gestion.'?id='.hidelock($ncontrol)?>" method="post" style="margin:0px;"> 
-        <?php
-        } 
-        else if(strcmp($fac_valid,0)){
-            ?>
-         <form name="frm" id="frm" action="<?=$_SERVER['REQUEST_URI'];?>" method="post" style="margin:0px;"> 
-        <?php    
-        }	
-       ?>
+
+<form name="frm" id="frm" action="<?=$enlace_gestion.'?id='.hidelock($ncontrol)?>" method="post" style="margin:0px;"> 
 <!------------INICIO DE LOS CAMPOS DEL FORMULARIO-------------->
 
 
@@ -553,28 +490,22 @@ if($id_factura != "" || $id_factura != "0"){
 </CENTER>        
 <br>
  <center>
+     <input type="hidden" id="id" name="id" value="<?=  hidelock($id_factura)?>">
+<div><input name="submit" id="submit" style="float: center" value="Calcular Pesos y Bultos" type="submit"></div>
 
-          <div><input name="submit" id="submit" style="float: center" value="Calcular Pesos y Bultos" type="submit"></div
-
-        </center> 
+</center> 
         </form>
-             <br>
+        <br>
 <hr>
              
 <!---------------------------FIN DEL FORMULARIO facturas-------------------------------------->
 
-          <?php
-           //si es un retaceo existente que muestre sus facturas si es que tiene
-           if($fac_valid != "" || $fac_valid !="0")
-               {
-                ?>
 
 <!--------------------------INCIIO DEL FORM PARA INGRESAR DATOS INICIALES DE FACTURAS ----------------------->             
 <form class="frmspecial" name="frmf" id="frmf" action="<?=$_SERVER['REQUEST_URI'];?>" method="post" style="margin:0px;"> 
                  
               <h4 style="font-family:helvetica">Agregar Items a la Factura</h4>
-              <input class="required" name="idFactRetaceo" id="idFactRetaceo" type="hidden" value="" title="">
-              <center>
+             <center>
              <table><tr>
                 <td style="width:120px">
                 <div class="texto_explicacion_formulario">Cantidad de Bultos:</div>
@@ -618,7 +549,7 @@ if($id_factura != "" || $id_factura != "0"){
                 <td colspan="2">
                 <div class="texto_explicacion_formulario">Descripcion:&nbsp</div>
                 <div>
-                <input class="required" name="Descripcion" id="Descripcion" style="width:250px" type="text" value="" title="Seleccione Descripcion">
+                <input class="required" name="Descripcion" id="Descripcion" style="width:250px" type="text" value="" title="Requerido">
                 <input class="required" name="descripcion2" id="descripcion2" style="width:100px" type="hidden" value="" title="">
                 </div>
                 </td>  
@@ -634,7 +565,7 @@ if($id_factura != "" || $id_factura != "0"){
                 <td>
                 <div class="texto_explicacion_formulario">Partida Arancelaria:</div>
                 <div>
-                <input class="required" name="partidaArancelaria" id="partidaArancelaria" style="width:110px" type="text" value="" title="Ingrese No Partida">
+                <input class="required" name="partidaArancelaria" id="partidaArancelaria" style="width:110px" type="text" value="" title="Requerido">
                 </div>
                 </td> 
             
@@ -651,7 +582,7 @@ if($id_factura != "" || $id_factura != "0"){
             <td >
                 <div class="texto_explicacion_formulario">Referencia:&nbsp</div>
                 <div>
-                <input class="required" name="referencia" id="referencia" style="width:100px" type="text" value="" title="Seleccione Descripcion">
+                <input name="referencia" id="referencia" style="width:100px" type="text" value="" title="Requerido">
                 </div>
                 </td> 
 
@@ -675,9 +606,23 @@ if($id_factura != "" || $id_factura != "0"){
                 ?>
                     </select> </div>
                 </td>
-                                
                 
-                <td colspan="3">
+                <td>
+                <div class="texto_explicacion_formulario">No. Pagina:</div>
+                <div style="padding-top:10px">
+                    <select name="pagFactura" id="pagFactura" title="Seleccione una Unidad">
+                    <?php
+                    $result = mysql_query("SELECT paginas from factura where idFactura=".$id_factura." and idRetaceo=".hideunlock($_SESSION["n_declaracion"]), $link);
+                    while($fila = mysql_fetch_array($result)){
+
+                          echo  '<option value="'.$fila["paginas"].'">Pagina '.$fila["paginas"].'</option>';       
+                     }
+                    ?>
+                    </select>
+                </div>  
+                </td>                
+                
+                <td colspan="2">
                     <div class="texto_explicacion_formulario">&nbsp</div>
                     <div style="padding-top: 30px;text-align: LEFT;">
                         <input name="addItem" id="addItem" value="Agregar Item" type="submit">
@@ -695,7 +640,7 @@ if($id_factura != "" || $id_factura != "0"){
 <!---------------------------FIN DEL FORMULARIO-------------------------------------->
 
 
-            <div style="float:LEFT" class="texto_explicacion_formulario">Detalles de Facturas: (De doble click para editar)</div>
+            <div style="float:LEFT" class="texto_explicacion_formulario">Detalles de Items: (De doble click para editar)</div>
             <table id="factini" align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
               <tbody><tr bgcolor="#6990BA" >
                 <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="40">Id Item</td>
@@ -746,7 +691,7 @@ if($id_factura != "" || $id_factura != "0"){
                                 <b>$<?echo number_format(round($FOBtotal,2),2);?></b>
                     </td>
             </tr>
-            </tbody></table> <? }?>
+            </tbody></table>
 
           </td>
         </tr>
@@ -768,13 +713,44 @@ if($id_factura != "" || $id_factura != "0"){
 <tr><td class="texto_copyright" align="right" height="44" valign="middle"> <?=$copyrigth;?></td></tr>
 </tbody></table>
 </center>
-<!-- DIV DE DESCRIPCIONES -->
-  <div id="dialogDesc" title="Buscar Descripciones" align="center">
-  </div>
+
+
+<!------DIV DE DESCRIPCIONES-------->
+  <div id="dialogDesc" title="Buscar Descripciones" align="center" style="overflow:hidden">
+  <table align="center" border="0" cellpadding="0" cellspacing="0">
+        <tbody><tr>
+          <td valign="top" align="left">
+          <span class="texto_ok">Ingrese una Descripcion:</span><br/>
+          <input type="text" id="busqDescripcion" name="busqDescripcion">
+          <input type="button" id="btnBusqDesc" name="btnBusqDesc" value="Buscar">                      
+          </td>
+        </tr>
+  </tbody></table>  
+      <b>Seleccione una Descripcion</b>
+      <br>
+<div ID="resDescrip" style="overflow: auto;height: 230px;width:480px">
+</div>
+      
+</div>
+<!---------------------------->
 <!-- DIV DE ARANCELES -->
   <div id="dialogAranc" title="Buscar Partidas Arancelarias" align="center">
+      <table align="center" border="0" cellpadding="0" cellspacing="0">
+        <tbody><tr>
+          <td valign="top" align="left">
+          <span class="texto_ok">Ingrese Inciso:</span><br/>
+          <input type="text" id="busqArancel" name="busqArancel">
+          <input type="button" id="btnBusqAranc" name="btnBusqAranc" value="Buscar">                      
+          </td>
+        </tr>
+        </tbody></table>
+      <b>Seleccione una Partida Arancelaria</b>
+      <br>
+      <div ID="resArancel" style="overflow: auto;height: 230px;width:480px">
+      </div>
+      
   </div>
-
+<!---------------------->
 <? include_once("../includes/barra_menu.php");?>
 </body></html>
 <?
