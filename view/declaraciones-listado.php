@@ -107,34 +107,7 @@ $_SESSION['timeout'] = time();
 					 })
                                 });
 			});
-                        
-			
-                        
-		$(function() {
-			function abrir() {
-				var selectedEffect = 'bounce';
-				var options = {};
-				$( "#avanzadas" ).effect( selectedEffect, options, 500 );
-			};
-			
-			$( "#desplegar" ).click(function() {
-				abrir();
-				return false;
-			});
-			
-			function cerrar() {
-				var selectedEffect = 'blind';
-				var options = {};
-				$( "#avanzadas" ).hide( selectedEffect, options, 1000);
-			};
 
-			$( "#cerrar" ).click(function() {
-				cerrar();
-				return false;
-			});
-			
-			$( "#avanzadas" ).hide();
-	});
         </script>
         <style>
 			#desplegar { padding: .5em 1em; text-decoration: none; font-size:11px; float:left; }
@@ -292,9 +265,9 @@ $_SESSION['timeout'] = time();
                       <table align="center" border="0" cellpadding="0" cellspacing="0" width="928">  
                         <tbody><tr>
                           <td valign="top">
-    						<div id="cargar">
+    				<div id="cargar">
 
-							</div>
+				</div>
 
 </tbody></table>
     

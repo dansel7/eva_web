@@ -63,6 +63,9 @@ if(isset($_POST['addItem'])){
     $_POST["num_item_declaracion"]=0;
     $_POST["nuevoUsado"]="N";
     $_POST["tipoDescripcion"]="N";
+    //SE CALCULA EL PRECIO TOTAL POR SI EL JAVASCRIPT ESTA DESACTIVADO
+    $_POST["precioTotal"]=number_format($_POST["cuantia"], 2, '.', '') * number_format($_POST["precioUnitario"], 2, '.', '');
+    
        $resultado = $clase_database->formToDB($link,'item','post','','addItem, ','insert','');
         if ($resultado){ 
             $mensaje = "Informacion Almacenada Exitosamente";
@@ -72,12 +75,13 @@ if(isset($_POST['addItem'])){
             $clase_css = "texto_error";
         }
         
-         //ACTUALIZA EL VALOR DE OTROSGASTOS DE LA TABLA DE RETACEO Y EL CIF
-      //$resultado = $clase_database->formToDB($link,'retaceo','','otrosGastos=(SELECT SUM(otrosGastos) from factura where idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'")','','update','numero="'.hideunlock($_SESSION["n_declaracion"]).'"');
+         //CALCULA LOS VALORES DE LA TABLA DE FACTURA.
+        //REVISAR PORQUE NO ACTUALIZA EN LAS TABLAS
+$resultado = $clase_database->formToDB($link,'factura f,(SELECT SUM(precioTotal) pt,SUM(cuantia) c,SUM(pesoBruto) pb,SUM(pesoNeto) pn,SUM(bultos) b from item 
+where idFactura='.$id_factura.' and idRetaceo='.hideunlock($_SESSION["n_declaracion"]).'")','f.FOB=i.pt,f.cuantia=i.c,f.pesoBruto=i.pb,f.pesoNeto=i.pn,f.bultos=i.b,f.total=f.otrosGastos+f.FOB','','','update','idFactura="'.$id_factura.'"');
+      
       //$resultado = $clase_database->formToDB($link,'retaceo','','CIF=flete+otrosGastos+seguro', '','update','numero="'.hideunlock($_SESSION["n_declaracion"]).'"');
-  
 }
-
 
 //-----MODIFICAR DATOS NUEVOS DE FACTURAS
 if(isset($_POST['updItem'])){
@@ -119,7 +123,7 @@ if($id_factura != "" || $id_factura != "0"){
         }
 
               //consulta que genera un preview de los items de un retaceo definido
-             $items = mysql_query("SELECT * FROM item WHERE idRetaceo='".hideunlock($_SESSION["n_declaracion"])."' and idFacturaRetaceo =".$id_factura, $link);
+             $items = mysql_query("SELECT * FROM item WHERE idRetaceo='".hideunlock($_SESSION["n_declaracion"])."' and idFactura =".$id_factura, $link);
              
 }
 
@@ -166,19 +170,23 @@ if($id_factura != "" || $id_factura != "0"){
                     $("#frm :input").tooltip();
                     $("#frmf :input").tooltip();
                     
+                    //CALCULOS
+                    $("#frmf #pesoBruto").blur(function(){
+                      $("#frmf #pesoNeto").focus();
+                      $("#frmf #pesoNeto").val($(this).val());
+                    });
                     
-                    $("#fob").focus(function(){
-                        if($(this).val()=="" || $(this).val()=="0.0") $(this).val("")
-                    }); 
-                    $("#fob").blur(function(){
-                        if($(this).val()=="") $(this).val("0.0")
-                    });
-                    $("#otrosGastos").focus(function(){
-                       if($(this).val()=="" || $(this).val()=="0.0") $(this).val("")
-                    });
-                    $("#otrosGastos").blur(function(){
-                       if($(this).val()=="") $(this).val("0.0")
-                    });
+                    $("#busqDescripcion").keypress(function(e) {
+                        if(e.which == 13) {
+                        $("#btnBusqDesc").click();  
+                        }
+                     });
+                     
+                     $("#busqArancel").keypress(function(e) {
+                        if(e.which == 13) {
+                        $("#btnBusqAranc").click();  
+                        }
+                     });
                     
                     
                     //AL DAR DOBLE CLICK EN EL REGISTRO SE MODIFICARA EL VALOR
@@ -538,7 +546,7 @@ if($id_factura != "" || $id_factura != "0"){
                 <td style="width:120px">
                 <div class="texto_explicacion_formulario">Precio Unitario:</div>
                 <div>
-                <input class="required" name="precioUnitario" id="precioUnitario" style="width:120px" type="text" value="0.0" title="Ingrese Precio">
+                <input class="required" name="precioUnitario" id="precioUnitario" style="width:120px" type="text" value="0.00" title="Ingrese Precio">
                 </div>
                 </td> 
                 
@@ -587,9 +595,9 @@ if($id_factura != "" || $id_factura != "0"){
                 </td> 
 
                 <td>
-                <div class="texto_explicacion_formulario">Total:&nbsp</div>
+                <div class="texto_explicacion_formulario" >Total:&nbsp</div>
                 <div>
-                <input readonly="readonly" class="required" name="precioTotal" id="precioTotal" style="width:110px" type="text" value="0.0" title="">
+                <input readonly="readonly" class="required read" name="precioTotal" id="precioTotal" style="width:110px" type="text" value="0.00" title="">
                 </div>
                 </td> 
                 
@@ -655,7 +663,7 @@ if($id_factura != "" || $id_factura != "0"){
 
         //IMPRIME LOS ITEMS DE LA DECLARACION A QUIEN PERTENECE
 
-
+$total=0;
             while($fact = mysql_fetch_array($items)){
                 ?>
 
@@ -680,15 +688,17 @@ if($id_factura != "" || $id_factura != "0"){
                 <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" >
                 <?=number_format(round($fact["precioTotal"],2),2)?>
                 </td>
+               
             </tr>
                                         <?
+                                         $total+=number_format(round($fact["precioTotal"],2),2);
                                                 }
 
                                         ?>
             <tr bgcolor="#6990BA">
                     <td bgcolor="#6990BA" colspan="6" class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">TOTAL</td>
                     <td class="tabla_titulo" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226); border-right: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle">
-                                <b>$<?echo number_format(round($FOBtotal,2),2);?></b>
+                                <b>$<?echo number_format(round($total,2),2);?></b>
                     </td>
             </tr>
             </tbody></table>
