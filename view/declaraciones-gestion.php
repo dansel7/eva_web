@@ -707,7 +707,7 @@ if($id_declaracion != "" || $id_declaracion != "0"){
 <!---------------------------FIN DEL FORMULARIO-------------------------------------->
 
 
-            <div style="float:center" class="texto_explicacion_formulario">Detalles de Facturas: (De doble click para editar)</div>
+            <div style="float:center" class="texto_explicacion_formulario">Detalles de Facturas: (De doble click para editar) - Para Ingresar Items Seleccione la opcion Facturas <img src="../images/icono-tienda.gif" width="25" height="20" border="0"></div>
             <table id="factini" align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
               <tbody><tr bgcolor="#6990BA" >
                 <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">Id Factura</td>

@@ -75,12 +75,15 @@ if(isset($_POST['addItem'])){
             $clase_css = "texto_error";
         }
         
-         //CALCULA LOS VALORES DE LA TABLA DE FACTURA.
-        //REVISAR PORQUE NO ACTUALIZA EN LAS TABLAS
+         //CALCULA LOS VALORES DE LA FACTURA.
+        
 $resultado = $clase_database->formToDB($link,'factura f,(SELECT SUM(precioTotal) pt,SUM(cuantia) c,SUM(pesoBruto) pb,SUM(pesoNeto) pn,SUM(bultos) b from item 
-where idFactura='.$id_factura.' and idRetaceo='.hideunlock($_SESSION["n_declaracion"]).'")','f.FOB=i.pt,f.cuantia=i.c,f.pesoBruto=i.pb,f.pesoNeto=i.pn,f.bultos=i.b,f.total=f.otrosGastos+f.FOB','','','update','idFactura="'.$id_factura.'"');
-      
-      //$resultado = $clase_database->formToDB($link,'retaceo','','CIF=flete+otrosGastos+seguro', '','update','numero="'.hideunlock($_SESSION["n_declaracion"]).'"');
+where idFactura='.$id_factura.' and idRetaceo='.hideunlock($_SESSION["n_declaracion"]).') i','','f.FOB=i.pt,f.cuantia=i.c,f.pesoBruto=i.pb,f.pesoNeto=i.pn,f.bultos=i.b,f.total=f.otrosGastos+i.pt','','update','idFactura="'.$id_factura.'"');
+  //CALCULA LOS VALORES DEL RETACEO.
+$resultado = $clase_database->formToDB($link,'retaceo r,(SELECT SUM(otrosGastos) og,SUM(FOB) fob,SUM(cuantia) c,SUM(pesoBruto) pb,SUM(bultos) b 
+from factura where idRetaceo='.hideunlock($_SESSION["n_declaracion"]).') f','','r.FOB=f.fob,r.cuantia=f.c,r.pesoBruto=f.pb,r.bultos=f.b,r.otrosGastos=f.og,r.seguro=(f.fob+f.og+r.flete)*0.00275,r.cif=(f.fob+f.og+r.flete)+((f.fob+f.og+r.flete)*0.00275)','','update','idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');
+ 
+
 }
 
 //-----MODIFICAR DATOS NUEVOS DE FACTURAS
@@ -97,14 +100,9 @@ if(isset($_POST['updItem'])){
             $mensaje = "Error al Almacenar Informacion";
             $clase_css = "texto_error";
       } 
-      //ACTUALIZA EL VALOR DE OTROSGASTOS DE LA TABLA DE RETACEO Y EL CIF
-      $resultado = $clase_database->formToDB($link,'retaceo','','otrosGastos=(SELECT SUM(otrosGastos) from factura where idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'")','','update','numero="'.hideunlock($_SESSION["n_declaracion"]).'"');
-      $resultado = $clase_database->formToDB($link,'retaceo','','CIF=flete+otrosGastos+seguro', '','update','numero="'.hideunlock($_SESSION["n_declaracion"]).'"');
-
-
 }
 
-//CARGA DE DATOS DESDE BD
+//CARGA DE DATOS DE LA FACTURA
 if($id_factura != "" || $id_factura != "0"){
         $result = mysql_query("SELECT * FROM factura WHERE idRetaceo='".hideunlock($_SESSION["n_declaracion"])."' and idFactura ='".$id_factura."'", $link);
         $fac_valid= mysql_num_rows($result);
@@ -206,9 +204,9 @@ if($id_factura != "" || $id_factura != "0"){
                      $('#frmf #otrosGastos').val(tds.eq(6).html());
                      $('#frmf #fob').val(tds.eq(7).html());
                      
-                     $('#frmf #addf').attr("value","Actualizar Datos");
-                     $('#frmf #addf').attr("name","updf");
-                     $('#frmf #addf').attr("id","updf");
+                     $('#frmf #addItem').attr("value","Editar Item");
+                     $('#frmf #addItem').attr("name","updItem");
+                     $('#frmf #addItem').attr("id","updItem");
                      $('#cancel').css("display","block");
                      //SOLO FALTA QUE ACTUALICE EN LA FUNCION DE PHP
                      }   
@@ -622,9 +620,11 @@ if($id_factura != "" || $id_factura != "0"){
                     <?php
                     $result = mysql_query("SELECT paginas from factura where idFactura=".$id_factura." and idRetaceo=".hideunlock($_SESSION["n_declaracion"]), $link);
                     while($fila = mysql_fetch_array($result)){
-
-                          echo  '<option value="'.$fila["paginas"].'">Pagina '.$fila["paginas"].'</option>';       
-                     }
+                     $npg=$fila["paginas"];
+                    }
+                    for($i=1;$i<=$npg;$i++) 
+                    echo  '<option value="'.$i.'">Pagina '.$i.'</option>';       
+                     
                     ?>
                     </select>
                 </div>  
@@ -641,8 +641,8 @@ if($id_factura != "" || $id_factura != "0"){
              </table>
              </center>
           </form>
-<form method="Post">
-<input name="cancel" id="cancel" style="display:none;float: right;" value="Cancelar" type="submit">
+<form method="Post" style="padding-left: 500px">
+<input name="cancel" id="cancel" style="display:none;float: center;" value="Cancelar" type="submit">
 </form>
 <br>
 <!---------------------------FIN DEL FORMULARIO-------------------------------------->
@@ -650,7 +650,7 @@ if($id_factura != "" || $id_factura != "0"){
 
             <div style="float:LEFT" class="texto_explicacion_formulario">Detalles de Items: (De doble click para editar)</div>
             <table id="factini" align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
-              <tbody><tr bgcolor="#6990BA" >
+              <tbody><tr bgcolor="#6990BA">
                 <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="40">Id Item</td>
                 <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="350">Descripcion</td>                            
                 <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">Bultos</td>
@@ -667,7 +667,7 @@ $total=0;
             while($fact = mysql_fetch_array($items)){
                 ?>
 
-                <tr>
+                <tr class="flink">
                 <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle">
                 <?=$fact["idItemFactura"]?>
                 </td>
