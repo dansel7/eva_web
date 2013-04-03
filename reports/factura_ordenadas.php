@@ -127,7 +127,7 @@ $temp=$row_exp[1];//Guarda un temporal que seria el numero anterior para compara
 
 }//FIN IMPRESION CADA REGISTRO
 $varr.="<tr>
-		<td colspan=\"7\" style=\"border:1px solid black;text-align:center\">Subtotal</td>
+		<td colspan=\"7\" style=\"border:1px solid black;text-align:center\"><b>Subtotal</b></td>
 		<td style=\"border:1px solid black;text-align:right\"><b>$".number_format(round($fobSubt,2),2)."</b></td>
 		</tr>";
 $fobTotal+=$fobSubt;

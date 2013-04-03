@@ -75,7 +75,7 @@
                     return false;
                     }
                     $sql = "UPDATE ".$tabla." SET ".$campos." WHERE ".$sql_condicion;
-                     //echo $sql;
+                    //echo $sql;
 	  
 	  	 }else{
 	  	 

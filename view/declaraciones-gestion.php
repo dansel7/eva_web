@@ -209,7 +209,6 @@ if(isset($_POST['updf'])){
       //ACTUALIZA EL VALOR DE OTROSGASTOS DE LA TABLA DE RETACEO Y EL CIF
       $resultado = $clase_database->formToDB($link,'retaceo','','otrosGastos=(SELECT SUM(otrosGastos) from factura where idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'")','','update','idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');
       $resultado = $clase_database->formToDB($link,'retaceo','','CIF=flete+otrosGastos+seguro', '','update','idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');
- 
 
    }
 
@@ -310,15 +309,15 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                  //funcion para actualizar datos iniciales de facturas
                     if(tds.eq(0).html()!="Id Factura" && tds.eq(0).html()!="TOTAL"){
                     
-                     $('#frmf #idFactRetaceo').val(tds.eq(0).html());
-                     $('#frmf #numero').val(tds.eq(1).html());
-                     $('#frmf #fechaf').val(tds.eq(2).html());
-                     $('#frmf #paginas').val(tds.eq(3).html());
-                     $('#frmf #bultos').val(tds.eq(4).html());
-                     $('#frmf #pesoBruto').val(tds.eq(5).html());
-                     $('#frmf #cuantia').val(tds.eq(6).html());
-                     $('#frmf #otrosGastos').val(tds.eq(7).html());
-                     $('#frmf #fob').val(tds.eq(8).html());
+                     $('#frmf #idFactRetaceo').val(tds.eq(0).html().trim());
+                     $('#frmf #numero').val(tds.eq(1).html().trim());
+                     $('#frmf #fechaf').val(tds.eq(2).html().trim());
+                     $('#frmf #paginas').val(tds.eq(3).html().trim());
+                     $('#frmf #bultos').val(tds.eq(4).html().trim());
+                     $('#frmf #pesoBruto').val(tds.eq(5).html().trim());
+                     $('#frmf #cuantia').val(tds.eq(6).html().trim());
+                     $('#frmf #otrosGastos').val(tds.eq(7).html().trim());
+                     $('#frmf #fob').val(tds.eq(8).html().trim());
                      
                      $('#frmf #addf').attr("value","Actualizar Datos");
                      $('#frmf #addf').attr("name","updf");

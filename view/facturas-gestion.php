@@ -66,7 +66,7 @@ if(isset($_POST['addItem'])){
     //SE CALCULA EL PRECIO TOTAL POR SI EL JAVASCRIPT ESTA DESACTIVADO
     $_POST["precioTotal"]=number_format($_POST["cuantia"], 2, '.', '') * number_format($_POST["precioUnitario"], 2, '.', '');
     
-       $resultado = $clase_database->formToDB($link,'item','post','','addItem, ','insert','');
+       $resultado = $clase_database->formToDB($link,'item','post','','addItem, idItem, ','insert','');
         if ($resultado){ 
             $mensaje = "Informacion Almacenada Exitosamente";
             $clase_css = "texto_ok";
@@ -74,9 +74,9 @@ if(isset($_POST['addItem'])){
             $mensaje = "Error al Almacenar Informacion";
             $clase_css = "texto_error";
         }
-        
+ 
          //CALCULA LOS VALORES DE LA FACTURA.
-        
+
 $resultado = $clase_database->formToDB($link,'factura f,(SELECT SUM(precioTotal) pt,SUM(cuantia) c,SUM(pesoBruto) pb,SUM(pesoNeto) pn,SUM(bultos) b from item 
 where idFactura='.$id_factura.' and idRetaceo='.hideunlock($_SESSION["n_declaracion"]).') i','','f.FOB=i.pt,f.cuantia=i.c,f.pesoBruto=i.pb,f.pesoNeto=i.pn,f.bultos=i.b,f.total=f.otrosGastos+i.pt','','update','idFactura="'.$id_factura.'"');
   //CALCULA LOS VALORES DEL RETACEO.
@@ -89,17 +89,24 @@ from factura where idRetaceo='.hideunlock($_SESSION["n_declaracion"]).') f','','
 //-----MODIFICAR DATOS NUEVOS DE FACTURAS
 if(isset($_POST['updItem'])){
 
- $_POST["numero"]=strtoupper($_POST["numero"]);
- $_POST["fecha"]=  $_POST["fechaf"];
- $resultado = $clase_database->formToDB($link,'datosIniciales','post','', 'fechaf, idFactRetaceo, updf, npag, ','update','idFactRetaceo="'.trim($_POST['idFactRetaceo']).'" and idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');
-
+$resultado = $clase_database->formToDB($link,'item','post','','updItem, idItem, ','update','idItem='.$_POST["idItem"]);
+ 
      if ($resultado){ 
             $mensaje = "Informacion Almacenada Exitosamente";
             $clase_css = "texto_ok";
         }else{
             $mensaje = "Error al Almacenar Informacion";
             $clase_css = "texto_error";
-      } 
+      }
+      
+             
+    //CALCULA LOS VALORES DE LA FACTURA.
+$resultado = $clase_database->formToDB($link,'factura f,(SELECT SUM(precioTotal) pt,SUM(cuantia) c,SUM(pesoBruto) pb,SUM(pesoNeto) pn,SUM(bultos) b from item 
+where idFactura='.$id_factura.' and idRetaceo='.hideunlock($_SESSION["n_declaracion"]).') i','','f.FOB=i.pt,f.cuantia=i.c,f.pesoBruto=i.pb,f.pesoNeto=i.pn,f.bultos=i.b,f.total=f.otrosGastos+i.pt','','update','idFactura="'.$id_factura.'"');
+  //CALCULA LOS VALORES DEL RETACEO.
+$resultado = $clase_database->formToDB($link,'retaceo r,(SELECT SUM(otrosGastos) og,SUM(FOB) fob,SUM(cuantia) c,SUM(pesoBruto) pb,SUM(bultos) b 
+from factura where idRetaceo='.hideunlock($_SESSION["n_declaracion"]).') f','','r.FOB=f.fob,r.cuantia=f.c,r.pesoBruto=f.pb,r.bultos=f.b,r.otrosGastos=f.og,r.seguro=(f.fob+f.og+r.flete)*0.00275,r.cif=(f.fob+f.og+r.flete)+((f.fob+f.og+r.flete)*0.00275)','','update','idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');
+ 
 }
 
 //CARGA DE DATOS DE LA FACTURA
@@ -194,15 +201,18 @@ if($id_factura != "" || $id_factura != "0"){
                     var tds=$(this).find("td");
                  //funcion para actualizar datos iniciales de facturas
                     if(tds.eq(0).html()!="Id Item" && tds.eq(0).html()!="TOTAL"){
-                    
-                     $('#frmf #idFactRetaceo').val(tds.eq(0).html())
-                     $('#frmf #numero').val(tds.eq(1).html());
-                     $('#frmf #fechaf').val(tds.eq(2).html());
-                     $('#frmf #bultos').val(tds.eq(3).html());
-                     $('#frmf #pesoBruto').val(tds.eq(4).html());
-                     $('#frmf #cuantia').val(tds.eq(5).html());
-                     $('#frmf #otrosGastos').val(tds.eq(6).html());
-                     $('#frmf #fob').val(tds.eq(7).html());
+                     $('#frmf #idItem').val(tds.eq(12).html().trim())
+                     $('#frmf #descripcion').val(tds.eq(1).html().trim());
+                     $('#frmf #bultos').val(tds.eq(2).html().trim());
+                     $('#frmf #pesoBruto').val(tds.eq(3).html().trim());
+                     $('#frmf #cuantia').val(tds.eq(4).text().trim());
+                     $('#frmf #precioUnitario').val(tds.eq(5).html().trim());
+                     $('#frmf #precioTotal').val(tds.eq(6).html().trim());
+                     $('#frmf #pesoNeto').val(tds.eq(7).html().trim());
+                     $('#frmf #partidaArancelaria').val(tds.eq(8).html().trim());
+                     $('#frmf #referencia').val(tds.eq(9).html().trim());
+                     $('#frmf #unidades').val(tds.eq(10).html().trim());
+                     $('#frmf #pagFactura').val(tds.eq(11).html().trim());
                      
                      $('#frmf #addItem').attr("value","Editar Item");
                      $('#frmf #addItem').attr("name","updItem");
@@ -246,8 +256,8 @@ if($id_factura != "" || $id_factura != "0"){
                     
                     $( "#btnBuscarD" ).click(function() {
 //SI TXTBOX DESCRIPCION ESTA CON UN VALOR EL LO BUSCA INMEDIATAMENTE ANTES DE ABRIR EL CUADRO DE BUSQUEDA   
-                        if($("#Descripcion").val()!=""){
-                         $("#busqDescripcion").val($("#Descripcion").val());
+                        if($("#descripcion").val()!=""){
+                         $("#busqDescripcion").val($("#descripcion").val());
                          $("#btnBusqDesc").click(); 
                         }
 
@@ -509,8 +519,8 @@ if($id_factura != "" || $id_factura != "0"){
 
 <!--------------------------INCIIO DEL FORM PARA INGRESAR DATOS INICIALES DE FACTURAS ----------------------->             
 <form class="frmspecial" name="frmf" id="frmf" action="<?=$_SERVER['REQUEST_URI'];?>" method="post" style="margin:0px;"> 
-                 
-              <h4 style="font-family:helvetica">Agregar Items a la Factura</h4>
+        <input type="hidden" id="idItem" name="idItem" value="">   
+           <h4 style="font-family:helvetica">Agregar Items a la Factura</h4>
              <center>
              <table><tr>
                 <td style="width:120px">
@@ -555,7 +565,7 @@ if($id_factura != "" || $id_factura != "0"){
                 <td colspan="2">
                 <div class="texto_explicacion_formulario">Descripcion:&nbsp</div>
                 <div>
-                <input class="required" name="Descripcion" id="Descripcion" style="width:250px" type="text" value="" title="Requerido">
+                <input class="required" name="descripcion" id="descripcion" style="width:250px" type="text" value="" title="Requerido">
                 <input class="required" name="descripcion2" id="descripcion2" style="width:100px" type="hidden" value="" title="">
                 </div>
                 </td>  
@@ -687,6 +697,24 @@ $total=0;
                 <?=number_format(round($fact["precioUnitario"],2),2)?>
                 <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" >
                 <?=number_format(round($fact["precioTotal"],2),2)?>
+                </td>
+                <td style="display:none">
+                   <?=$fact["pesoNeto"]?>
+                </td>
+                <td style="display:none">
+                  <?=$fact["partidaArancelaria"]?>
+                </td>
+                <td style="display:none">
+                  <?=$fact["referencia"]?> 
+                </td>
+                <td style="display:none">
+                   <?=$fact["unidades"]?> 
+                </td>
+                <td style="display:none">
+                  <?=$fact["pagFactura"]?> 
+                </td>
+                <td style="display:none">
+                  <?=$fact["idItem"]?> 
                 </td>
                
             </tr>
