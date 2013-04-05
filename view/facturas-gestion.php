@@ -128,7 +128,7 @@ if($id_factura != "" || $id_factura != "0"){
         }
 
               //consulta que genera un preview de los items de un retaceo definido
-             $items = mysql_query("SELECT * FROM item WHERE idRetaceo='".hideunlock($_SESSION["n_declaracion"])."' and idFactura =".$id_factura, $link);
+             $items = mysql_query("SELECT * FROM item WHERE idRetaceo='".hideunlock($_SESSION["n_declaracion"])."' and idFactura =".$id_factura." order by idItemFactura", $link);
              
 }
 

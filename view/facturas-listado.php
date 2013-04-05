@@ -237,7 +237,8 @@ function dbclick(id){
    <td class="tabla_titulo" style="border: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="60">ELIMINAR</td>
   </tr>
 <?
-  	$sql_facturas = "SELECT * FROM factura WHERE idRetaceo =".$id_declaracion;
+//MODIFICAR LA CONSUTA DE FACTURA Y DE ITEM Q MUESTRE SEGUN EL ID ORDENADAMENTE
+  	$sql_facturas = "SELECT * FROM factura WHERE idRetaceo =".$id_declaracion. " order by idFactRetaceo";
 	$result = mysql_query($sql_facturas,$link);
 	
 	while($fact = mysql_fetch_array($result)){
