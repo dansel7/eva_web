@@ -1,4 +1,33 @@
-<table align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
+<script>
+    //BUSQUEDA FILTRO LOCAL
+    $.expr[':'].containsIgnoreCase = function(e,i,m){
+    return jQuery(e).text().toUpperCase().indexOf(m[3].toUpperCase())>=0;
+};
+
+     $("#filtro_txt").keyup(function(){
+            
+ //Primero oculta todas las filas y luego muestra solo el encabezado
+          $("#desc_table").find("tr").hide();
+          $("#desc_table").find("tr").eq(0).show();
+ //convierte los datos de las filas en un solo arreglo
+          var data = this.value.split(" ");
+ //crea un objeto con las filas
+          var jo = $("#desc_table").find("tr");
+ //Filtro recursivo de Jquery para recibir los resultados. 
+          $.each(data, function(i, v){
+               jo = jo.filter("*:containsIgnoreCase('"+v+"')");
+          });
+ //Muestra las filas que concuerdan.
+          jo.show();
+
+if($("#filtro_txt").val()=="") $("#desc_table").find("tr").show();
+
+      });
+      
+    </script>
+    <label class="texto_ok">Filtro Descripcion, Inciso: </label><input type="text" id="filtro_txt" name="filtro_txt" >
+<br><br>
+<table id="desc_table" align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
   <tbody><tr bgcolor="#EBEBEB">
     <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="50px">#</td>
     <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="200px">DESCRIPCION COMERCIAL</td>

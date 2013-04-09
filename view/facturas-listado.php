@@ -270,7 +270,7 @@ function dbclick(id){
                 <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">
                 <? $FOBtotal+=$fact["FOB"];echo $fact["FOB"];?>
                 </td>
-        <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle"><a href="facturas-gestion.php?id=<? echo hidelock($fact['idFactura']);?>"><img src="../images/icono-editar.gif" border="0"></a></td>
+        <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle"><a href="facturas-gestion.php?id=<? echo hidelock($fact['idFactura']);?>"><img src="../images/icono-itemAdd.png" border="0"></a></td>
         <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226); border-right: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle"><a href="javascript:eliminar('<? echo hidelock($fact['idFactura']);?>');"><img src="../images/icono-eliminar.gif" border="0"></a></td>
       </tr>
     

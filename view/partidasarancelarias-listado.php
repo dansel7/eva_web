@@ -45,15 +45,43 @@ $_SESSION['timeout'] = time();
 	<head><meta http-equiv="X-UA-Compatible" content="IE=8" >
 		<meta http-equiv="X-UA-Compatible" content="IE=7" >
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-		<meta name="Author" content="Universidad Don Bosco">
-		<title><? echo $title; ?> - Listado de Empresas</title>
+		<meta name="Author" content="Villatoro Asociados">
+		<title><? echo $title; ?> - Partidas Arancelarias</title>
 		<link rel="stylesheet" href="../css/estilos.css" type="text/css">
-		<link href="../css/redmond/jquery-ui-1.9.2.custom.css" rel="stylesheet">
+     <link href="../css/redmond/jquery-ui-1.9.2.custom.css" rel="stylesheet">
 	<script src="../js/jquery-1.8.3.js"></script>
 	<script src="../js/jquery-ui-1.9.2.custom.js"></script>
+<script>
+$(document).ready(function(){
+    //BUSQUEDA FILTRO LOCAL
+    $.expr[':'].containsIgnoreCase = function(e,i,m){
+    return jQuery(e).text().toUpperCase().indexOf(m[3].toUpperCase())>=0;
+     };
+
+     $("#filtro_txt").keyup(function(){
+         
+ //Primero oculta todas las filas y luego muestra solo el encabezado
+          $("#aranc_table").find("tr").hide();
+          $("#aranc_table").find("tr").eq(0).show();
+ //convierte los datos de las filas en un solo arreglo
+          var data = this.value.split(" ");
+ //crea un objeto con las filas
+          var jo = $("#aranc_table").find("tr");
+ //Filtro recursivo de Jquery para recibir los resultados. 
+          $.each(data, function(i, v){
+               jo = jo.filter("*:containsIgnoreCase('"+v+"')");
+          });
+ //Muestra las filas que concuerdan.
+          jo.show();
+
+if($("#filtro_txt").val()=="") $("#aranc_table").find("tr").show();
+      });
+
+})
+</script>
 </head>
-	<body>
-		<center>
+<body>
+<center>
 <table border="0" cellpadding="0" cellspacing="0">
   <tbody><tr><td height="22">&nbsp;</td></tr>
   
@@ -65,8 +93,7 @@ $_SESSION['timeout'] = time();
   
   <tr>
     <td class="fondo_menu" valign="top">
-     
-<form name="frm" id="frm" action="<? echo $enlace_listado; ?>" method="post" style="margin:0px;" >    
+ 
       <table border="0" cellpadding="0" cellspacing="0">
         <tbody><tr><td height="10"></td></tr>
         <tr><td style="padding-right: 14px;" align="right"><table align="right" border="0" cellpadding="0" cellspacing="0"><tbody><tr><td height="20" valign="middle"><a href="index.php"><img src="../images/volver-menu.gif" border="0" height="16" width="14"></a></td><td style="padding-right: 40px;" height="20" valign="middle"><a href="index.php" class="texto_volver_inicio">&nbsp;Volver al panel de administraci&oacute;n</a></td><td height="20" valign="middle"><a href="../clases/cerrar_sesion.php"><img src="../images/menu-cerrar-sesion.gif" border="0" height="18" width="18"></a></td><td height="20" valign="middle"><a href="../clases/cerrar_sesion.php" class="texto_volver_inicio">&nbsp;Cerrar sesi&oacute;n</a></td></tr></tbody></table></td></tr>
@@ -163,8 +190,11 @@ $_SESSION['timeout'] = time();
                       <table align="center" border="0" cellpadding="0" cellspacing="0" width="928">  
                         <tbody><tr>
                           <td valign="top">
-    
-<table align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
+
+
+    <label class="texto_ok">Filtro Descripcion, Inciso: </label><input type="text" id="filtro_txt" name="filtro_txt" >
+<br><br>
+<table  id="aranc_table" name="aranc_table" align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
   <tbody><tr bgcolor="#EBEBEB">
     <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="50">#</td>
     <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="100">DESCRIPCION</td>
@@ -178,7 +208,7 @@ $_SESSION['timeout'] = time();
     <td class="tabla_titulo" style="border: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="75">ELIMINAR</td>
   </tr>
 <?
-  	$sql_empresas = "SELECT descripcion,inciso,dai,iva,tlc1,tlc2,tlc3 FROM arancel ORDER BY descripcion limit 0,1000";
+  	$sql_empresas = "SELECT descripcion,inciso,dai,iva,tlc1,tlc2,tlc3 FROM arancel ORDER BY inciso limit 0,1000";
 	$result = mysql_query($sql_empresas,$link);
 	$contador = 0;
 	while($filas = mysql_fetch_array($result)){
@@ -221,15 +251,12 @@ $_SESSION['timeout'] = time();
   <tr><td class="fondo_login_abajo_menu"></td></tr>
   <tr><td class="texto_copyright" align="right" height="44" valign="middle"><?=$copyrigth; ?></td></tr>
 </tbody></table>
-<input name="total" id="total" value="8" type="hidden">
-<input name="accion" id="accion" value="" type="hidden">
-<input id="__EVENTTARGET" name="__EVENTTARGET" type="hidden">      
-</form>
+
 
 <script type="text/javascript">
   function eliminar(id)
   {
-	if (confirm('�Desea realmente eliminar el registro seleccionado?'))
+	if (confirm('Desea realmente eliminar el registro seleccionado?'))
 	{
       document.location.href='empresas-listado.php?accion=eliminar&id='+id;
 	}

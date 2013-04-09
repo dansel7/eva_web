@@ -26,7 +26,7 @@
 	
 	$ARANCEL = $_POST["arancel"];
         
-  	$sql_incisos = "SELECT dai,inciso,descripcion FROM ARANCEL WHERE INCISO LIKE '%".$ARANCEL."%'";
+  	$sql_incisos = "SELECT dai,inciso,descripcion FROM ARANCEL WHERE INCISO LIKE '".$ARANCEL."%'";
 	$result = mysql_query($sql_incisos,$link);
 	$contador = 0;
 	while($filas = mysql_fetch_array($result)){ 

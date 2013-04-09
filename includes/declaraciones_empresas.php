@@ -26,7 +26,7 @@
 	?>
 	
       <tr bgcolor="#FBFBFB">
-        <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle"><a href="declaraciones-gestion.php?id=<? echo hidelock($filas['idRetaceo']);?>"><img src="../images/icono-editar.gif" border="0"></a></td>
+        <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle"><a href="declaraciones-gestion.php?id=<? echo hidelock($filas['idRetaceo']);?>"><img src="../images/openf.png" border="0"></a></td>
         <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle"><? echo $contador;?></td>
         <td class="tabla_filas" style="padding-left: 1px; border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle"><? echo $filas['numero'];?></td>
         <td class="tabla_filas" style="padding-left: 1px; border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle"><? echo $filas['numRegistro'];?></td>
