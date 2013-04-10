@@ -133,7 +133,7 @@ function dbclick(id){
    $result = mysql_query("SELECT numero,flete,bultos,pesoBruto,cuantia,seguro,CIF,DAI,IVA,FOB,otrosGastos,aPago,numRegistro FROM retaceo WHERE idRetaceo='". hideunlock($_SESSION["n_declaracion"])."'", $link);
                 while($fila = mysql_fetch_array($result)){
                     //SE OBTIENEN LOS DATOS DE LA DECLARACION, DE LA TABLA RETACEO
-                  
+  
    ?>                   
                       
                 <center>      
@@ -240,9 +240,16 @@ function dbclick(id){
 //MODIFICAR LA CONSUTA DE FACTURA Y DE ITEM Q MUESTRE SEGUN EL ID ORDENADAMENTE
   	$sql_facturas = "SELECT * FROM factura WHERE idRetaceo =".$id_declaracion. " order by idFactRetaceo";
 	$result = mysql_query($sql_facturas,$link);
-	
+	$ft=0;
+        $gt=0;
+        $bt=0;
+        $ct=0;
+        $pbt=0;
 	while($fact = mysql_fetch_array($result)){
-		
+        $bt+=$fact["bultos"];
+        $ct+=$fact["cuantia"];
+        $pbt+=$fact["pesoBruto"];	
+                
 	?>
 	
            <tr class="flink" onDblClick="dbclick('<? echo hidelock($fact['idFactura']);?>')" >
@@ -275,8 +282,9 @@ function dbclick(id){
       </tr>
     
 	<?
+       
 	}
-	
+
   ?>
       </tbody></table>
     </td></tr>

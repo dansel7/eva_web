@@ -169,6 +169,8 @@ if($id_factura != "" || $id_factura != "0"){
                     $('#fechaf').datepicker({
                             dateFormat: "yy-mm-dd"
                     });
+                   
+                    
                     $('#fechaf').mask("9999-99-99")
                     
 

@@ -261,7 +261,7 @@ if($id_declaracion != "" || $id_declaracion != "0"){
             label.error {float: center; color: white; padding-left: .5em; vertical-align: top; border:#C63 thin dashed; background-color:#3c859f; }
             .submit { margin-left: 12em; }
             em { font-weight: bold; padding-right: 1em; vertical-align: top; }
-  
+
 </style>
     <script>
                 $(document).ready(function(){
@@ -279,6 +279,7 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                     $('#fechaf').datepicker({
                             dateFormat: "yy-mm-dd"
                     });
+                    
                     $('#fechaf').mask("9999-99-99")
                     
                     
@@ -555,7 +556,7 @@ if($id_declaracion != "" || $id_declaracion != "0"){
          </select>		
         </div>
          
-</TD><TD>
+</TD><TD colspan="2">
             <div class="texto_explicacion_formulario">Modelo de Declaraci&oacute;n:&nbsp;</div><br><br>
 
             <div>
@@ -573,25 +574,25 @@ if($id_declaracion != "" || $id_declaracion != "0"){
 
                                          </select>		
                         </div>
- </TD><TD>          
-            <div class="texto_explicacion_formulario">Calcular Seguro:&nbsp;</div>
-             <div>
-                  <Input type='hidden' Name='calcularSeguro' value="N"><br>
+ </TD></TR>
+<TR><td >&nbsp;</td>
+    <TD >
+        <div class="texto_explicacion_formulario">Tipo de Calculo de Seguro:&nbsp;</div>
+           <div class="texto_explicacion_formulario">Calcular Seguro:&nbsp;</div>
+             <div class="texto_explicacion_formulario">
+                  <Input type='hidden' Name='calcularSeguro' value="N">
                   <Input id='calcularSeguro' type='Checkbox' <? if(isset($CalcSeguro)){if($CalcSeguro=="S")echo "Checked";}?> Name='calcularSeguro' value="S">
                  
-             </div><br><br>
-
-</TD></TR>
-<TR><td >&nbsp;</td>
-    <TD COLSPAN="2">
-        <div class="texto_explicacion_formulario">Tipo de Calculo de Seguro:&nbsp;</div><br><br>
+             </div>
         <div>
             <b class="texto_explicacion_formulario">Externo:
             <Input type = 'Radio' Name ='TipoCalculoSeguro' <? if(isset($TipoCalcSeguro)){if($TipoCalcSeguro=="E")echo "Checked";}else{echo "Checked";} ?> value= 'E'></b>
             <b class="texto_explicacion_formulario">Interno:
             <Input type = 'Radio' Name ='TipoCalculoSeguro' <? if(isset($TipoCalcSeguro)){if($TipoCalcSeguro=="I")echo "Checked";} ?> value= 'I'></b>
         </div>
-    </TD>
+    
+   
+   </TD>
     
 </TR>       
 </TABLE>

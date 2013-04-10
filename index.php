@@ -136,7 +136,7 @@ error_reporting(0);
       <?php // <div style="padding-top:2px;padding-left:433px;"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td height="20" valign="middle"><input name="txt_recordar" id="txt_recordar" value="recordar" type="checkbox"></td><td class="texto_recordar_password" height="20" valign="middle">&nbsp;Recordar Contrase&ntilde;a</td></tr></tbody></table></div> ?>
 
       <div style="padding-top:95px;padding-left:575px;">
-      <input type="image" src="images/boton-acceder-login.gif" value="Acceder" id="image" name="image" >
+      <input type="image" src="images/boton-acceder-login.png" value="Acceder" id="image" name="image" >
       </div>
       <div style="padding-top:65px;padding-left:485px;"><table border="0" cellpadding="0" cellspacing="0"><tbody></tbody></table></div>
     </td>
