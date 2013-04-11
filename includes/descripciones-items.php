@@ -6,7 +6,7 @@
                     var tds=$(this).find("td");
                  //funcion para actualizar datos iniciales de facturas
                     if(tds.eq(0).html()!="DESCRIPCION COMERCIAL"){
-                     $('#Descripcion').val(tds.eq(0).html());
+                     $('#descripcion').val(tds.eq(0).html());
                      $('#partidaArancelaria').val(tds.eq(1).html());
                      if($('#precioUnitario').val()=="0.00" || $('#precioUnitario').val()==""){
                      $('#precioUnitario').val(parseFloat(tds.eq(2).html()).toFixed(2));

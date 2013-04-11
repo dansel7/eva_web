@@ -232,6 +232,7 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                 $flete= $fila['flete'];
                 $TipoCalcSeguro= $fila['TipoCalculoSeguro'];
                 $CalcSeguro= $fila['calcularSeguro'];
+                $seguro=$fila['seguro'];
         }
         //CREA UNA VARIABLE DE SESION DE EL NIT DE LA EMPRESA
         if(!isset($_SESSION["NIT_EMPRESA"])){
@@ -274,7 +275,7 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                     if(modeldec=="")modeldec="IM4";
                     $("#modelodeclaracion ").val(modeldec);
 
-
+                    //AGREGAR FUNCION QUE QUITE MODO LECTURA AL SEGURO AL DESCHEQUEAR CHECK CALCULARSEGURO
                                        
                     $('#fechaf').datepicker({
                             dateFormat: "yy-mm-dd"
@@ -486,7 +487,7 @@ if($id_declaracion != "" || $id_declaracion != "0"){
        ?>
 <!------------INICIO DE LOS CAMPOS DEL FORMULARIO-------------->
 <CENTER>
-<TABLE cellpadding="5" >
+<TABLE cellpadding="5">
 <TR><TD WIDTH="150">
                          
         <div class="texto_explicacion_formulario">N&uacute;mero de Control:&nbsp;</div><br><br>
@@ -556,7 +557,7 @@ if($id_declaracion != "" || $id_declaracion != "0"){
          </select>		
         </div>
          
-</TD><TD colspan="2">
+</TD><TD>
             <div class="texto_explicacion_formulario">Modelo de Declaraci&oacute;n:&nbsp;</div><br><br>
 
             <div>
@@ -574,26 +575,33 @@ if($id_declaracion != "" || $id_declaracion != "0"){
 
                                          </select>		
                         </div>
- </TD></TR>
-<TR><td >&nbsp;</td>
-    <TD >
-        <div class="texto_explicacion_formulario">Tipo de Calculo de Seguro:&nbsp;</div>
-           <div class="texto_explicacion_formulario">Calcular Seguro:&nbsp;</div>
+ </TD>
+ <TD>
+      <div class="texto_explicacion_formulario">Seguro:&nbsp;</div><br><br>
+        <div>
+        <input class="required read" name="seguro" id="seguro" readonly rows="1" type="text" value="<? echo isset($seguro) ? $seguro : "";?>" title="">
+        </div>
+</TD</TR>
+<TR>
+    <TD colspan="3">
+        <div style="margin-left:220px;margin-top: -15px">
+          <div class="texto_explicacion_formulario">Calcular Seguro:&nbsp;</div>
              <div class="texto_explicacion_formulario">
                   <Input type='hidden' Name='calcularSeguro' value="N">
                   <Input id='calcularSeguro' type='Checkbox' <? if(isset($CalcSeguro)){if($CalcSeguro=="S")echo "Checked";}?> Name='calcularSeguro' value="S">
                  
              </div>
-        <div>
-            <b class="texto_explicacion_formulario">Externo:
+          <br>
+        <div style="margin-top:15px;margin-left: -175px" class="texto_explicacion_formulario">Tipo de Calculo de Seguro:</div>
+        <br><br>
+        <div style="margin-top:-25px;margin-left:5px" class="texto_explicacion_formulario">
+            <b >Externo:
             <Input type = 'Radio' Name ='TipoCalculoSeguro' <? if(isset($TipoCalcSeguro)){if($TipoCalcSeguro=="E")echo "Checked";}else{echo "Checked";} ?> value= 'E'></b>
-            <b class="texto_explicacion_formulario">Interno:
+            <b >Interno:
             <Input type = 'Radio' Name ='TipoCalculoSeguro' <? if(isset($TipoCalcSeguro)){if($TipoCalcSeguro=="I")echo "Checked";} ?> value= 'I'></b>
         </div>
-    
-   
-   </TD>
-    
+    </div>
+    </TD>   
 </TR>       
 </TABLE>
 </CENTER>        

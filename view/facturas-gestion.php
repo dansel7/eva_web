@@ -64,7 +64,7 @@ if(isset($_POST['addItem'])){
     $_POST["nuevoUsado"]="N";
     $_POST["tipoDescripcion"]="N";
     //SE CALCULA EL PRECIO TOTAL POR SI EL JAVASCRIPT ESTA DESACTIVADO
-    $_POST["precioTotal"]=number_format($_POST["cuantia"], 2, '.', '') * number_format($_POST["precioUnitario"], 2, '.', '');
+    $_POST["precioTotal"]=round($_POST["cuantia"], 2) * round($_POST["precioUnitario"], 2);
     
        $resultado = $clase_database->formToDB($link,'item','post','','addItem, idItem, ','insert','');
         if ($resultado){ 
@@ -82,13 +82,13 @@ where idFactura='.$id_factura.' and idRetaceo='.hideunlock($_SESSION["n_declarac
   //CALCULA LOS VALORES DEL RETACEO.
 $resultado = $clase_database->formToDB($link,'retaceo r,(SELECT SUM(otrosGastos) og,SUM(FOB) fob,SUM(cuantia) c,SUM(pesoBruto) pb,SUM(bultos) b 
 from factura where idRetaceo='.hideunlock($_SESSION["n_declaracion"]).') f','','r.FOB=f.fob,r.cuantia=f.c,r.pesoBruto=f.pb,r.bultos=f.b,r.otrosGastos=f.og,r.seguro=(f.fob+f.og+r.flete)*0.00275,r.cif=(f.fob+f.og+r.flete)+((f.fob+f.og+r.flete)*0.00275)','','update','idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');
- 
 
+header("Location:".$_SERVER['REQUEST_URI']);
 }
 
 //-----MODIFICAR DATOS NUEVOS DE FACTURAS
 if(isset($_POST['updItem'])){
-
+$_POST["precioTotal"]=round($_POST["cuantia"], 2) * round($_POST["precioUnitario"], 2);
 $resultado = $clase_database->formToDB($link,'item','post','','updItem, idItem, ','update','idItem='.$_POST["idItem"]);
  
      if ($resultado){ 
@@ -99,15 +99,42 @@ $resultado = $clase_database->formToDB($link,'item','post','','updItem, idItem, 
             $clase_css = "texto_error";
       }
       
-             
     //CALCULA LOS VALORES DE LA FACTURA.
 $resultado = $clase_database->formToDB($link,'factura f,(SELECT SUM(precioTotal) pt,SUM(cuantia) c,SUM(pesoBruto) pb,SUM(pesoNeto) pn,SUM(bultos) b from item 
 where idFactura='.$id_factura.' and idRetaceo='.hideunlock($_SESSION["n_declaracion"]).') i','','f.FOB=i.pt,f.cuantia=i.c,f.pesoBruto=i.pb,f.pesoNeto=i.pn,f.bultos=i.b,f.total=f.otrosGastos+i.pt','','update','idFactura="'.$id_factura.'"');
   //CALCULA LOS VALORES DEL RETACEO.
 $resultado = $clase_database->formToDB($link,'retaceo r,(SELECT SUM(otrosGastos) og,SUM(FOB) fob,SUM(cuantia) c,SUM(pesoBruto) pb,SUM(bultos) b 
 from factura where idRetaceo='.hideunlock($_SESSION["n_declaracion"]).') f','','r.FOB=f.fob,r.cuantia=f.c,r.pesoBruto=f.pb,r.bultos=f.b,r.otrosGastos=f.og,r.seguro=(f.fob+f.og+r.flete)*0.00275,r.cif=(f.fob+f.og+r.flete)+((f.fob+f.og+r.flete)*0.00275)','','update','idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');
- 
+
+header("Location:".$_SERVER['REQUEST_URI']);
+
+
 }
+
+//ELIMINACION MULTIPLE
+if(isset($_POST['opdet'])){
+			$cntDel = 0;
+			$selDels = $_POST['idsimps'];
+            
+			foreach($selDels as $idSel) {
+			 	
+				if($idSel != '') {
+                                        $result = $clase_database->Eliminar($link,'item','idItem =' . $idSel);
+					if($result) 
+					$cntDel++;
+				}
+			}
+                        $resultado=true;
+                    if($cntDel > 0) { 
+                        $mensaje = "Se eliminaron $cntDel registros";
+                        $clase_css = "texto_ok";
+                    }else{
+                        $mensaje = "No se seleccionaron registros para eliminar";
+                        $clase_css = "texto_error";
+                    }
+				
+} 
+//FIN ELIMINACION MULTIPLE
 
 //CARGA DE DATOS DE LA FACTURA
 if($id_factura != "" || $id_factura != "0"){
@@ -195,6 +222,14 @@ if($id_factura != "" || $id_factura != "0"){
                         }
                      });
                     
+                    //Al dar enter en descripcion abra ventana de busqueda
+                     $("#descripcion").keypress(function(e) {
+                         
+                        if(e.which == 13) {
+                        $("#btnBuscarD").click();  
+                        }
+  
+                     });
                     
                     //AL DAR DOBLE CLICK EN EL REGISTRO SE MODIFICARA EL VALOR
                     $('#factini tr').dblclick(function()
@@ -216,7 +251,7 @@ if($id_factura != "" || $id_factura != "0"){
                      $('#frmf #unidades').val(tds.eq(10).html().trim());
                      $('#frmf #pagFactura').val(tds.eq(11).html().trim());
                      
-                     $('#frmf #addItem').attr("value","Editar Item");
+                     $('#frmf #addItem').attr("value","Actualizar Item");
                      $('#frmf #addItem').attr("name","updItem");
                      $('#frmf #addItem').attr("id","updItem");
                      $('#cancel').css("display","block");
@@ -311,6 +346,12 @@ if($id_factura != "" || $id_factura != "0"){
                 //FIN OBTENCION RESULTADOS BUSQUEDAS
 });    
 
+function delRow(cheque,idsimps) {//funcion para eliminacion multiple
+		if(cheque)
+			document.getElementById('idsimps'+idsimps).value = idsimps;
+		else
+			document.getElementById('idsimps'+idsimps).value = '';
+	}
 
     </script>
 </head>
@@ -418,7 +459,7 @@ if($id_factura != "" || $id_factura != "0"){
           <td valign="top">
               
 
-<form name="frm" id="frm" action="<?=$enlace_gestion.'?id='.hidelock($ncontrol)?>" method="post" style="margin:0px;"> 
+<form name="frm" id="frm" action="<?=$_SERVER['REQUEST_URI'];?>" method="post" style="margin:0px;"> 
 <!------------INICIO DE LOS CAMPOS DEL FORMULARIO-------------->
 
 
@@ -653,7 +694,7 @@ if($id_factura != "" || $id_factura != "0"){
              </table>
              </center>
           </form>
-<form method="Post" style="padding-left: 500px">
+<form method="post" style="padding-left: 500px">
 <input name="cancel" id="cancel" style="display:none;float: center;" value="Cancelar" type="submit">
 </form>
 <br>
@@ -661,7 +702,13 @@ if($id_factura != "" || $id_factura != "0"){
 
 
             <div style="float:LEFT" class="texto_explicacion_formulario">Detalles de Items: (De doble click para editar)</div>
-            <table id="factini" align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
+           <br>
+            <!---Eliminacion Multiple-->
+            <form method="post" action="facturas-gestion.php">
+            <input style="margin-left:100px" type="submit" name="opdet" value="Eliminar Seleccionados" onclick="return confirm('Esta seguro que desea Eliminar los registros seleccionados?') ;" />
+            <input type="hidden" id="id" name="id" value="<?=  hidelock($id_factura)?>">
+           
+        <table style="margin-top:5px" id="factini" align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
               <tbody><tr bgcolor="#6990BA">
                 <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="40">Id Item</td>
                 <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="350">Descripcion</td>                            
@@ -670,6 +717,7 @@ if($id_factura != "" || $id_factura != "0"){
                 <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">Cuantia</td>                                
                 <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">Precio Unitario</td>
                 <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="70">Total</td>
+                <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="70">Eliminar</td>
            <?php
 
 
@@ -718,10 +766,10 @@ $total=0;
                 <td style="display:none">
                   <?=$fact["idItem"]?> 
                 </td>
-               
+              <td ><center><input type="checkbox" onclick="delRow(this.checked, '<? echo  $fact["idItem"]; ?>')" /><input type="hidden" name="idsimps[]" id="idsimps<? echo  $fact["idItem"];; ?>" /></center></td>
             </tr>
                                         <?
-                                         $total+=number_format(round($fact["precioTotal"],2),2);
+                                         $total+=round($fact["precioTotal"],2);
                                                 }
 
                                         ?>
@@ -730,9 +778,11 @@ $total=0;
                     <td class="tabla_titulo" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226); border-right: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle">
                                 <b>$<?echo number_format(round($total,2),2);?></b>
                     </td>
+                    <td></td>
             </tr>
             </tbody></table>
-
+            </form>    
+            <!---Eliminacion Multiple--->
           </td>
         </tr>
       </tbody></table>

@@ -21,6 +21,7 @@
             //$link,es el objeto de conexion
             //$tabla,nombre de la tabla
             //$sql_condicion="", es la condicion para hacer un update y en ese caso no es opcional
+            
 		return mysql_query("DELETE FROM ". $tabla ." WHERE ". $condicion, $link);	
 	}
 		
