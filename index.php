@@ -33,7 +33,7 @@ error_reporting(0);
 			$usuario = new usuario();
 			$enlace = $conexion->conectar();
 			$sq = $usuario->LoginUsuario($_POST['txt_usuario'],$_POST['txt_password']);
-			
+
 			$result = mysql_query($sq,$enlace);
 			
 			$cantidad = mysql_num_rows($result);
@@ -54,7 +54,7 @@ error_reporting(0);
 
 				if($_SESSION["perfil"]=="17"){
 					$_SESSION["autenticado_admin"] = "si";
-					$link = "Location: index.php";
+					$link = "Location: view/index.php";
 					header($link);
 				}else{
 					$_SESSION["autenticado_admin"] = "no";
@@ -109,7 +109,7 @@ error_reporting(0);
 							</tr>
 							<tr>
 							<td class="menu_separador_1"><img src="images/transparente.gif" height="1" width="14"></td>
-							<td><img src="images/logo.png" border="0" height="90" width="165"></td>
+							<td><img src="images/logo.jpg" border="0" height="90" width="165"></td>
 	
 							</tr>
 							</table>

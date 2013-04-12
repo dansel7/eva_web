@@ -12,7 +12,7 @@
                      $('#precioUnitario').val(parseFloat(tds.eq(2).html()).toFixed(2));
                      }
                     }
-                    $( "#dialogDesc" ).dialog("close");
+                    $("#dialogDesc" ).dialog("close");
                 });
                //FIN DE SELECCION 
                   

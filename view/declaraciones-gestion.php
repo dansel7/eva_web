@@ -275,8 +275,23 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                     if(modeldec=="")modeldec="IM4";
                     $("#modelodeclaracion ").val(modeldec);
 
-                    //AGREGAR FUNCION QUE QUITE MODO LECTURA AL SEGURO AL DESCHEQUEAR CHECK CALCULARSEGURO
-                                       
+                    //FUNCION QUE QUITE MODO LECTURA AL SEGURO AL DESCHEQUEAR CHECK CALCULARSEGURO
+                    $("#calcularSeguro").click(function(){
+                       if($("#calcularSeguro").is(':checked')) { 
+                           $("#seguro").attr("readonly",true);
+                           $("#seguro").attr("class","required read");
+                           $("#TipoCalculoSeguroE").removeAttr("disabled");
+                           $("#TipoCalculoSeguroI").removeAttr("disabled");
+                          
+                       }else{
+                            $("#seguro").attr("readonly",false);
+                            $("#seguro").attr("class","required");
+                            $("#TipoCalculoSeguroE").attr("disabled", true);
+                            $("#TipoCalculoSeguroI").attr("disabled", true);
+                       }
+                       
+                    });
+                    
                     $('#fechaf').datepicker({
                             dateFormat: "yy-mm-dd"
                     });
@@ -562,7 +577,7 @@ if($id_declaracion != "" || $id_declaracion != "0"){
 
             <div>
 
-              <select id="modeloDeclaracion" name="modeloDeclaracion" title="Seleccione Modelo de Declaracion">
+              <select id="modeloDeclaracion" name="modeloDeclaracion" title="Seleccione Modelo">
 
                 <option value="EX1" >EX1 Exportacion</option>
                                                 <option value="EX2" >EX2 Exportacion Temporal</option>
@@ -596,9 +611,9 @@ if($id_declaracion != "" || $id_declaracion != "0"){
         <br><br>
         <div style="margin-top:-25px;margin-left:5px" class="texto_explicacion_formulario">
             <b >Externo:
-            <Input type = 'Radio' Name ='TipoCalculoSeguro' <? if(isset($TipoCalcSeguro)){if($TipoCalcSeguro=="E")echo "Checked";}else{echo "Checked";} ?> value= 'E'></b>
+            <Input type = 'Radio' id ='TipoCalculoSeguroE' Name ='TipoCalculoSeguro' <? if(isset($TipoCalcSeguro)){if($TipoCalcSeguro=="E")echo "Checked";}else{echo "Checked";} ?> value= 'E'></b>
             <b >Interno:
-            <Input type = 'Radio' Name ='TipoCalculoSeguro' <? if(isset($TipoCalcSeguro)){if($TipoCalcSeguro=="I")echo "Checked";} ?> value= 'I'></b>
+            <Input type = 'Radio' id ='TipoCalculoSeguroI' Name ='TipoCalculoSeguro' <? if(isset($TipoCalcSeguro)){if($TipoCalcSeguro=="I")echo "Checked";} ?> value= 'I'></b>
         </div>
     </div>
     </TD>   

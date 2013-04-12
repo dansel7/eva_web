@@ -249,7 +249,7 @@ FROM  modulo WHERE id_modulo_padre=".$modulos_padre['id_modulo'];
         <table align="left" border="0" cellpadding="0" cellspacing="0">
 							<tr>
 							<td class="menu_separador_1"><img src="../images/transparente.gif" height="1" width="14"></td>
-							<td><img src="../images/logo.png" border="0" height="65" width="150"></td>
+							<td><img src="../images/logo.jpg" border="0" height="65" width="150"></td>
 							<td class="menu_separador_1"><img src="../images/transparente.gif" height="1" width="14"></td>
 							<td><img src="../images/va.png" border="0" height="60" width="85"></td>
 							</tr>
