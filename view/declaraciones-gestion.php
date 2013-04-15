@@ -234,6 +234,10 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                 $CalcSeguro= $fila['calcularSeguro'];
                 $seguro=$fila['seguro'];
         }
+        //CREA VARIABLE DE SESSION PARA COMPROBAR SI SE DEBE CALCULAR EL SEGURO O NO
+        if(!isset($_SESSION["calculoseguro"]) || isset($_POST['submit'])){
+            $_SESSION["calculoseguro"]=$CalcSeguro;
+        }
         //CREA UNA VARIABLE DE SESION DE EL NIT DE LA EMPRESA
         if(!isset($_SESSION["NIT_EMPRESA"])){
         $_SESSION["NIT_EMPRESA"]=$nitempresa;
@@ -291,6 +295,18 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                        }
                        
                     });
+                    if($("#calcularSeguro").is(':checked')) { 
+                           $("#seguro").attr("readonly",true);
+                           $("#seguro").attr("class","required read");
+                           $("#TipoCalculoSeguroE").removeAttr("disabled");
+                           $("#TipoCalculoSeguroI").removeAttr("disabled");
+                          
+                       }else{
+                            $("#seguro").attr("readonly",false);
+                            $("#seguro").attr("class","required");
+                            $("#TipoCalculoSeguroE").attr("disabled", true);
+                            $("#TipoCalculoSeguroI").attr("disabled", true);
+                       }
                     
                     $('#fechaf').datepicker({
                             dateFormat: "yy-mm-dd"

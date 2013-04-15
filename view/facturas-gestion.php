@@ -80,8 +80,16 @@ if(isset($_POST['addItem'])){
 $resultado = $clase_database->formToDB($link,'factura f,(SELECT SUM(precioTotal) pt,SUM(cuantia) c,SUM(pesoBruto) pb,SUM(pesoNeto) pn,SUM(bultos) b from item 
 where idFactura='.$id_factura.' and idRetaceo='.hideunlock($_SESSION["n_declaracion"]).') i','','f.FOB=i.pt,f.cuantia=i.c,f.pesoBruto=i.pb,f.pesoNeto=i.pn,f.bultos=i.b,f.total=f.otrosGastos+i.pt','','update','idFactura="'.$id_factura.'"');
   //CALCULA LOS VALORES DEL RETACEO.
+//PRIMERO COMPRUEBA SI SE DEBE CALCULAR EL SEGURO O NO.
+if(strtoupper($_SESSION["calculoseguro"])=="S")
+{
 $resultado = $clase_database->formToDB($link,'retaceo r,(SELECT SUM(otrosGastos) og,SUM(FOB) fob,SUM(cuantia) c,SUM(pesoBruto) pb,SUM(bultos) b 
 from factura where idRetaceo='.hideunlock($_SESSION["n_declaracion"]).') f','','r.FOB=f.fob,r.cuantia=f.c,r.pesoBruto=f.pb,r.bultos=f.b,r.otrosGastos=f.og,r.seguro=(f.fob+f.og+r.flete)*0.00275,r.cif=(f.fob+f.og+r.flete)+((f.fob+f.og+r.flete)*0.00275)','','update','idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');
+}else{
+$resultado = $clase_database->formToDB($link,'retaceo r,(SELECT SUM(otrosGastos) og,SUM(FOB) fob,SUM(cuantia) c,SUM(pesoBruto) pb,SUM(bultos) b 
+from factura where idRetaceo='.hideunlock($_SESSION["n_declaracion"]).') f','','r.FOB=f.fob,r.cuantia=f.c,r.pesoBruto=f.pb,r.bultos=f.b,r.otrosGastos=f.og,r.cif=(f.fob+f.og+r.flete)+((f.fob+f.og+r.flete)*0.00275)','','update','idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');  
+}
+
 
 header("Location:".$_SERVER['REQUEST_URI']);
 }
@@ -103,8 +111,15 @@ $resultado = $clase_database->formToDB($link,'item','post','','updItem, idItem, 
 $resultado = $clase_database->formToDB($link,'factura f,(SELECT SUM(precioTotal) pt,SUM(cuantia) c,SUM(pesoBruto) pb,SUM(pesoNeto) pn,SUM(bultos) b from item 
 where idFactura='.$id_factura.' and idRetaceo='.hideunlock($_SESSION["n_declaracion"]).') i','','f.FOB=i.pt,f.cuantia=i.c,f.pesoBruto=i.pb,f.pesoNeto=i.pn,f.bultos=i.b,f.total=f.otrosGastos+i.pt','','update','idFactura="'.$id_factura.'"');
   //CALCULA LOS VALORES DEL RETACEO.
+//PRIMERO COMPRUEBA SI SE DEBE CALCULAR EL SEGURO O NO.
+if(strtoupper($_SESSION["calculoseguro"])=="S")
+{
 $resultado = $clase_database->formToDB($link,'retaceo r,(SELECT SUM(otrosGastos) og,SUM(FOB) fob,SUM(cuantia) c,SUM(pesoBruto) pb,SUM(bultos) b 
 from factura where idRetaceo='.hideunlock($_SESSION["n_declaracion"]).') f','','r.FOB=f.fob,r.cuantia=f.c,r.pesoBruto=f.pb,r.bultos=f.b,r.otrosGastos=f.og,r.seguro=(f.fob+f.og+r.flete)*0.00275,r.cif=(f.fob+f.og+r.flete)+((f.fob+f.og+r.flete)*0.00275)','','update','idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');
+}else{
+$resultado = $clase_database->formToDB($link,'retaceo r,(SELECT SUM(otrosGastos) og,SUM(FOB) fob,SUM(cuantia) c,SUM(pesoBruto) pb,SUM(bultos) b 
+from factura where idRetaceo='.hideunlock($_SESSION["n_declaracion"]).') f','','r.FOB=f.fob,r.cuantia=f.c,r.pesoBruto=f.pb,r.bultos=f.b,r.otrosGastos=f.og,r.cif=(f.fob+f.og+r.flete)+((f.fob+f.og+r.flete)*0.00275)','','update','idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');  
+}
 
 header("Location:".$_SERVER['REQUEST_URI']);
 
