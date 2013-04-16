@@ -121,8 +121,6 @@ $resultado = $clase_database->formToDB($link,'retaceo r,(SELECT SUM(otrosGastos)
 from factura where idRetaceo='.hideunlock($_SESSION["n_declaracion"]).') f','','r.FOB=f.fob,r.cuantia=f.c,r.pesoBruto=f.pb,r.bultos=f.b,r.otrosGastos=f.og,r.cif=(f.fob+f.og+r.flete)+((f.fob+f.og+r.flete)*0.00275)','','update','idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');  
 }
 
-header("Location:".$_SERVER['REQUEST_URI']);
-
 
 }
 
@@ -167,6 +165,7 @@ if($id_factura != "" || $id_factura != "0"){
                 $fob= $fila['FOB'];
                 $otrosGastos= $fila['otrosGastos'];
                 $total= $fila['total'];
+                
         }
 
               //consulta que genera un preview de los items de un retaceo definido
@@ -265,12 +264,15 @@ if($id_factura != "" || $id_factura != "0"){
                      $('#frmf #referencia').val(tds.eq(9).html().trim());
                      $('#frmf #unidades').val(tds.eq(10).html().trim());
                      $('#frmf #pagFactura').val(tds.eq(11).html().trim());
-                     
+                                          
                      $('#frmf #addItem').attr("value","Actualizar Item");
                      $('#frmf #addItem').attr("name","updItem");
                      $('#frmf #addItem').attr("id","updItem");
                      $('#cancel').css("display","block");
-                     //SOLO FALTA QUE ACTUALICE EN LA FUNCION DE PHP
+                     
+                     if(tds.eq(13).html().trim()=="S"){ $('#frmf #agrupar').attr('checked', true);}
+                     else{$('#frmf #agrupar').attr('checked', false);}  
+                     
                      }   
                      
                     });  
@@ -361,7 +363,7 @@ if($id_factura != "" || $id_factura != "0"){
                 //FIN OBTENCION RESULTADOS BUSQUEDAS
 });    
 
-function delRow(cheque,idsimps) {//funcion para eliminacion multiple
+function delRow(cheque,idsimps){//funcion para eliminacion multiple
 		if(cheque)
 			document.getElementById('idsimps'+idsimps).value = idsimps;
 		else
@@ -575,7 +577,7 @@ function delRow(cheque,idsimps) {//funcion para eliminacion multiple
 <!---------------------------FIN DEL FORMULARIO facturas-------------------------------------->
 
 
-<!--------------------------INCIIO DEL FORM PARA INGRESAR DATOS INICIALES DE FACTURAS ----------------------->             
+<!--------------------------INICIO DEL FORM PARA INGRESAR DATOS INICIALES DE FACTURAS ----------------------->             
 <form class="frmspecial" name="frmf" id="frmf" action="<?=$_SERVER['REQUEST_URI'];?>" method="post" style="margin:0px;"> 
         <input type="hidden" id="idItem" name="idItem" value="">   
            <h4 style="font-family:helvetica">Agregar Items a la Factura</h4>
@@ -706,9 +708,19 @@ function delRow(cheque,idsimps) {//funcion para eliminacion multiple
                 </td>
                 
                 </tr>
+                <tr>
+                    <td colspan="6">
+                       <div class="texto_explicacion_formulario">Agrupar item en Consolidado</div>
+             <div class="texto_explicacion_formulario">
+                  <Input type='hidden' Name='agrupar' value="N">
+                  <Input id='agrupar' type='Checkbox' Name='agrupar' value="S">
+             </div>
+                    </td>
+                </tr>
              </table>
              </center>
           </form>
+
 <form method="post" style="padding-left: 500px">
 <input name="cancel" id="cancel" style="display:none;float: center;" value="Cancelar" type="submit">
 </form>
@@ -781,7 +793,12 @@ $total=0;
                 <td style="display:none">
                   <?=$fact["idItem"]?> 
                 </td>
-              <td ><center><input type="checkbox" onclick="delRow(this.checked, '<? echo  $fact["idItem"]; ?>')" /><input type="hidden" name="idsimps[]" id="idsimps<? echo  $fact["idItem"];; ?>" /></center></td>
+                <td style="display:none">
+                  <?=$fact["agrupar"]?> 
+                </td>
+              <td >
+              <center><input type="checkbox" onclick="delRow(this.checked, '<? echo  $fact["idItem"]; ?>')" /><input type="hidden" name="idsimps[]" id="idsimps<? echo  $fact["idItem"];; ?>" /></center>
+              </td>
             </tr>
                                         <?
                                          $total+=round($fact["precioTotal"],2);

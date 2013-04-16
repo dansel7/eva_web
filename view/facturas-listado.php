@@ -29,7 +29,30 @@ $_SESSION['timeout'] = time();
 	$link = $conexion->conectar();
 	$clase_database = new database();
 	
-       
+       //ELIMINACION MULTIPLE
+if(isset($_POST['opdet'])){
+			$cntDel = 0;
+			$selDels = $_POST['idsimps'];
+            
+			foreach($selDels as $idSel) {
+			 	
+				if($idSel != '') {
+                                        $result = $clase_database->Eliminar($link,'factura','idFactura =' . $idSel);
+					if($result) 
+					$cntDel++;
+				}
+			}
+                        $resultado=true;
+                    if($cntDel > 0) { 
+                        $mensaje = "Se eliminaron $cntDel registros";
+                        $clase_css = "texto_ok";
+                    }else{
+                        $mensaje = "No se seleccionaron registros para eliminar";
+                        $clase_css = "texto_error";
+                    }
+				
+} 
+//FIN ELIMINACION MULTIPLE
 	
 ?>
 <html>
@@ -47,6 +70,12 @@ $_SESSION['timeout'] = time();
 function dbclick(id){          
  $(location).attr('href',"facturas-gestion.php?id="+id);   
 }
+  function delRow(cheque,idsimps){//funcion para eliminacion multiple
+		if(cheque)
+			document.getElementById('idsimps'+idsimps).value = idsimps;
+		else
+			document.getElementById('idsimps'+idsimps).value = '';
+	}
   </script>
 
 
@@ -56,8 +85,7 @@ function dbclick(id){
        
  if($id_declaracion=="0"){
      //SE VERIFICA SI NO HAY UN RETACEO ABIERTO, PARA MOSTRAR MENSAJE DE ADVERTENCIA
-   
-         ?>
+            ?>
 <script>
   $(function() {
     $( "#errorMSJ" ).dialog({
@@ -66,6 +94,7 @@ function dbclick(id){
       close: function( event, ui ) {location.href="declaraciones-listado.php";}
     });
   });
+ 
   </script>
   
   <body>
@@ -219,12 +248,15 @@ function dbclick(id){
                   <table align="center" border="0" cellpadding="0" cellspacing="0" width="930">
                     <tbody><tr>
                       <td valign="top">           
-                      
+         <form method="post" action="facturas-listado.php">
+            
                       <table align="center" border="0" cellpadding="0" cellspacing="0" width="928">  
                         <tbody><tr>
                           <td valign="top">
-                              <h3 class="texto_explicacion_formulario">Para agregar Items a una factura de Doble Click:</h3>
-<table id="facts" name="facts" align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
+                              <h3 class="texto_explicacion_formulario">Para agregar Items a una factura de Doble Click:</h3><br>
+ <input style="margin-left:100px" type="submit" name="opdet" value="Eliminar Seleccionados" onclick="return confirm('Esta seguro que desea Eliminar los registros seleccionados?') ;" />
+            
+ <table id="facts" name="facts" align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
   <tbody><tr bgcolor="#EBEBEB">
     <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="30">Id Factura</td>
     <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="20">Numero Factura</td>
@@ -278,7 +310,9 @@ function dbclick(id){
                 <? $FOBtotal+=$fact["FOB"];echo $fact["FOB"];?>
                 </td>
         <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle"><a href="facturas-gestion.php?id=<? echo hidelock($fact['idFactura']);?>"><img src="../images/icono-itemAdd.png" border="0"></a></td>
-        <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226); border-right: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle"><a href="javascript:eliminar('<? echo hidelock($fact['idFactura']);?>');"><img src="../images/icono-eliminar.gif" border="0"></a></td>
+        <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226); border-right: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle">
+         <center><input type="checkbox" onclick="delRow(this.checked, '<? echo  $fact["idFactura"]; ?>')" /><input type="hidden" name="idsimps[]" id="idsimps<? echo  $fact["idFactura"];; ?>" /></center>
+        </td>
       </tr>
     
 	<?
@@ -289,6 +323,7 @@ function dbclick(id){
       </tbody></table>
     </td></tr>
 </tbody></table>
+         </form>
     
                           </td>
                         </tr>
@@ -309,16 +344,6 @@ function dbclick(id){
 <input name="accion" id="accion" value="" type="hidden">
 <input id="__EVENTTARGET" name="__EVENTTARGET" type="hidden">      
 </form>
-
-<script type="text/javascript">
-  function eliminar(id)
-  {
-	if (confirm('�Desea realmente eliminar el registro seleccionado?'))
-	{
-      document.location.href='facturas-listado.php?accion=eliminar&id='+id;
-	}
-  }
-</script>
 
 </center>
 <? include_once("../includes/barra_menu.php");?>
