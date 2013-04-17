@@ -28,31 +28,7 @@ $_SESSION['timeout'] = time();
 	$conexion = new conexion();
 	$link = $conexion->conectar();
 	$clase_database = new database();
-	
-       //ELIMINACION MULTIPLE
-if(isset($_POST['opdet'])){
-			$cntDel = 0;
-			$selDels = $_POST['idsimps'];
-            
-			foreach($selDels as $idSel) {
-			 	
-				if($idSel != '') {
-                                        $result = $clase_database->Eliminar($link,'factura','idFactura =' . $idSel);
-					if($result) 
-					$cntDel++;
-				}
-			}
-                        $resultado=true;
-                    if($cntDel > 0) { 
-                        $mensaje = "Se eliminaron $cntDel registros";
-                        $clase_css = "texto_ok";
-                    }else{
-                        $mensaje = "No se seleccionaron registros para eliminar";
-                        $clase_css = "texto_error";
-                    }
-				
-} 
-//FIN ELIMINACION MULTIPLE
+
 	
 ?>
 <html>
@@ -70,12 +46,7 @@ if(isset($_POST['opdet'])){
 function dbclick(id){          
  $(location).attr('href',"facturas-gestion.php?id="+id);   
 }
-  function delRow(cheque,idsimps){//funcion para eliminacion multiple
-		if(cheque)
-			document.getElementById('idsimps'+idsimps).value = idsimps;
-		else
-			document.getElementById('idsimps'+idsimps).value = '';
-	}
+
   </script>
 
 
@@ -248,13 +219,13 @@ function dbclick(id){
                   <table align="center" border="0" cellpadding="0" cellspacing="0" width="930">
                     <tbody><tr>
                       <td valign="top">           
-         <form method="post" action="facturas-listado.php">
+
             
                       <table align="center" border="0" cellpadding="0" cellspacing="0" width="928">  
                         <tbody><tr>
                           <td valign="top">
                               <h3 class="texto_explicacion_formulario">Para agregar Items a una factura de Doble Click:</h3><br>
- <input style="margin-left:100px" type="submit" name="opdet" value="Eliminar Seleccionados" onclick="return confirm('Esta seguro que desea Eliminar los registros seleccionados?') ;" />
+ 
             
  <table id="facts" name="facts" align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
   <tbody><tr bgcolor="#EBEBEB">
@@ -266,7 +237,7 @@ function dbclick(id){
     <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">Cuantia</td>                                
     <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="90">Gastos</td>
    <td class="tabla_titulo" style="border: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">FOB</td><td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="50">AGREGAR</td>
-   <td class="tabla_titulo" style="border: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="60">ELIMINAR</td>
+   
   </tr>
 <?
 //MODIFICAR LA CONSUTA DE FACTURA Y DE ITEM Q MUESTRE SEGUN EL ID ORDENADAMENTE
@@ -310,9 +281,7 @@ function dbclick(id){
                 <? $FOBtotal+=$fact["FOB"];echo $fact["FOB"];?>
                 </td>
         <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle"><a href="facturas-gestion.php?id=<? echo hidelock($fact['idFactura']);?>"><img src="../images/icono-itemAdd.png" border="0"></a></td>
-        <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226); border-right: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle">
-         <center><input type="checkbox" onclick="delRow(this.checked, '<? echo  $fact["idFactura"]; ?>')" /><input type="hidden" name="idsimps[]" id="idsimps<? echo  $fact["idFactura"];; ?>" /></center>
-        </td>
+
       </tr>
     
 	<?

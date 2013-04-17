@@ -37,7 +37,7 @@ header("Location: /eva_web/error");
  			            		<tr><td class="menu_separador_1"><img src="images/transparente.gif" height="5" width="14"></td></tr>
 							<tr>
 							<td class="menu_separador_1"><img src="images/transparente.gif" height="1" width="14"></td>
-							<td><img src="images/logo.png" border="0" height="60" width="150"></td>
+							<td><img src="images/logo.jpg" border="0" height="60" width="150"></td>
 							<td class="menu_separador_1"><img src="images/transparente.gif" height="1" width="14"></td>
 							<td><img src="images/va.png" border="0" height="60" width="85"></td>
 							</tr>

@@ -45,11 +45,11 @@ $link = $conexion->conectar();
 $clase_database = new database();
 
 
-$id_declaracion = isset($_GET['id']) ? hideunlock($_GET['id']) : 0;
+$id_declaracion = isset($_REQUEST['id']) ? hideunlock($_REQUEST['id']) : 0;
 
 //SE CREA UNA VARIABLE DE SESION PARA LA DECLARACION CON LA QUE SE ESTARA TRABAJANDO        
-if(isset($_GET['id']) && $_GET['id']!="" && !isset($_SESSION["n_declaracion"])){
-    $_SESSION["n_declaracion"]=$_GET['id'];
+if(isset($_REQUEST['id']) && $_REQUEST['id']!="" && !isset($_SESSION["n_declaracion"])){
+    $_SESSION["n_declaracion"]=$_REQUEST['id'];
 }
 
 
@@ -242,8 +242,53 @@ if($id_declaracion != "" || $id_declaracion != "0"){
         if(!isset($_SESSION["NIT_EMPRESA"])){
         $_SESSION["NIT_EMPRESA"]=$nitempresa;
         }
+        
+        
+                	
+       //ELIMINACION MULTIPLE
+if(isset($_POST['opdet'])){
+			$cntDel = 0;
+			$selDels = $_POST['idsimps'];
+            
+			foreach($selDels as $idSel) {
+			 	
+				if($idSel != '') {
+                                    $val=explode(",", $idSel);
+
+                                     $result = $clase_database->Eliminar($link,'datosIniciales','idDatosIniciales =' . $val[0]);
+                                     $result = $clase_database->Eliminar($link,'factura','idFactura =' . $val[1]);
+                                       if($result) 
+					$cntDel++;
+				}
+			}
+                        
+//CALCULA LOS VALORES DEL RETACEO.
+//PRIMERO COMPRUEBA SI SE DEBE CALCULAR EL SEGURO O NO.
+if(strtoupper($_SESSION["calculoseguro"])=="S")
+{
+$resultado = $clase_database->formToDB($link,'retaceo r,(SELECT SUM(otrosGastos) og,SUM(FOB) fob,SUM(cuantia) c,SUM(pesoBruto) pb,SUM(bultos) b 
+from factura where idRetaceo='.hideunlock($_SESSION["n_declaracion"]).') f','','r.FOB=f.fob,r.cuantia=f.c,r.pesoBruto=f.pb,r.bultos=f.b,r.otrosGastos=f.og,r.seguro=(f.fob+f.og+r.flete)*0.00275,r.cif=(f.fob+f.og+r.flete)+((f.fob+f.og+r.flete)*0.00275)','','update','idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');
+}else{
+$resultado = $clase_database->formToDB($link,'retaceo r,(SELECT SUM(otrosGastos) og,SUM(FOB) fob,SUM(cuantia) c,SUM(pesoBruto) pb,SUM(bultos) b 
+from factura where idRetaceo='.hideunlock($_SESSION["n_declaracion"]).') f','','r.FOB=f.fob,r.cuantia=f.c,r.pesoBruto=f.pb,r.bultos=f.b,r.otrosGastos=f.og,r.cif=(f.fob+f.og+r.flete)+((f.fob+f.og+r.flete)*0.00275)','','update','idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');  
+}
+ 
+                        
+                        
+                        $resultado=true;
+                    if($cntDel > 0) { 
+                        $mensaje = "Se eliminaron $cntDel registros";
+                        $clase_css = "texto_ok";
+                    }else{
+                        $mensaje = "No se seleccionaron registros para eliminar";
+                        $clase_css = "texto_error";
+                    }
+				
+} 
+//FIN ELIMINACION MULTIPLE
+        
               //consulta que genera un preview de las facturas de un retaceo definido
-             $facturas = mysql_query("SELECT d.*,f.paginas FROM datosIniciales d,factura f WHERE f.idFactRetaceo=d.idFactRetaceo and f.idRetaceo=".$id_declaracion." and d.idRetaceo =".$id_declaracion, $link);
+             $facturas = mysql_query("SELECT d.*,f.paginas,f.idFactura FROM datosIniciales d,factura f WHERE f.idFactRetaceo=d.idFactRetaceo and f.idRetaceo=".$id_declaracion." and d.idRetaceo =".$id_declaracion, $link);
 
 }
 
@@ -363,7 +408,17 @@ if($id_declaracion != "" || $id_declaracion != "0"){
 
                 });    
 
-
+ function delRow(cheque,idsimps,iddatos){//funcion para eliminacion multiple
+       var facts = new Array();
+       facts[0] =idsimps ;
+       facts[1] = iddatos;
+       
+       
+		if(cheque)
+			document.getElementById('idsimps'+idsimps).value = facts;
+		else
+			document.getElementById('idsimps'+idsimps).value = '';
+	}
     </script>
     
     
@@ -604,7 +659,7 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                                                 <option value="IM7" >IM7 Declaracion de Deposito</option>
                                                 <option value="IM8" >IM8 Importacion a Franquicia</option>	
 
-                                         </select>		
+               </select>		
                         </div>
  </TD>
  <TD>
@@ -747,6 +802,10 @@ if($id_declaracion != "" || $id_declaracion != "0"){
 
 
             <div style="float:center" class="texto_explicacion_formulario">Detalles de Facturas: (De doble click para editar) - Para Ingresar Items Seleccione la opcion Facturas <img src="../images/icono-tienda.gif" width="25" height="20" border="0"></div>
+<form method="post" action="<?php echo $_SERVER['REQUEST_URI'];?>"> 
+
+    <input style="margin-left:45%;margin-bottom:5px" type="submit" name="opdet" value="Eliminar Seleccionados" onclick="return confirm('Esta seguro que desea Eliminar los registros seleccionados?') ;" />
+    
             <table id="factini" align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
               <tbody><tr bgcolor="#6990BA" >
                 <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">Id Factura</td>
@@ -758,6 +817,7 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                 <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">Cuantia</td>                                
                 <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">Gastos</td>
                 <td class="tabla_titulo" style="border: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">FOB</td>
+                <td class="tabla_titulo" style="border: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">Eliminar</td>
                   </tr>
            <?php
 
@@ -765,6 +825,7 @@ if($id_declaracion != "" || $id_declaracion != "0"){
         //imprime las facturas del retaceo que pertenece
         $FOBtotal=0;
         $GASTOStotal=0;
+
             while($fact = mysql_fetch_array($facturas)){
                 ?>
 
@@ -796,6 +857,11 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                 <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">
                 <? $FOBtotal+=$fact["FOB"];echo $fact["FOB"];?>
                 </td>
+                
+                <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226); border-right: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle">
+                <center><input type="checkbox" onclick="delRow(this.checked,'<? echo  $fact["idDatosIniciales"]; ?>', '<? echo  $fact["idFactura"]; ?>')" /><input type="hidden" name="idsimps[]" id="idsimps<? echo  $fact["idDatosIniciales"];; ?>" /></center>
+                </td>
+                
             </tr>
                                         <?
                                                 }
@@ -809,9 +875,12 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                     <td class="tabla_titulo" style="border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226); border-right: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle">
                                 <b>$<?echo number_format(round($FOBtotal,2),2);?></b>
                     </td>
+                    <td>
+                        
+                    </td>
             </tr>
             </tbody></table> <? }?>
-
+         </form>
           </td>
         </tr>
       </tbody></table>

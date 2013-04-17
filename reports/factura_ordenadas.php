@@ -64,10 +64,10 @@ $pdf->addpage($orientacion,'legal');//AGREGA NUEVA PAGINA POR CADA MES
 
 $rsd='
 <table width="100%">
-<tr><td colspan="3" style="text-align:center"><b>REPORTE INCISO</b></td></tr>
+<tr><td colspan="3" style="text-align:center"><b>REPORTE FACTURAS ORDENADAS</b><br></td></tr>
 <tr>
 	<td width="300px"><b>No. Retaceo:</b> '.$rows_e["numRegistro"].' </td>
-        <td width="200px"><b>Fecha:</b> '.$rows_e["fecha"].'</td>
+        <td width="200px"><b>Fecha:</b> '.substr($rows_e["fecha"],0,10).'</td>
         <td width="200px"><b>No.Control:</b> '.$rows_e["numero"].'</td> 
 </tr>
 <tr>

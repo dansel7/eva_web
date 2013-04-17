@@ -113,10 +113,10 @@
 
 			  <td align="center" valign="top"><div><img src="../images/transparente(1).gif" height="8" width="1"></div>
 
-				<div align="center"><a href="variables-entorno-gestion.php"><img width="45%" height="40%" src="../images/icono-eventos.gif" border="0"></a></div>
+				<div align="center"><a href="calc-impuestos-gestion.php"><img width="45%" height="40%" src="../images/icono-eventos.gif" border="0"></a></div>
 
-				<div style="height:25px;"><a href="variables-entorno-gestion.php" class="modulo_titulo"> Variables del Sistema</a></div>
-
+				<div style="height:25px;"><a href="calc-impuestos-entorno-gestion.php" class="modulo_titulo"> Calculo Impuestos</a></div>
+                                <br>
 			  </td>
 			   </tr><tr>
 

@@ -289,9 +289,9 @@ $_SESSION['timeout'] = time();
 
 			  <td align="center" valign="top"><div><img src="../images/transparente(1).gif" height="8" width="1"></div>
 
-				<div align="center"><a href="variables-entorno-gestion.php"><img src="../images/icono-eventos.gif" border="0"></a></div>
+				<div align="center"><a href="calc-impuestos-gestion.php"><img src="../images/icono-impuestos.gif" border="0"></a></div>
 
-				<div style="height:30px;"><a href="variables-entorno-gestion.php" class="modulo_titulo">Gesti&oacute;n de <br>Variables del Sistema</a></div>
+				<div style="height:30px;"><a href="calc-impuestos-gestion.php" class="modulo_titulo">Calculo de Impuestos</a></div>
 
 			  </td>
 
