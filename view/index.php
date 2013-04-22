@@ -1,6 +1,6 @@
 <? 
 session_start();
-error_reporting(0);
+//error_reporting(0);
 // 10 mins in seconds
 $timeout = 600; 
 
@@ -72,6 +72,17 @@ $_SESSION['timeout'] = time();
             position: "top",
             height: '300'
         });
+        
+        $( "#divcalci" ).dialog({
+            autoOpen: false,
+            show: "blind",
+            hide: "explode",
+            width:'700',
+            position: "top",
+            height: '600'
+        });
+        
+        
  
         $( "#opener1" ).click(function() {
             $( "#dialog" ).dialog( "open" );
@@ -81,6 +92,16 @@ $_SESSION['timeout'] = time();
             $( "#dialog" ).dialog( "open" );
             return false;
         });
+        
+          $( "#btncalc1" ).click(function() {
+            $( "#divcalci" ).dialog( "open" );
+            return false;
+        });
+         $( "#btncalc2" ).click(function() {
+            $( "#divcalci" ).dialog( "open" );
+            return false;
+        });
+        
     });
     </script>
 </head>
@@ -289,9 +310,9 @@ $_SESSION['timeout'] = time();
 
 			  <td align="center" valign="top"><div><img src="../images/transparente(1).gif" height="8" width="1"></div>
 
-				<div align="center"><a href="calc-impuestos-gestion.php"><img src="../images/icono-impuestos.gif" border="0"></a></div>
+				<div id="btncalc1" align="center"><a href="#"><img src="../images/icono-impuestos.gif" border="0"></a></div>
 
-				<div style="height:30px;"><a href="calc-impuestos-gestion.php" class="modulo_titulo">Calculo de Impuestos</a></div>
+				<div id="btncalc2" style="height:30px;"><a href="#" class="modulo_titulo">Calculo de Impuestos</a></div>
 
 			  </td>
 
@@ -343,6 +364,43 @@ $_SESSION['timeout'] = time();
 
 </center>
 
+  <div id="divcalci" title="Calculo de Impuestos" align="center">
+<?php
+if(isset($_SESSION["n_declaracion"])){
+$paises = mysql_query("SELECT * FROM paises", $link);
+$datos = array();
+while ($rowp=mysql_fetch_row($paises)){
+$datos[]=$rowp;
+}
+      
+$qry= "select item.partidaArancelaria,item.descripcion from item inner join factura on item.idFactura=factura.idFactura where item.idRetaceo=".  hideunlock($_SESSION["n_declaracion"])." order by factura.idFactRetaceo,idItemFactura";
+$result = mysql_query($qry, $link);
+                    while($fila = mysql_fetch_array($result)){  
+//DE QUE MANERA SE PODRA AGRUPAR. Y HACER UN MATCH CON LA TABLA RETACEO IMPUESTOS.                        
+                        ?>
+      <?=$fila[0]?>&nbsp;
+      <?=$fila[1]?>
+                    <select name="pais" id="pais" >
+                        <option value="-1" disabled selected>Seleccione una Pais</option>
+                       	echo $paises;
+                            <? foreach($datos as $val){ ?>
+                            <option value="<?=$val[0]?>" ><?=$val[1]?></option>								
+                            <? }?>
+			
+                   </select><br>
+<?php
+                    }
+?>
+
+
+<?php
+}else{?>
+      <h2>Para Calcular los impuestos debe Abrir una Declaracion.<br> <a style="color:blue" href="declaraciones-listado.php">Abrir</a></h2>    
+<?php 
+}
+?>
+</div>    
+    
   <div id="dialog" title="Reportes" align="center">
 <?php
 if(isset($_SESSION["n_declaracion"])){
@@ -387,11 +445,13 @@ if(isset($_SESSION["n_declaracion"])){
 
 <?php
 }else{?>
-      <h2>Para visualizar un Reporte debe Abrir una Declaracion.<br> <a href="declaraciones-listado.php">Abrir</a></h2>    
+      <h2>Para visualizar un Reporte debe Abrir una Declaracion.<br> <a style="color:blue" href="declaraciones-listado.php">Abrir</a></h2>    
 <?php 
 }
 ?>
 </div>
+    
+    
 
 <!-- End Of Analytics Code -->
 

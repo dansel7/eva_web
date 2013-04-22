@@ -113,7 +113,7 @@
 
 			  <td align="center" valign="top"><div><img src="../images/transparente(1).gif" height="8" width="1"></div>
 
-				<div align="center"><a href="calc-impuestos-gestion.php"><img width="45%" height="40%" src="../images/icono-eventos.gif" border="0"></a></div>
+				<div align="center"><a href="calc-impuestos-gestion.php"><img width="45%" height="40%" src="../images/icono-impuestos.gif" border="0"></a></div>
 
 				<div style="height:25px;"><a href="calc-impuestos-entorno-gestion.php" class="modulo_titulo"> Calculo Impuestos</a></div>
                                 <br>
@@ -197,7 +197,7 @@ if(isset($_SESSION["n_declaracion"])){
 			  </tbody></table>
 <?php
 }else{?>
-      <h2>Para visualizar un Reporte debe Abrir una Declaracion.<br> <a href="declaraciones-listado.php">Abrir</a></h2>    
+      <h2>Para visualizar un Reporte debe Abrir una Declaracion.<br> <a style="color:blue" href="declaraciones-listado.php">Abrir</a></h2>    
 <?php 
 }
 ?>
