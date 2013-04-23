@@ -77,7 +77,7 @@ $_SESSION['timeout'] = time();
             autoOpen: false,
             show: "blind",
             hide: "explode",
-            width:'700',
+            width:'800',
             position: "top",
             height: '600'
         });
@@ -373,25 +373,34 @@ while ($rowp=mysql_fetch_row($paises)){
 $datos[]=$rowp;
 }
       
-$qry= "select item.partidaArancelaria,item.descripcion from item inner join factura on item.idFactura=factura.idFactura where item.idRetaceo=".  hideunlock($_SESSION["n_declaracion"])." order by factura.idFactRetaceo,idItemFactura";
+$qry= "select item.partidaArancelaria,item.descripcion from item inner join factura on item.idFactura=factura.idFactura where item.idRetaceo=".  hideunlock($_SESSION["n_declaracion"])." group by agrupar,partidaArancelaria order by factura.idFactRetaceo,idItemFactura";
 $result = mysql_query($qry, $link);
+$i=0;
+?>
+      <table width="750px"><tr><td class="tabla_titulo" width="80px">No.Item</td><td class="tabla_titulo" width="170px">Partida Arancelaria</td><td class="tabla_titulo" width="250px">Descripcion</td><td class="tabla_titulo" width="250px">Pais</td></tr>
+<?php
                     while($fila = mysql_fetch_array($result)){  
+                        $i++;
 //DE QUE MANERA SE PODRA AGRUPAR. Y HACER UN MATCH CON LA TABLA RETACEO IMPUESTOS.                        
                         ?>
-      <?=$fila[0]?>&nbsp;
-      <?=$fila[1]?>
-                    <select name="pais" id="pais" >
+          <tr>
+      <Td class="tabla_filas"><?=$i?><input id="numeroItem" type="hidden" name="numeroItem" value="<?=$i?>"/></Td>
+      <Td class="tabla_filas"><?=$fila[0]?><input id="arancel" type="hidden" name="arancel" value="<?=$fila[0]?>"/></Td>
+      <Td class="tabla_filas"><input id="descripcion" name="descripcion" style="width:250px" value="<?=$fila[1]?>" /></Td>
+      <Td class="tabla_filas"><select name="pais" id="pais" >
                         <option value="-1" disabled selected>Seleccione una Pais</option>
                        	echo $paises;
                             <? foreach($datos as $val){ ?>
-                            <option value="<?=$val[0]?>" ><?=$val[1]?></option>								
-                            <? }?>
+                         <option value="<?=$val[0]?>" ><?=$val[1]?></option>								
+                        <? }?>
 			
-                   </select><br>
+          </select>
+      </Td>
+                       </tr>
 <?php
                     }
 ?>
-
+</table>
 
 <?php
 }else{?>
@@ -399,6 +408,7 @@ $result = mysql_query($qry, $link);
 <?php 
 }
 ?>
+      
 </div>    
     
   <div id="dialog" title="Reportes" align="center">
