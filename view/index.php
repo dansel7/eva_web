@@ -75,7 +75,7 @@ $_SESSION['timeout'] = time();
         
         $( "#divcalci" ).dialog({
             autoOpen: false,
-            show: "blind",
+            show: "explode",
             hide: "explode",
             width:'800',
             position: "top",
@@ -94,10 +94,22 @@ $_SESSION['timeout'] = time();
         });
         
           $( "#btncalc1" ).click(function() {
+               $("#divcalci").html("<center><img width='50px' height='50px' src='../images/load.gif'></center>"); 
+                                    $.post("../includes/calc-impuestos.php",
+							{id: $("#Empresas").val(),numero:$("#busqIdDeclaracion").val()},
+						   function(data){
+						   $("#divcalci").html(data);  
+					 })
             $( "#divcalci" ).dialog( "open" );
             return false;
         });
          $( "#btncalc2" ).click(function() {
+             $("#divcalci").html("<center><img width='50px' height='50px' src='../images/load.gif'></center>"); 
+                                    $.post("../includes/calc-impuestos.php",
+							{id: $("#Empresas").val(),numero:$("#busqIdDeclaracion").val()},
+						   function(data){
+						   $("#divcalci").html(data);  
+					 })
             $( "#divcalci" ).dialog( "open" );
             return false;
         });
@@ -364,57 +376,8 @@ $_SESSION['timeout'] = time();
 
 </center>
 
-  <div id="divcalci" title="Calculo de Impuestos" align="center">
-<?php
-if(isset($_SESSION["n_declaracion"])){
-    
-$existencia= mysql_query("SELECT inciso,descripcion,pais FROM retaceoImpuestos where idRetaceo=".  hideunlock($_SESSION["n_declaracion"]), $link);
-if(mysql_num_rows($existencia)<=0){
-$qry= "select item.partidaArancelaria,item.descripcion,idItem from item inner join factura on item.idFactura=factura.idFactura where item.idRetaceo=".  hideunlock($_SESSION["n_declaracion"])." group by agrupar,partidaArancelaria order by factura.idFactRetaceo,idItemFactura";
-$result = mysql_query($qry, $link);
-}else{
-$result = $existencia;   
-}
+<div id="divcalci" title="Calculo de Impuestos" align="center">
 
-$paises = mysql_query("SELECT * FROM paises", $link);
-$datos = array();
-while ($rowp=mysql_fetch_row($paises)){
-$datos[]=$rowp;
-}
-
-$i=0;
-?>
-     <table width="750px"><tr><td class="tabla_titulo" width="80px">No.Item</td><td class="tabla_titulo" width="170px">Partida Arancelaria</td><td class="tabla_titulo" width="250px">Descripcion</td><td class="tabla_titulo" width="250px">Pais</td></tr>
-    <?php
-                    while($fila = mysql_fetch_array($result)){  
-                        $i++;
-//DE QUE MANERA SE PODRA AGRUPAR. Y HACER UN MATCH CON LA TABLA RETACEO IMPUESTOS.                        
-                        ?>
-          <tr>
-      <Td class="tabla_filas"><?=$i?><input id="numeroItem" type="hidden" name="numeroItem" value="<?=$i?>"/></Td>
-      <Td class="tabla_filas"><?=$fila[0]?><input id="arancel" type="hidden" name="arancel" value="<?=$fila[0]?>"/></Td>
-      <Td class="tabla_filas"><input id="descripcion" name="descripcion" style="width:250px" value="<?=$fila[1]?>" /></Td>
-      <Td class="tabla_filas">
-          <select name="pais" id="pais" >
-                <option value="-1" disabled selected>Seleccione una Pais</option>
-                echo $paises;
-                    <? foreach($datos as $val){ ?>
-                 <option value="<?=$val[0]?>" <?if($val[0]==$fila[2]) echo "selected";?> ><?=$val[1]?></option>								
-                <? }?>
-          </select>
-      </Td>
-          </tr>
-    <?php
-                        }
-    ?>
-    </table>
-
-<?php
-}else{?>
-      <h2>Para Calcular los impuestos debe Abrir una Declaracion.<br> <a style="color:blue" href="declaraciones-listado.php">Abrir</a></h2>    
-<?php 
-}
-?> 
 </div>    
 
     

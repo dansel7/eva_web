@@ -113,9 +113,9 @@
 
 			  <td align="center" valign="top"><div><img src="../images/transparente(1).gif" height="8" width="1"></div>
 
-				<div align="center"><a href="calc-impuestos-gestion.php"><img width="45%" height="40%" src="../images/icono-impuestos.gif" border="0"></a></div>
+				<div id="btncalc1" align="center"><a href=""><img width="45%" height="40%" src="../images/icono-impuestos.gif" border="0"></a></div>
 
-				<div style="height:25px;"><a href="calc-impuestos-entorno-gestion.php" class="modulo_titulo"> Calculo Impuestos</a></div>
+				<div id="btncalc2" style="height:25px;"><a href="" class="modulo_titulo"> Calculo Impuestos</a></div>
                                 <br>
 			  </td>
 			   </tr><tr>
@@ -204,6 +204,10 @@ if(isset($_SESSION["n_declaracion"])){
 
 </div>
 
+ <div id="divcalci" title="Calculo de Impuestos" align="center">
+
+</div>    
+
         <script>
     // increase the default animation speed to exaggerate the effect
     $.fx.speeds._default = 1000;
@@ -226,6 +230,41 @@ if(isset($_SESSION["n_declaracion"])){
             $( "#dialog" ).dialog( "open" );
             return false;
         });
+        
+        
+          $( "#divcalci" ).dialog({
+            autoOpen: false,
+            show: "explode",
+            hide: "explode",
+            width:'800',
+            position: "top",
+            height: '600'
+        });
+        
+           $( "#btncalc1" ).click(function() {
+               $("#divcalci").html("<center><img width='50px' height='50px' src='../images/load.gif'></center>"); 
+                                    $.post("../includes/calc-impuestos.php",
+							{id: $("#Empresas").val(),numero:$("#busqIdDeclaracion").val()},
+						   function(data){
+						   $("#divcalci").html(data);  
+					 })
+            $( "#divcalci" ).dialog( "open" );
+            return false;
+        });
+         $( "#btncalc2" ).click(function() {
+             $("#divcalci").html("<center><img width='50px' height='50px' src='../images/load.gif'></center>"); 
+                                    $.post("../includes/calc-impuestos.php",
+							{id: $("#Empresas").val(),numero:$("#busqIdDeclaracion").val()},
+						   function(data){
+						   $("#divcalci").html(data);  
+					 })
+            $( "#divcalci" ).dialog( "open" );
+            return false;
+        });
+        
+               $( "#cancelcimp" ).click(function() {
+                  $( "#divcalci" ).dialog( "close" ); 
+               });
     });
     //function deteccion(){
        // alert('Estás entrando desde un '+navigator.platform);

@@ -200,6 +200,7 @@ if($id_factura != "" || $id_factura != "0"){
                     
                     $("#frm").validate();
                     $("#frmf").validate();   
+                    
 //funcion para poner el valor retornado de la BD
                     $("#modotransporte ").val('<?=$modotransporte?>');
                     var modeldec="<?=$modelodeclaracion?>";
@@ -277,13 +278,42 @@ if($id_factura != "" || $id_factura != "0"){
                      
                     });  
                     
-                    //CALCULO DE TOTAL
+                    //CALCULO DE TOTAL CUANTIA * PRECIO  UNITARIO TOMANDO EN CUENTA LA REGLA DE UNIDAD
+                    
+                    function calculo_total(){
+                        var cuantia=parseFloat($('#cuantia').val());
+                        var precio=parseFloat($('#precioUnitario').val());
+                        var parteEntera=parseInt($('#cuantia').val());
+                        var parteDecimal=(cuantia-parteEntera).toFixed(4);
+                        var unidad=1;
+                        
+                                                  
+                        //REVISAR QUE CALCULE BIEN SEGUN LA REGLA
+                        if($("#unidades").val()=="DOC"){
+                        unidad=12;
+                        parteDecimal*=10;
+                        }
+                        
+                        if($("#unidades").val()=="CIE"){
+                        unidad=100;
+                        parteDecimal*=100;
+                        }
+                        if($("#unidades").val()=="MIL"){
+                        unidad=1000;
+                        parteDecimal*=1000;
+                        }
+                        //alert("(" + parteEntera + "*" + precio + ")" + "+((" + (precio/unidad).toFixed(2) + ")*" + parteDecimal + ")");
+                        $('#precioTotal').val(((parteEntera*precio)+((precio/unidad).toFixed(2)*parteDecimal)).toFixed(2));
+                    }
+                    
                     $('#cuantia').blur(function(){
-                        $('#precioTotal').val((parseFloat($('#cuantia').val()) * parseFloat($('#precioUnitario').val())).toFixed(2));
+                        calculo_total();
                     });
+                    
                     $('#precioUnitario').blur(function(){
-                        $('#precioTotal').val((parseFloat($('#cuantia').val()) * parseFloat($('#precioUnitario').val())).toFixed(2));
+                        calculo_total();
                     });
+                    
                     
                     //DIV DE BUSQUEDAS
                     $( "#dialogDesc" ).dialog({
