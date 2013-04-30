@@ -75,7 +75,7 @@ if(isset($_POST['addItem'])){
             $clase_css = "texto_error";
         }
  
-         //CALCULA LOS VALORES DE LA FACTURA.
+  //CALCULA LOS VALORES DE LA FACTURA.
 
 $resultado = $clase_database->formToDB($link,'factura f,(SELECT SUM(precioTotal) pt,SUM(cuantia) c,SUM(pesoBruto) pb,SUM(pesoNeto) pn,SUM(bultos) b from item 
 where idFactura='.$id_factura.' and idRetaceo='.hideunlock($_SESSION["n_declaracion"]).') i','','f.FOB=i.pt,f.cuantia=i.c,f.pesoBruto=i.pb,f.pesoNeto=i.pn,f.bultos=i.b,f.total=f.otrosGastos+i.pt','','update','idFactura="'.$id_factura.'"');
@@ -211,9 +211,8 @@ if($id_factura != "" || $id_factura != "0"){
                     $('#fechaf').datepicker({
                             dateFormat: "yy-mm-dd"
                     });
-                   
-                    
-                    $('#fechaf').mask("9999-99-99")
+
+                    $('#fechaf').mask("9999-99-99");
                     
 
                     $("#frm :input").tooltip();
@@ -283,29 +282,64 @@ if($id_factura != "" || $id_factura != "0"){
                     function calculo_total(){
                         var cuantia=parseFloat($('#cuantia').val());
                         var precio=parseFloat($('#precioUnitario').val());
-                        var parteEntera=parseInt($('#cuantia').val());
-                        var parteDecimal=(cuantia-parteEntera).toFixed(4);
+                        var sep=$('#cuantia').val().split(".");
+                        var parteEntera=parseInt(sep[0]);//SE OPTIENE EL ENTERO DE LA PARTE ENTERA
+                        var parteDecimal=parseInt(sep[1]);//SE OBTIENE EL ENTERO DE LA PARTE DECIMAL
                         var unidad=1;
+                        var sizeLetra=parteDecimal.toString().length;
                         
+                        if($("#unidades").val()=="UNI"){
+
+                        if(parteDecimal>0){
+                            alert("Decimales No pueden ser mayor a 0");
+                            $('#cuantia').focus();
+                        }
+  
+                        }
                                                   
-                        //REVISAR QUE CALCULE BIEN SEGUN LA REGLA
+                        //SEGUN SEA LA UNIDAD SE DEFINIRA EL VALOR A DIVIDIR EL PRECIO
                         if($("#unidades").val()=="DOC"){
+                            //COMPROBAR QUE VALIDE EL NUMERO DE DECIMALES
+                        if(sizeLetra>2){
+                            alert("Cantidad de decimales en cuantia excede de 2 ");
+                            $('#cuantia').focus();
+                        }
+                        if(parteDecimal>11){
+                            alert("Decimales No pueden ser mayor a 11");
+                            $('#cuantia').focus();
+                        }
+                        
                         unidad=12;
-                        parteDecimal*=10;
                         }
                         
                         if($("#unidades").val()=="CIE"){
+                            
+                        if(sizeLetra>2 ){
+                            alert("Cantidad de decimales en cuantia excede de 2 ");
+                            $('#cuantia').focus();
+                        }
+                        if(parteDecimal>99){
+                            alert("Decimales No pueden ser mayor a 99");
+                            $('#cuantia').focus();
+                        }
                         unidad=100;
-                        parteDecimal*=100;
                         }
                         if($("#unidades").val()=="MIL"){
-                        unidad=1000;
-                        parteDecimal*=1000;
+                        
+                        if(sizeLetra>3){
+                            alert("Cantidad de decimales en cuantia excede de 3 ");
+                            $('#cuantia').focus();
                         }
-                        //alert("(" + parteEntera + "*" + precio + ")" + "+((" + (precio/unidad).toFixed(2) + ")*" + parteDecimal + ")");
-                        $('#precioTotal').val(((parteEntera*precio)+((precio/unidad).toFixed(2)*parteDecimal)).toFixed(2));
+                        if(parteDecimal>999){
+                            alert("Decimales No pueden ser mayor a 999");
+                            $('#cuantia').focus();
+                        }
+                        unidad=1000;
+                        }
+                        
+                        $('#precioTotal').val(((parteEntera*precio)+ ((precio/unidad) * parteDecimal)).toFixed(2));
                     }
-                    
+                    //CUANDO PIERDA EL ENFOQUE
                     $('#cuantia').blur(function(){
                         calculo_total();
                     });
@@ -313,7 +347,10 @@ if($id_factura != "" || $id_factura != "0"){
                     $('#precioUnitario').blur(function(){
                         calculo_total();
                     });
-                    
+                    //CUANDO CAMBIE EL COMBOBOX DE UNIDADES
+                    $("#unidades").change(function(){
+                        calculo_total();
+                    });
                     
                     //DIV DE BUSQUEDAS
                     $( "#dialogDesc" ).dialog({
