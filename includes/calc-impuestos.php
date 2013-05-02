@@ -43,7 +43,7 @@ $i=0;
     </script>
      <table width="750px"><tr><td class="tabla_titulo" width="80px">No.Item</td><td class="tabla_titulo" width="170px">Partida Arancelaria</td><td class="tabla_titulo" width="250px">Descripcion</td><td class="tabla_titulo" width="250px">Pais</td></tr>
     <?php
-                    while($fila = mysql_fetch_array($result)){  
+      while($fila = mysql_fetch_array($result)){  
                         $i++;
 //DE QUE MANERA SE PODRA AGRUPAR. Y HACER UN MATCH CON LA TABLA RETACEO IMPUESTOS.                        
                         ?>
@@ -62,7 +62,7 @@ $i=0;
       </Td>
           </tr>
     <?php
-                        }
+  }
     ?>
     </table>
 <br>

@@ -37,6 +37,7 @@ $opc = isset($_GET['opc']) ? hideunlock($_GET['opc']) : 0;//variable que define 
 
 //CALCULO DE BULTOS Y PESOS
 if (isset($_POST['submit'])){
+    //AUN NO PROGRAMADO
 if($_POST['submit']=='Guardar'){
         $_POST["idRetaceo"]=$clase_database->GenerarNuevoId($link, "idRetaceo", "retaceo", "");
         $_POST["usuario"]=$_SESSION["usu"];
@@ -64,7 +65,18 @@ if(isset($_POST['addItem'])){
     $_POST["nuevoUsado"]="N";
     $_POST["tipoDescripcion"]="N";
     //SE CALCULA EL PRECIO TOTAL POR SI EL JAVASCRIPT ESTA DESACTIVADO
-    $_POST["precioTotal"]=round($_POST["cuantia"], 2) * round($_POST["precioUnitario"], 2);
+
+        $part=split(".",$_POST["cuantia"]);
+        $parteEntera=$part[0];//SE OPTIENE EL ENTERO DE LA PARTE ENTERA
+        $parteDecimal=$part[1];//SE OBTIENE EL ENTERO DE LA PARTE DECIMAL
+        //$sizeLetra=strlen($parteDecimal);
+$unidad=1;
+        if($_POST["unidad"]=="UNI") $unidad=1;
+        if($_POST["unidad"]=="DOC") $unidad=12;
+        if($_POST["unidad"]=="CIE") $unidad=100;
+        if($_POST["unidad"]=="MIL") $unidad=1000;
+        $_POST["precioTotal"]= round(($parteEntera* $_POST["precioUnitario"]) + (($_POST["precioUnitario"]/$unidad) * $parteDecimal),2);
+        
     
        $resultado = $clase_database->formToDB($link,'item','post','','addItem, idItem, ','insert','');
         if ($resultado){ 
@@ -96,7 +108,22 @@ header("Location:".$_SERVER['REQUEST_URI']);
 
 //-----MODIFICAR DATOS NUEVOS DE FACTURAS
 if(isset($_POST['updItem'])){
-$_POST["precioTotal"]=round($_POST["cuantia"], 2) * round($_POST["precioUnitario"], 2);
+    
+//SE CALCULA EL PRECIO TOTAL POR SI EL JAVASCRIPT ESTA DESACTIVADO
+
+        $part=explode(".",$_POST["cuantia"]);
+        $parteEntera=$part[0];//SE OPTIENE EL ENTERO DE LA PARTE ENTERA
+        $parteDecimal=$part[1];//SE OBTIENE EL ENTERO DE LA PARTE DECIMAL
+        //$sizeLetra=strlen($parteDecimal);
+$unidad=1;
+        if($_POST["unidades"]=="UNI") $unidad=1;
+        if($_POST["unidades"]=="DOC") $unidad=12;
+        if($_POST["unidades"]=="CIE") $unidad=100;
+        if($_POST["unidades"]=="MIL") $unidad=1000;
+//        echo  "round((".$parteEntera."*". $_POST["precioUnitario"].") + ((".$_POST["precioUnitario"]."/".$unidad.") * ".$parteDecimal."),2)";
+        $_POST["precioTotal"]= round(($parteEntera* $_POST["precioUnitario"]) + (($_POST["precioUnitario"]/$unidad) * $parteDecimal),2);
+       
+        
 $resultado = $clase_database->formToDB($link,'item','post','','updItem, idItem, ','update','idItem='.$_POST["idItem"]);
  
      if ($resultado){ 
@@ -279,12 +306,14 @@ if($id_factura != "" || $id_factura != "0"){
                     
                     //CALCULO DE TOTAL CUANTIA * PRECIO  UNITARIO TOMANDO EN CUENTA LA REGLA DE UNIDAD
                     
-                    function calculo_total(){
+                    function calculo_total(){ 
                         var cuantia=parseFloat($('#cuantia').val());
                         var precio=parseFloat($('#precioUnitario').val());
                         var sep=$('#cuantia').val().split(".");
                         var parteEntera=parseInt(sep[0]);//SE OPTIENE EL ENTERO DE LA PARTE ENTERA
+                        
                         var parteDecimal=parseInt(sep[1]);//SE OBTIENE EL ENTERO DE LA PARTE DECIMAL
+                        if(isNaN(parteDecimal)) parteDecimal=0; //SI NO TIENE VALOR DECIMAL VALDRA CERO
                         var unidad=1;
                         var sizeLetra=parteDecimal.toString().length;
                         
@@ -324,6 +353,7 @@ if($id_factura != "" || $id_factura != "0"){
                         }
                         unidad=100;
                         }
+                        
                         if($("#unidades").val()=="MIL"){
                         
                         if(sizeLetra>3){
@@ -336,7 +366,7 @@ if($id_factura != "" || $id_factura != "0"){
                         }
                         unidad=1000;
                         }
-                        
+
                         $('#precioTotal').val(((parteEntera*precio)+ ((precio/unidad) * parteDecimal)).toFixed(2));
                     }
                     //CUANDO PIERDA EL ENFOQUE
