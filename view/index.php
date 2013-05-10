@@ -243,11 +243,12 @@ $_SESSION['timeout'] = time();
 
                 <td class="menu_separador_1"><img src="../images/transparente.gif" height="1" width="14"></td>
 
-			  <td align="center" valign="top"><div><img src="../images/transparente(1).gif" height="8" width="1"></div>
+			   <td align="center" valign="top"><div><img src="../images/transparente(1).gif" height="8" width="1"></div>
 
-				<div align="center"><a href="descripcomercial-listado.php"><img src="../images/icono-menus.gif" border="0"></a></div>
+				<div align="center"><a href="declaraciones-listado.php"><img src="../images/icono-afp.gif" border="0"></a></div>
 
-				<div style="height:30px;"><a href="descripcomercial-listado.php" class="modulo_titulo">Gesti&oacute;n de<br>Descripciones Comerciales</a></div>
+				<div style="height:30px;"><a href="declaraciones-listado.php" class="modulo_titulo">Gesti&oacute;n de <br>Declaraciones</a></div>
+
 
 			  </td>
 
@@ -304,14 +305,14 @@ $_SESSION['timeout'] = time();
 
                <td class="menu_separador_1"><img src="../images/transparente.gif" height="1" width="14"></td>
 
-			  <td align="center" valign="top"><div><img src="../images/transparente(1).gif" height="8" width="1"></div>
+			 <td align="center" valign="top"><div><img src="../images/transparente(1).gif" height="8" width="1"></div>
 
-				<div align="center"><a href="declaraciones-listado.php"><img src="../images/icono-afp.gif" border="0"></a></div>
+				<div align="center"><a href="descripcomercial-listado.php"><img src="../images/icono-menus.gif" border="0"></a></div>
 
-				<div style="height:30px;"><a href="declaraciones-listado.php" class="modulo_titulo">Gesti&oacute;n de <br>Declaraciones</a></div>
+				<div style="height:30px;"><a href="descripcomercial-listado.php" class="modulo_titulo">Gesti&oacute;n de<br>Descripciones Comerciales</a></div>
 
-
-			  </td>
+                         
+                         </td>
 
 		  	  <td class="menu_separador_1"><img src="../images/transparente.gif" height="1" width="14"></td>
 
