@@ -65,7 +65,7 @@ if($("#filtro_txt").val()=="") $("#desc_table").find("tr").show();
                         " and tipoDescripcion='N' " .
                         " and descripcionempresa.empresa like " . $paramEmp .
                         " order by descripcion asc, empresa desc ";
-                     echo $sql_empresas;
+                     //echo $sql_empresas;
 	$result = mysql_query($sql_empresas,$linkCombos);
 	$contador = 0;
 	while($filas = mysql_fetch_array($result)){
