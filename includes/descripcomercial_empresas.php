@@ -58,7 +58,7 @@ if($("#filtro_txt").val()=="") $("#desc_table").find("tr").show();
 		   */
 
 	
-  	$sql_empresas =  "select descripcion.inciso , descripcion.descripcion" .
+  	$sql_empresas = "select descripcion.inciso , descripcion.descripcion" .
                         " from descripcion left join descripcionempresa on (descripcion.inciso = descripcionempresa.inciso) " .
                         " left join empresas on (descripcionempresa.empresa = empresas.nit) " .
                         " where descripcion like '%%' " .

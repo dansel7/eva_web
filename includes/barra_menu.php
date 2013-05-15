@@ -191,7 +191,20 @@ if(isset($_SESSION["n_declaracion"])){
 				
 				<div style="height:30px;"><a target="_blank" href="../reports/factura_ordenadas.php" class="modulo_titulo">Facturas Ordenadas</a></div>
 			  </td>
-			                    
+			           
+              <td class="menu_separador_1"><img src="../images/transparente.gif" height="1" width="14"></td>
+
+			  
+
+		  	  <td class="menu_separador_1"><img src="../images/transparente.gif" height="1" width="14"></td>
+                         <td align="center" valign="top">
+			  	<div><img src="../images/transparente(1).gif" height="8" width="1"></div>
+
+				<div align="center"><a target="_blank" href="../reports/aranceles_agrupados.php"><img src="../images/icono-aran-agrup.png" border="0"></a></div>
+				
+				<div style="height:30px;"><a target="_blank" href="../reports/aranceles_agrupados.php" class="modulo_titulo">Reporte Partidas Ordenadas</a></div>
+			  </td>
+			           
 
 			  </tr>
 			  </tbody></table>
