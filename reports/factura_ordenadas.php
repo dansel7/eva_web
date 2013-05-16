@@ -3,7 +3,7 @@
 //error_reporting(0);
 session_start();
 
-if(!isset($_SESSION["n_declaracion"])){
+if(!isset($_SESSION['usu'])){
 		$direccion = "Location: ../index.php";
 		header($direccion);
 	}else{

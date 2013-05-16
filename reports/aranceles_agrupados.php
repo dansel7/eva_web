@@ -3,7 +3,7 @@
 //error_reporting(0);
 session_start();
 
-if(!isset($_SESSION["n_declaracion"])){
+if(!isset($_SESSION['usu'])){
 		$direccion = "Location: ../index.php";
 		header($direccion);
 	}else{
@@ -64,7 +64,7 @@ $pdf->addpage($orientacion,'legal');//AGREGA NUEVA PAGINA POR CADA MES
 
 $rsd='
 <table width="100%">
-<tr><td colspan="3" style="text-align:center"><b>REPORTE Partidas Arancelarias Agrupadas</b><br></td></tr>
+<tr><td colspan="3" style="text-align:center"><b>REPORTE PARTIDAS ARANCELARIAS AGRUPADAS</b><br></td></tr>
 <tr>
 	<td width="300px"><b>No. Retaceo:</b> '.$rows_e["numRegistro"].' </td>
         <td width="200px"><b>Fecha:</b> '.substr($rows_e["fecha"],0,10).'</td>

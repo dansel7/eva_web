@@ -424,7 +424,7 @@ if(isset($_SESSION["n_declaracion"])){
 
 			  
 
-		  	  <td class="menu_separador_1"><img src="../images/transparente.gif" height="1" width="14"></td>
+		  	 <td class="menu_separador_1"><img src="../images/transparente.gif" height="1" width="14"></td>
                          <td align="center" valign="top">
 			  	<div><img src="../images/transparente(1).gif" height="8" width="1"></div>
 
