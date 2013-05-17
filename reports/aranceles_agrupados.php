@@ -34,7 +34,7 @@ $pdf->SetKeywords('TCPDF, PDF, reporte, control, MANTENIMIENTO');
 
 //set margins
 //$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
-$pdf->SetMargins(10, 20, 10);
+$pdf->SetMargins(10, 10, 10);
 //$pdf->SetHeaderMargin(0);
 //$pdf->SetFooterMargin(15);
 
@@ -66,15 +66,44 @@ $rsd='
 <table width="100%">
 <tr><td colspan="3" style="text-align:center"><b>REPORTE PARTIDAS ARANCELARIAS AGRUPADAS</b><br></td></tr>
 <tr>
-	<td width="300px"><b>No. Retaceo:</b> '.$rows_e["numRegistro"].' </td>
-        <td width="200px"><b>Fecha:</b> '.substr($rows_e["fecha"],0,10).'</td>
-        <td width="200px"><b>No.Control:</b> '.$rows_e["numero"].'</td> 
+	<td width="100px"><b>No. Retaceo:</b> </td>
+        <td width="225px" style="text-align:right">'.$rows_e["numRegistro"].'&nbsp;&nbsp;&nbsp;&nbsp;</td>
+        <td width="100px"><b>FOB:</b></td> 
+        <td width="100px" style="text-align:right">'.$rows_e["FOB"].'&nbsp;&nbsp;&nbsp;&nbsp;</td> 
+        <td width="100px"><b>DAI:</b> </td> 
+        <td width="60px" style="text-align:right">'.$rows_e["DAI"].'</td>     
 </tr>
 <tr>
-	<td><b>Empresa:</b> '.$rows_e["nombre"].'</td>
-	<td><b>NIT:</b> '.$rows_e["NIT"].'</td>
-	<td><b>A&Ntilde;O: '.  substr($rows_e["fecha"], 0,4).'</b></td>
+	<td width="100px"><b>NIT:</b> </td>
+        <td width="225px" style="text-align:right">'.$rows_e["NIT"].'&nbsp;&nbsp;&nbsp;&nbsp;</td>
+        <td width="100px"><b>Flete:</b></td> 
+        <td width="100px" style="text-align:right">'.$rows_e["flete"].'&nbsp;&nbsp;&nbsp;&nbsp;</td> 
+        <td width="100px"><b>IVA:</b> </td> 
+        <td width="60px" style="text-align:right">'.$rows_e["IVA"].'</td>     
 </tr>
+<tr>
+	<td width="100px"><b>Fecha:</b> </td>
+        <td width="225px" style="text-align:right">'.date("d-m-Y", strtotime($rows_e["fecha"])).'&nbsp;&nbsp;&nbsp;&nbsp;</td>
+        <td width="100px"><b>O.Gastos:</b></td> 
+        <td width="100px" style="text-align:right">'.$rows_e["otrosGastos"].'&nbsp;&nbsp;&nbsp;&nbsp;</td> 
+        <td width="100px"><b>A Pago:</b> </td> 
+        <td width="60px" style="text-align:right">'.$rows_e["aPago"].'</td>     
+</tr>
+<tr>
+	<td width="100px"><b>Consignatario:</b> </td>
+        <td width="225px" style="text-align:right">'.$rows_e["nombre"].'&nbsp;&nbsp;&nbsp;&nbsp;</td>
+        <td width="100px"><b>Seguro:</b></td> 
+        <td width="100px" style="text-align:right">'.$rows_e["seguro"].'&nbsp;&nbsp;&nbsp;&nbsp;</td> 
+        <td colspan="2"></td> 
+</tr>
+<tr>
+	<td width="100px"><b>Doc.Transporte:</b> </td>
+        <td width="225px" style="text-align:right">'.$rows_e["numeroDocumentoTransporte"].'&nbsp;&nbsp;&nbsp;&nbsp;</td>
+        <td width="100px"><b>CIF:</b></td> 
+        <td width="100px" style="text-align:right">'.$rows_e["CIF"].'&nbsp;&nbsp;&nbsp;&nbsp;</td> 
+        <td colspan="2"></td>   
+</tr>
+
 </table>	
 <br>
 <table border="0" width="100%" cellpadding="3" cellspacing="0">
