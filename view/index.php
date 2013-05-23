@@ -430,7 +430,7 @@ if(isset($_SESSION["n_declaracion"])){
 
 				<div align="center"><a target="_blank" href="../reports/aranceles_agrupados.php"><img src="../images/icono-aran-agrup.png" border="0"></a></div>
 				
-				<div style="height:30px;"><a target="_blank" href="../reports/aranceles_agrupados.php" class="modulo_titulo">Reporte Partidas Ordenadas</a></div>
+				<div style="height:30px;"><a target="_blank" href="../reports/aranceles_agrupados.php" class="modulo_titulo">Reporte Partidas Agrupadas</a></div>
 			  </td>
 			           	                    
 

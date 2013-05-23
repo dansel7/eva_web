@@ -331,12 +331,14 @@ from factura where idRetaceo='.hideunlock($_SESSION["n_declaracion"]).') f','','
                            $("#seguro").attr("class","required read");
                            $("#TipoCalculoSeguroE").removeAttr("disabled");
                            $("#TipoCalculoSeguroI").removeAttr("disabled");
+                           $("#tdPorc").css("display","none");
                           
                        }else{
                             $("#seguro").attr("readonly",false);
                             $("#seguro").attr("class","required");
                             $("#TipoCalculoSeguroE").attr("disabled", true);
                             $("#TipoCalculoSeguroI").attr("disabled", true);
+                            $("#tdPorc").css("display","block");
                        }
                        
                     });
@@ -345,12 +347,14 @@ from factura where idRetaceo='.hideunlock($_SESSION["n_declaracion"]).') f','','
                            $("#seguro").attr("class","required read");
                            $("#TipoCalculoSeguroE").removeAttr("disabled");
                            $("#TipoCalculoSeguroI").removeAttr("disabled");
+                           $("#tdPorc").css("display","none");
                           
                        }else{
                             $("#seguro").attr("readonly",false);
                             $("#seguro").attr("class","required");
                             $("#TipoCalculoSeguroE").attr("disabled", true);
                             $("#TipoCalculoSeguroI").attr("disabled", true);
+                            $("#tdPorc").css("display","block");
                        }
                     
                     $('#fechaf').datepicker({
@@ -663,10 +667,23 @@ from factura where idRetaceo='.hideunlock($_SESSION["n_declaracion"]).') f','','
                         </div>
  </TD>
  <TD>
-      <div class="texto_explicacion_formulario">Seguro:&nbsp;</div><br><br>
-        <div>
-        <input class="required read" name="seguro" id="seguro" readonly rows="1" type="text" value="<? echo isset($seguro) ? $seguro : "";?>" title="">
-        </div>
+     <table>
+      <tr>
+         <td>
+            <div class="texto_explicacion_formulario">Seguro:&nbsp;</div><br><br>
+            <div>
+            <input class="required read" name="seguro" id="seguro" readonly rows="1" type="text" value="<? echo isset($seguro) ? $seguro : "";?>" title="">
+            </div>
+        </td>
+        <td id="tdPorc" style="display:none">
+            <div class="texto_explicacion_formulario">Porcentaje de Seguro:&nbsp;</div><br><br>
+            <div>
+            <input class="required read" name="PorcentajeSeguro" id="PorcentajeSeguro"  rows="1" type="text" value="<? echo isset($seguro) ? $seguro : "";?>" title="">
+            </div>
+        </td>
+      </tr>
+     </table>
+        
 </TD</TR>
 <TR>
     <TD colspan="3">

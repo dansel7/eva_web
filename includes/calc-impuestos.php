@@ -46,7 +46,7 @@ if(isset($_GET["ins"])){//INSERCION DE CALCULOS DE IMPUESTOS (INSERCION EN CASO 
    
    
     $sql=preg_replace('/, $/', '', $sql);//SE ELIMINA LA COMA DEL FINAL
-    echo $sql;
+    //echo $sql;
     $resultado = mysql_query($sql,$link);//SE EJECUTA LA CONSULTA
 
         if ($resultado){ 
@@ -78,11 +78,11 @@ if(isset($_GET["res"])){//REINICIALIZAR LOS DATOS DEL RETACEO
     
 $existencia= mysql_query("SELECT inciso,descripcion,pais FROM retaceoImpuestos where idRetaceo=".  hideunlock($_SESSION["n_declaracion"]), $link);
 $msj="";
-if(mysql_num_rows($existencia)<=0){
+if(mysql_num_rows($existencia)<=0){//SI NO HAY CALCULO HECHOS EL LOS OBTIENE.
 $qry= "select item.partidaArancelaria,item.descripcion,idItem from item inner join factura on item.idFactura=factura.idFactura where item.idRetaceo=".  hideunlock($_SESSION["n_declaracion"])." group by agrupar,partidaArancelaria order by factura.idFactRetaceo,idItemFactura";
 $result = mysql_query($qry, $link);
 $msj="<h3 style='color:red'>No se ha realizado ningun calculo de impuestos</h3>";
-}else{
+}else{//SI HAY SOLAMENTE LOS MUESTRA
 $result = $existencia;   
 }
 
