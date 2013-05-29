@@ -233,7 +233,9 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                 $TipoCalcSeguro= $fila['TipoCalculoSeguro'];
                 $CalcSeguro= $fila['calcularSeguro'];
                 $seguro=$fila['seguro'];
+                $porcentSeguro=$fila['porcentSeguro'];
         }
+        
         //CREA VARIABLE DE SESSION PARA COMPROBAR SI SE DEBE CALCULAR EL SEGURO O NO
         if(!isset($_SESSION["calculoseguro"]) || isset($_POST['submit'])){
             $_SESSION["calculoseguro"]=$CalcSeguro;
@@ -678,7 +680,7 @@ from factura where idRetaceo='.hideunlock($_SESSION["n_declaracion"]).') f','','
         <td id="tdPorc" style="display:none">
             <div class="texto_explicacion_formulario">Porcentaje de Seguro:&nbsp;</div><br><br>
             <div>
-            <input class="required read" name="PorcentajeSeguro" id="PorcentajeSeguro"  rows="1" type="text" value="<? echo isset($seguro) ? $seguro : "";?>" title="">
+            <input class="required" name="PorcentajeSeguro" id="PorcentajeSeguro"  rows="1" type="text" value="<? echo isset($porcentSeguro) ? $porcentSeguro : "";?>" title="">%
             </div>
         </td>
       </tr>
@@ -698,10 +700,10 @@ from factura where idRetaceo='.hideunlock($_SESSION["n_declaracion"]).') f','','
         <div style="margin-top:15px;margin-left: -175px" class="texto_explicacion_formulario">Tipo de Calculo de Seguro:</div>
         <br><br>
         <div style="margin-top:-25px;margin-left:5px" class="texto_explicacion_formulario">
-            <b >Externo:
-            <Input type = 'Radio' id ='TipoCalculoSeguroE' Name ='TipoCalculoSeguro' <? if(isset($TipoCalcSeguro)){if($TipoCalcSeguro=="E")echo "Checked";}else{echo "Checked";} ?> value= 'E'></b>
-            <b >Interno:
-            <Input type = 'Radio' id ='TipoCalculoSeguroI' Name ='TipoCalculoSeguro' <? if(isset($TipoCalcSeguro)){if($TipoCalcSeguro=="I")echo "Checked";} ?> value= 'I'></b>
+            <b alt="Transporte Internacional">Externo:
+            <Input  type = 'Radio' id ='TipoCalculoSeguroE' Name ='TipoCalculoSeguro' <? if(isset($TipoCalcSeguro)){if($TipoCalcSeguro=="E")echo "Checked";}else{echo "Checked";} ?> value= 'E'></b>
+            <b alt="Transporte Regional">Interno:
+            <Input  type = 'Radio' id ='TipoCalculoSeguroI' Name ='TipoCalculoSeguro' <? if(isset($TipoCalcSeguro)){if($TipoCalcSeguro=="I")echo "Checked";} ?> value= 'I'></b>
         </div>
     </div>
     </TD>   
@@ -771,7 +773,7 @@ from factura where idRetaceo='.hideunlock($_SESSION["n_declaracion"]).') f','','
                 </td>
                 
                 <td>
-                <div class="texto_explicacion_formulario">Peso Bruto:</div>
+                <div class="texto_explicacion_formulario">Peso Bruto(lbs):</div>
                 <div>
                 <input class="" name="pesoBruto" id="pesoBruto" type="text" value="0.0" title="Ingrese Peso Bruto">
                 </div>
@@ -830,7 +832,7 @@ from factura where idRetaceo='.hideunlock($_SESSION["n_declaracion"]).') f','','
                 <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">Fecha</td>                              
                 <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">Paginas</td> 
                 <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">Bultos</td>
-                <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">Peso Bruto</td>
+                <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">Peso Bruto(lbs)</td>
                 <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">Cuantia</td>                                
                 <td class="tabla_titulo" style="border-top: 1px solid rgb(226, 226, 226); border-left: 1px solid rgb(226, 226, 226); border-bottom: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">Gastos</td>
                 <td class="tabla_titulo" style="border: 1px solid rgb(226, 226, 226);" align="center" height="34" valign="middle" width="80">FOB</td>
