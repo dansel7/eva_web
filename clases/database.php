@@ -93,15 +93,19 @@
 		return 0;
 	  }
           
+       
+              if (mysql_query($sql,$link))
+              {		
+                    return true;
+                     
+              }
+              else
+              {
+                    return false;
+                    
+              }
+         
           
-	  if (mysql_query($sql,$link))
-	  {		
-		  return true;		
-	  }
-	  else
-	  {
-		return false;
-	  }
 	}
 		
 	}

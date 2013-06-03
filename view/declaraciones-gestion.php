@@ -1,7 +1,7 @@
 <?
 
 session_start();
-error_reporting(0);
+//error_reporting(0);
 // 10 mins in seconds
 $timeout = 600; 
 
@@ -68,7 +68,7 @@ if (isset($_POST['submit'])){
     $_POST['NIT']=  hideunlock($_POST['NIT']);
     
 //Funcion para poder hacer el insert, o update de declaracion
-if($_POST['submit']=='Actualizar'){//ACTUALIZAR
+if($_POST['submit']=='Actualizar'){/////-------ACTUALIZAR-----------/////
     
         $_POST["fechaModificado"]=date("Y-m-d H:i:s");
         $resultado = $clase_database->formToDB($link,'retaceo','post','', 'submit, frm, ','update','idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');
@@ -80,7 +80,7 @@ if ($resultado){
             $clase_css = "texto_error";
         }
 }
-else if($_POST['submit']=='Guardar'){//GUARDAR NUEVO
+else if($_POST['submit']=='Guardar'){///////----------GUARDAR NUEVO--------/////////
     
         $_POST["usuario"]=$_SESSION["usu"];
         $_POST["estado"]="0";
@@ -277,7 +277,7 @@ from factura where idRetaceo='.hideunlock($_SESSION["n_declaracion"]).') f','','
  
                         
                         
-                        $resultado=true;
+                     $resultado=true;
                     if($cntDel > 0) { 
                         $mensaje = "Se eliminaron $cntDel registros";
                         $clase_css = "texto_ok";
@@ -680,7 +680,7 @@ from factura where idRetaceo='.hideunlock($_SESSION["n_declaracion"]).') f','','
         <td id="tdPorc" style="display:none">
             <div class="texto_explicacion_formulario">Porcentaje de Seguro:&nbsp;</div><br><br>
             <div>
-            <input class="required" name="PorcentajeSeguro" id="PorcentajeSeguro"  rows="1" type="text" value="<? echo isset($porcentSeguro) ? $porcentSeguro : "";?>" title="">%
+            <input class="required" name="PorcentSeguro" id="PorcentSeguro"  rows="1" type="text" value="<? echo isset($porcentSeguro) ? $porcentSeguro : "";?>" title="">%
             </div>
         </td>
       </tr>
