@@ -37,19 +37,21 @@ error_reporting(0);
 			$result = mysql_query($sq,$enlace);
 			
 			$cantidad = mysql_num_rows($result);
-			
+			//CRECION DE VARIABLES DE SESSION.S
 			if ($cantidad == 1){
 				while ($row = mysql_fetch_array($result))			
 				{
-					 //variables de sesion para control de usuario
-					$_SESSION["nombre_usuario"]=$row["nombre"];
-					//$_SESSION["apellido"] = $row["apellido"];
-					$_SESSION["perfil"]=$row["perfil"];
-					//$_SESSION["id_usuario"] = $row["id"];
-					//$_SESSION["id_tipo"] = $row["tipo"];
-					//$_SESSION["password"]=$_POST['txt_password'];
-					$_SESSION["usu"]=$_POST['txt_usuario'];//usuario
-					$_SESSION['timeout'] = time();
+                                     //variables de sesion para control de usuario
+                                    
+                                    $_SESSION["nombre_usuario"]=$row["nombre"];
+                                    $_SESSION["perfil"]=$row["perfil"];
+                                    $_SESSION["usu"]=$_POST['txt_usuario'];//usuario
+                                    $_SESSION['timeout'] = time();
+                                    
+                                    ////$_SESSION["apellido"] = $row["apellido"];
+                                    ////$_SESSION["id_usuario"] = $row["id"];
+                                    //$_SESSION["id_tipo"] = $row["tipo"];
+                                    //$_SESSION["password"]=$_POST['txt_password'];
 				}
 
 				if($_SESSION["perfil"]=="17"){

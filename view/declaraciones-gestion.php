@@ -212,7 +212,10 @@ if(isset($_POST['updf'])){
 
    }
 
-}//------OBTIENE LOS DATOS DE LA DECLARACION DESDE LA BD-------
+   
+   
+   
+}//------OBTIENE LOS DATOS DE LA DECLARACION DESDE LA BD PARA ABRIRLO-------
 //VARIABLE QUE VERIFICA SI LA DECLARACION EXISTE Y ES VALIDA.
 $dec_valid=0;
 //CARGA DE DATOS DESDE BD
@@ -234,12 +237,20 @@ if($id_declaracion != "" || $id_declaracion != "0"){
                 $CalcSeguro= $fila['calcularSeguro'];
                 $seguro=$fila['seguro'];
                 $porcentSeguro=$fila['porcentSeguro'];
+                
         }
         
         //CREA VARIABLE DE SESSION PARA COMPROBAR SI SE DEBE CALCULAR EL SEGURO O NO
         if(!isset($_SESSION["calculoseguro"]) || isset($_POST['submit'])){
             $_SESSION["calculoseguro"]=$CalcSeguro;
         }
+        
+        if($CalcSeguro=="N"){
+         $_SESSION["porcentSeguro"]=$porcentSeguro;  
+        }else if($CalcSeguro=="S"){
+         $_SESSION["TPSeguro"]=$TipoCalcSeguro;  
+        }
+        
         //CREA UNA VARIABLE DE SESION DE EL NIT DE LA EMPRESA
         if(!isset($_SESSION["NIT_EMPRESA"])){
         $_SESSION["NIT_EMPRESA"]=$nitempresa;
