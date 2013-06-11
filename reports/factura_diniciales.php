@@ -110,7 +110,16 @@ $gastosTotal+=$row_exp[9];
 // 
 $subTotal=$flete+$fobTotal+$gastosTotal;
 $montoAsegurado=$subTotal*1.1;
-$seguro=$montoAsegurado*0.0025;
+if(strtoupper($_SESSION["calculoseguro"])=="S")
+{
+    $porcent=0.0;
+    if(strtoupper($_SESSION["TPSeguro"])=="E"){$porcent=0.015;}
+    else if(strtoupper($_SESSION["TPSeguro"])=="I"){$porcent=0.0125;}
+    $seguro=$montoAsegurado*$porcent;
+}else if(strtoupper($_SESSION["calculoseguro"])=="N"){
+    $seguro=$montoAsegurado*($_SESSION["porcentSeguro"]/100);
+}
+
 //PIE DE TABLA
 $fin=$rsd.$varr."
     <tr>

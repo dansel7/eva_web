@@ -135,38 +135,38 @@ if(isset($_POST['addf'])){
     
     //COMPROBAR SI EL NUMERO DE FACTURA YA EXISTE.
     $result = mysql_query("SELECT * FROM factura WHERE numero ='".$_POST["numero"]."' and idRetaceo='".hideunlock($_SESSION["n_declaracion"])."'", $link);
-  if(mysql_affected_rows()==1){
-      
-        $resultado=true; 
-        $mensaje = "Numero de Factura Ya Existe";
-        $clase_css = "texto_error";
-        
-   }
-  else
-   { //SINO EXISTE LO INGRESA    
-        
-        $resultado = $clase_database->formToDB($link,'datosIniciales','post','', 'addf, frmf, paginas, fechaf, ','insert','');
-        $_POST["bultos"]=0.0;
-        $_POST["pesoBruto"]=0.0;
-        $_POST["cuantia"]=0.0;
-        $_POST["fob"]=0.0;
-        $_POST["total"]=0.0;
-        $_POST["pesoNeto"]=0.0;
-        $resultado = $clase_database->formToDB($link,'factura','post','','fechaf, addf, frmf, ','insert','');
+      if(mysql_affected_rows()==1){
 
-        if ($resultado){ 
-            $mensaje = "Informacion Almacenada Exitosamente";
-            $clase_css = "texto_ok";
-        }else{
-            $mensaje = "Error al Almacenar Informacion";
+            $resultado=true; 
+            $mensaje = "Numero de Factura Ya Existe";
             $clase_css = "texto_error";
-        }
-        
-         //ACTUALIZA EL VALOR DE OTROSGASTOS DE LA TABLA DE RETACEO Y EL CIF
-       $resultado = $clase_database->formToDB($link,'retaceo','','otrosGastos=(SELECT SUM(otrosGastos) from factura where idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'")','','update','idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');
-      $resultado = $clase_database->formToDB($link,'retaceo','','CIF=flete+otrosGastos+seguro', '','update','idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');
- 
-  }
+
+       }
+      else
+       { //SINO EXISTE LO INGRESA    
+
+            $resultado = $clase_database->formToDB($link,'datosIniciales','post','', 'addf, frmf, paginas, fechaf, ','insert','');
+            $_POST["bultos"]=0.0;
+            $_POST["pesoBruto"]=0.0;
+            $_POST["cuantia"]=0.0;
+            $_POST["fob"]=0.0;
+            $_POST["total"]=0.0;
+            $_POST["pesoNeto"]=0.0;
+            $resultado = $clase_database->formToDB($link,'factura','post','','fechaf, addf, frmf, ','insert','');
+
+            if ($resultado){ 
+                $mensaje = "Informacion Almacenada Exitosamente";
+                $clase_css = "texto_ok";
+            }else{
+                $mensaje = "Error al Almacenar Informacion";
+                $clase_css = "texto_error";
+            }
+
+             //ACTUALIZA EL VALOR DE OTROSGASTOS DE LA TABLA DE RETACEO Y EL CIF
+           $resultado = $clase_database->formToDB($link,'retaceo','','otrosGastos=(SELECT SUM(otrosGastos) from factura where idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'")','','update','idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');
+          $resultado = $clase_database->formToDB($link,'retaceo','','CIF=flete+otrosGastos+seguro', '','update','idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');
+
+      }
   
 }
 
