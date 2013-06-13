@@ -26,7 +26,7 @@ $pdf->SetKeywords('TCPDF, PDF, reporte, control, MANTENIMIENTO');
 //$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE, PDF_HEADER_STRING);
 
 // set header and footer fonts
-//$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+//$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '1', 90));
 //$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
 
 // set default monospaced font
@@ -106,21 +106,25 @@ $rsd='
 
 </table>	
 <br>
-<table border="0" width="100%" cellpadding="3" cellspacing="0">
+
+
+<table border="0" width="100%" cellpadding="1" cellspacing="0">
 <tr>	
-		<td style="border:1px solid black;width:35px" >Item</td>
-		<td style="border:1px solid black;width:70px" >Factura</td>
-		<td style="border:1px solid black;width:70px">Partida</td>
-		<td colspan="3" style="border:1px solid black;width:375px" >Descripcion</td>
-		<td style="border:1px solid black;width:70px" >Cuantia</td>
-		<td style="border:1px solid black;width:70px">FOB</td>
+		<td style="width:200px" ><b>Descripcion</b></td>
+		<td style="text-align:right;width:80px"><b>Bultos</b></td>
+		<td style="text-align:right;width:80px"><b>Peso Bruto</b></td>
+		<td style="text-align:right;width:80px"><b>Cuantia</b></td>
+		<td style="text-align:right;width:80px"><b>Valor</b></td>
+		<td style="text-align:right;width:65px"><b>Factura</b></td>
+                <td style="text-align:right;width:40px"><b>ODF</b></td>
+                <td style="text-align:center;width:80px"><b>TLC</b></td>
 </tr>';
 }
 
 //$resultado=mysql_query("select * from factura where numeroretaceo='jor301'",$link);
 
-$resultado=mysql_query("select item.idItemFactura, factura.numero as factura, item.partidaArancelaria as partida, item.descripcion, " .
-                " item.cuantia as cuantia, (item.cuantia * item.precioUnitario) as fob  ".
+$resultado=mysql_query("select item.descripcion,000.00,000.00,item.cuantia as cuantia,(item.cuantia * item.precioUnitario) as fob," .
+                " factura.numero as factura,factura.idFactRetaceo  ".
                 " from factura inner join item on factura.idFactura=item.idFactura where item.idRetaceo='".hideunlock($_SESSION["n_declaracion"])."' order by factura.idFactura,factura.numero,item.idItemFactura",$link);
 $fobSubt=0;
 $fobTotal=0;
@@ -135,36 +139,37 @@ $fact=$row_exp[1];//PRIMERO SE GUARDA EL NUMERO DE FACTURA
 if($temp==0 && $fobSubt==0){}//se comprueba que es el primer valor de los registros y no imprime nada
  else if($fact!=$temp){//compara si son diferentes los numeros de facturas asi para poder agrupar
 		$varr.="<tr>
-		<td colspan=\"7\" style=\"border:1px solid black;text-align:center\"><b>Subtotal</b></td>
-		<td style=\"border:1px solid black;text-align:right\"><b>$".number_format(round($fobSubt,2),2)."</b></td>
+		<td colspan=\"7\" style=\"text-align:center\"><b>Subtotal</b></td>
+		<td style=\"text-align:right\"><b>$".number_format(round($fobSubt,2),2)."</b></td>
 		</tr>";
                 $fobTotal+=$fobSubt;
 		$fobSubt=0;
 	} //hasta aca es la agrupacion, se hace antes porque para el primer registro no hay ninguna agrupacion
  
  $varr.="<tr>
-		<td style=\"border-left:1px solid black;border-right:1px solid black\">$row_exp[0]</td>
-		<td style=\"border-left:1px solid black;border-right:1px solid black\">$row_exp[1]</td>
-		<td style=\"border-left:1px solid black;border-right:1px solid black\">$row_exp[2]</td>
-		<td colspan=\"3\" style=\"border-left:1px solid black;border-right:1px solid black\">".htmlentities($row_exp[3])."</td>
-		<td style=\"border-left:1px solid black;border-right:1px solid black;text-align:right\">".number_format(round($row_exp[4],2),2)."</td>
-		<td style=\"border-left:1px solid black;border-right:1px solid black;text-align:right\">".number_format(round($row_exp[5],2),2)."</td>
-	</tr>";
+		<td >".htmlentities($row_exp[0])."</td>
+		<td style=\"text-align:right\">$row_exp[1]</td>
+		<td style=\"text-align:right\">$row_exp[2]</td>
+		<td style=\"text-align:right\">$row_exp[3]</td>
+		<td style=\"text-align:right\">".round($row_exp[4],2)."</td>
+		<td style=\"text-align:right\">$row_exp[5]</td>
+                <td style=\"text-align:right\">$row_exp[6]</td>
+                </tr>";
 
 $fobSubt+=$row_exp[5];	
 $temp=$row_exp[1];//Guarda un temporal que seria el numero anterior para comparar
 
 }//FIN IMPRESION CADA REGISTRO
 $varr.="<tr>
-		<td colspan=\"7\" style=\"border:1px solid black;text-align:center\"><b>Subtotal</b></td>
-		<td style=\"border:1px solid black;text-align:right\"><b>$".number_format(round($fobSubt,2),2)."</b></td>
+		<td colspan=\"7\" style=\"text-align:center\"><b>Subtotal</b></td>
+		<td style=\"text-align:right\"><b>$".number_format(round($fobSubt,2),2)."</b></td>
 		</tr>";
 $fobTotal+=$fobSubt;
 		$fobSubt=0;
 // ---------------PIE DEL REPORTE-----------------
 //PIE DE TABLA
 $fin=$rsd.$varr."<tr>
-		<td colspan=\"7\" style=\"border:1px solid black;text-align:center\">TOTALES</td>
+		<td colspan=\"7\" style=\"text-align:center\">TOTALES</td>
 
 		<td style=\"border:1px solid black\">$".number_format(round($fobTotal,2),2)."</td>
 	</tr>
