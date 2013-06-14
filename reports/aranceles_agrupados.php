@@ -123,7 +123,7 @@ $rsd='
 
 //$resultado=mysql_query("select * from factura where numeroretaceo='jor301'",$link);
 
-$resultado=mysql_query("select item.descripcion,000.00,000.00,item.cuantia as cuantia,(item.cuantia * item.precioUnitario) as fob," .
+$resultado=mysql_query("select item.descripcion,item.bultos,item.pesoBruto,item.cuantia as cuantia,(item.cuantia * item.precioUnitario) as fob," .
                 " factura.numero as factura,factura.idFactRetaceo  ".
                 " from factura inner join item on factura.idFactura=item.idFactura where item.idRetaceo='".hideunlock($_SESSION["n_declaracion"])."' order by factura.idFactura,factura.numero,item.idItemFactura",$link);
 $fobSubt=0;
@@ -133,7 +133,7 @@ while($row_exp = mysql_fetch_array($resultado)) //CONSULTA PARA CADA REGISTRO
 {
 //IMPRESION DE CADA REGISTRO
 //PARA HACER UNA AGRUPACION
-$fact=$row_exp[1];//PRIMERO SE GUARDA EL NUMERO DE FACTURA
+$fact=$row_exp[6];//PRIMERO SE GUARDA EL NUMERO DE FACTURA
 
 //La agrupacion se valida desde aca
 if($temp==0 && $fobSubt==0){}//se comprueba que es el primer valor de los registros y no imprime nada
@@ -156,8 +156,8 @@ if($temp==0 && $fobSubt==0){}//se comprueba que es el primer valor de los regist
                 <td style=\"text-align:right\">$row_exp[6]</td>
                 </tr>";
 
-$fobSubt+=$row_exp[5];	
-$temp=$row_exp[1];//Guarda un temporal que seria el numero anterior para comparar
+$fobSubt+=$row_exp[4];	
+$temp=$row_exp[6];//Guarda un temporal que seria el numero anterior para comparar
 
 }//FIN IMPRESION CADA REGISTRO
 $varr.="<tr>
