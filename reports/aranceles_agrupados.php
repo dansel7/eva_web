@@ -35,7 +35,7 @@ $pdf->SetKeywords('TCPDF, PDF, reporte, control, MANTENIMIENTO');
 //set margins
 //$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
 $pdf->SetMargins(10, 10, 10);
-//$pdf->SetHeaderMargin(0);
+//$pdf->SetHeaderMargin();
 //$pdf->SetFooterMargin(15);
 
 //set auto page breaks
@@ -57,6 +57,13 @@ $orientacion="vertical";
 //ARREGLO DE MESES PARA MOSTRAR
 $meses=array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
 // ---------------INICIO DEL REPORTE-----------------
+
+$impuestos = mysql_query("SELECT inciso,descripcion,pais FROM retaceoImpuestos where idRetaceo=".  hideunlock($_SESSION["n_declaracion"]), $link);
+$itemImpuestos = array();
+while ($rowp=mysql_fetch_row($impuestos)){
+$itemImpuestos[]=$rowp;
+}
+    
 $result=mysql_query("select r.*,e.nombre from retaceo r inner join empresas e on r.nit=e.nit where r.idRetaceo='".hideunlock($_SESSION["n_declaracion"])."'",$link);
 
 while($rows_e = mysql_fetch_array($result)){ //CONSULTA PARA ENCABEZADO
@@ -108,42 +115,60 @@ $rsd='
 <br>
 
 
-<table border="0" width="100%" cellpadding="1" cellspacing="0">
+<table border="0" width="100%" cellpadding="1" cellspacing="0" >
 <tr>	
-		<td style="width:200px" ><b>Descripcion</b></td>
-		<td style="text-align:right;width:80px"><b>Bultos</b></td>
+		<td style="width:255px" ><b>Descripcion</b></td>
+		<td style="text-align:right;width:55px"><b>Bultos</b></td>
 		<td style="text-align:right;width:80px"><b>Peso Bruto</b></td>
-		<td style="text-align:right;width:80px"><b>Cuantia</b></td>
+		<td style="text-align:right;width:60px"><b>Cuantia</b></td>
 		<td style="text-align:right;width:80px"><b>Valor</b></td>
 		<td style="text-align:right;width:65px"><b>Factura</b></td>
-                <td style="text-align:right;width:40px"><b>ODF</b></td>
+                <td style="text-align:right;width:30px"><b>ODF</b></td>
                 <td style="text-align:center;width:80px"><b>TLC</b></td>
 </tr>';
 }
 
 //$resultado=mysql_query("select * from factura where numeroretaceo='jor301'",$link);
 
+
 $resultado=mysql_query("select item.descripcion,item.bultos,item.pesoBruto,item.cuantia as cuantia,(item.cuantia * item.precioUnitario) as fob," .
-                " factura.numero as factura,factura.idFactRetaceo  ".
-                " from factura inner join item on factura.idFactura=item.idFactura where item.idRetaceo='".hideunlock($_SESSION["n_declaracion"])."' order by factura.idFactura,factura.numero,item.idItemFactura",$link);
+            " factura.numero as factura,factura.idFactRetaceo, agrupar,partidaArancelaria  ".
+            //se puso esta linea.
+" from item inner join factura on item.idFactura=factura.idFactura where item.idRetaceo=".  hideunlock($_SESSION["n_declaracion"]).
+            " order by agrupar desc,item.idItem asc,factura.idFactRetaceo"
+            //    " from factura inner join item on factura.idFactura=item.idFactura where item.idRetaceo='".hideunlock($_SESSION["n_declaracion"])."' order by factura.idFactura,factura.numero,item.idItemFactura"
+            ,$link);
+
+
 $fobSubt=0;
 $fobTotal=0;
-$temp=0;
+$tempA=0;
+$tempB=0;
+$NumItem=1;
 while($row_exp = mysql_fetch_array($resultado)) //CONSULTA PARA CADA REGISTRO
 {
 //IMPRESION DE CADA REGISTRO
 //PARA HACER UNA AGRUPACION
-$fact=$row_exp[6];//PRIMERO SE GUARDA EL NUMERO DE FACTURA
+$FlagAgrupado=$row_exp[7];//PRIMERO SE GUARDA LA BANDERA DE AGRUPADO
+$PartidaAgrupada=$row_exp[8];//SEGUNDO SE GUARDA LA PARTIDA ARANCELARIA QUE AGRUPA
 
 //La agrupacion se valida desde aca
-if($temp==0 && $fobSubt==0){}//se comprueba que es el primer valor de los registros y no imprime nada
- else if($fact!=$temp){//compara si son diferentes los numeros de facturas asi para poder agrupar
-		$varr.="<tr>
-		<td colspan=\"7\" style=\"text-align:center\"><b>Subtotal</b></td>
-		<td style=\"text-align:right\"><b>$".number_format(round($fobSubt,2),2)."</b></td>
-		</tr>";
+if($tempA==0 && $fobSubt==0){}//se comprueba que es el primer valor de los registros y no imprime nada
+ else  if($PartidaAgrupada!=$tempB || $FlagAgrupado!=$tempA){//compara si son diferentes las banderas de agrupados asi para poder Agrupar
+            $varr.="<tr>
+<td style=\"text-align:left\"><b>".$tempB."</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <b>DAI:". 0.0 ."</b></td>
+                <td style=\"text-align:right\"><b>". 0 ."</b></td>                    
+		<td style=\"text-align:right\"><b>". 0 ."</b></td>
+                <td style=\"text-align:right\"><b>". 0 ."</b></td>
+		<td style=\"text-align:right\"><b>".number_format(round($fobSubt,2),2)."</b></td>
+                <td colspan=\"3\" style=\"text-align:center\"><b>Item: &nbsp;&nbsp;". $NumItem ."</b></td>
+		</tr><tr><td colspan=8></td></tr>";
                 $fobTotal+=$fobSubt;
 		$fobSubt=0;
+                $NumItem++;
+                
+             //}
 	} //hasta aca es la agrupacion, se hace antes porque para el primer registro no hay ninguna agrupacion
  
  $varr.="<tr>
@@ -151,29 +176,50 @@ if($temp==0 && $fobSubt==0){}//se comprueba que es el primer valor de los regist
 		<td style=\"text-align:right\">$row_exp[1]</td>
 		<td style=\"text-align:right\">$row_exp[2]</td>
 		<td style=\"text-align:right\">$row_exp[3]</td>
-		<td style=\"text-align:right\">".round($row_exp[4],2)."</td>
+		<td style=\"text-align:right\">".number_format(round($row_exp[4],2),2)."</td>
 		<td style=\"text-align:right\">$row_exp[5]</td>
                 <td style=\"text-align:right\">$row_exp[6]</td>
+                <td style=\"text-align:right\">&nbsp;</td>
                 </tr>";
 
 $fobSubt+=$row_exp[4];	
-$temp=$row_exp[6];//Guarda un temporal que seria el numero anterior para comparar
+$tempA=$row_exp[7];//Guarda un temporal que seria la bandera de agrupado anterior para comparar
+$tempB=$row_exp[8];//Guarda un temporal que seria la partida arancelaria anterior para comparar
+
 
 }//FIN IMPRESION CADA REGISTRO
 $varr.="<tr>
-		<td colspan=\"7\" style=\"text-align:center\"><b>Subtotal</b></td>
-		<td style=\"text-align:right\"><b>$".number_format(round($fobSubt,2),2)."</b></td>
-		</tr>";
+		<td><b>".$tempB."</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <b>DAI:". 0.0 ."</b></td>
+                <td style=\"text-align:right\"><b>". 0 ."</b></td>                    
+		<td style=\"text-align:right\"><b>". 0 ."</b></td>
+                <td style=\"text-align:right\"><b>". 0 ."</b></td>
+		<td style=\"text-align:right\"><b>".number_format(round($fobSubt,2),2)."</b></td>
+                <td colspan=\"3\" style=\"text-align:center\"><b>Item: &nbsp;&nbsp;". $NumItem ."</b></td>
+		</tr><tr><td colspan=8></td></tr></table>";
 $fobTotal+=$fobSubt;
 		$fobSubt=0;
 // ---------------PIE DEL REPORTE-----------------
 //PIE DE TABLA
-$fin=$rsd.$varr."<tr>
-		<td colspan=\"7\" style=\"text-align:center\">TOTALES</td>
-
-		<td style=\"border:1px solid black\">$".number_format(round($fobTotal,2),2)."</td>
-	</tr>
-</table>
+$fin=$rsd.$varr."<b>
+<table border=\"0\" >              
+        <tr>
+        <td>&nbsp;</td>
+        <td colspan=\"2\" style=\"text-align:center\">Bultos</td>
+        <td colspan=\"2\" style=\"text-align:center\">Peso (Kgs)</td>
+        <td colspan=\"2\" style=\"text-align:center\">Cuantia</td>
+        <td colspan=\"2\" style=\"text-align:center\">Valor</td>
+        <td>&nbsp;</td>
+        </tr>
+        <tr>
+        <td>&nbsp;</td>
+        <td colspan=\"2\" style=\"text-align:center\">". 0 ."</td>
+        <td colspan=\"2\" style=\"text-align:center\">". 0 ."</td>
+        <td colspan=\"2\" style=\"text-align:center\">". 0 ."</td>
+        <td colspan=\"2\" style=\"text-align:center\">".number_format(round($fobTotal,2),2)."</td>
+        <td>&nbsp;</td>
+        </tr>
+</table></b>
 <br><br>
 ";
 

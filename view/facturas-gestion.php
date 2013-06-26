@@ -538,31 +538,6 @@ function delRow(cheque,idsimps){//funcion para eliminacion multiple
 </tr>
 <tr><td class="menu_abajo">&nbsp;</td></tr>
 
-<? if($resultado){?>
-<tr><td class="menu_interior_arriba">&nbsp;</td></tr>
-<tr>
-<td align="center" valign="top">
-<table align="center" border="0" cellpadding="0" cellspacing="0" width="950">
-<tbody><tr>
-<td class="menu_fondo" align="center" valign="top">
-  <table align="center" border="0" cellpadding="0" cellspacing="0" width="930">
-    <tbody>
-    <tr>
-      <td valign="top">
-      <br />
-      <span class="<? echo $clase_css; ?>"><? echo $mensaje; ?></span>
-      <br />
-      </td>
-    </tr>
-  </tbody></table> 
-</td>
-</tr>
-</tbody></table> 
-</td>
-</tr>
-<tr><td class="menu_abajo">&nbsp;</td></tr>
-<? } ?>
-
 
 
 <tr><td class="menu_interior_arriba">&nbsp;</td></tr>
@@ -682,9 +657,26 @@ function delRow(cheque,idsimps){//funcion para eliminacion multiple
 
 
 <!--------------------------INICIO DEL FORM PARA INGRESAR DATOS INICIALES DE FACTURAS ----------------------->             
-<form class="frmspecial" name="frmf" id="frmf" action="<?=$_SERVER['REQUEST_URI'];?>" method="post" style="margin:0px;"> 
+<a name="itemFact"></a>
+
+<? if($resultado){?>
+<center>
+  <table align="center" border="0" cellpadding="0" cellspacing="0" width="930">
+    <tbody>
+    <tr>
+      <td valign="top">
+      <br />
+      <span class="<? echo $clase_css; ?>"><? echo $mensaje; ?></span>
+      <br />
+      </td>
+    </tr>
+  </tbody></table> 
+</center>
+<? } ?>
+
+<form class="frmspecial" name="frmf" id="frmf" action="<?=$_SERVER['REQUEST_URI'];?>#itemFact" method="post" style="margin:0px;"> 
         <input type="hidden" id="idItem" name="idItem" value="">   
-           <h4 style="font-family:helvetica">Agregar Items a la Factura</h4>
+           <h4 style="font-family:helvetica">Agregar Items a la Factura <br><b style="font-size:12px;color: #785635">(Utilice la Tecla Tab para pasar de un campo a otro)</b></h4>
              <center>
              <table><tr>
                 <td style="width:120px">
@@ -832,7 +824,7 @@ function delRow(cheque,idsimps){//funcion para eliminacion multiple
 <!---------------------------FIN DEL FORMULARIO-------------------------------------->
 
 
-            <div style="float:LEFT" class="texto_explicacion_formulario">Detalles de Items: (De doble click para editar)</div>
+            <div style="float:LEFT" class="texto_explicacion_formulario">Detalles de Items: (Doble click para editar)</div>
            <br>
             <!---Eliminacion Multiple-->
             <form method="post" action="facturas-gestion.php">

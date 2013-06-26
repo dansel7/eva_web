@@ -29,7 +29,7 @@ class usuario{
 	public function LoginUsuario($alias,$password){
 		//insert into usuarios values(1,'Admin','Admin','Admin',AES_ENCRYPT('123456',1),'admin@despacho.com',NULL,1,1)
 		//$sql_login = "SELECT Tipo_Usuario as tipo, idUsuarios as id, Nombres as nombre, Apellidos as apellido, Alias, Password FROM usuarios WHERE Alias='".$alias."' and Password=AES_ENCRYPT('".$password."','1')";
-		$sql_login = "SELECT * FROM usuarios WHERE usuario='".$alias."' and clave='".$password."'";
+		$sql_login = "SELECT * FROM usuarios WHERE usuario='".$alias."' and clave='".$password."' limit 1";
 		return $sql_login;
 	}
 	

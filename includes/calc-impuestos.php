@@ -16,7 +16,7 @@ if(isset($_GET["ins"])){//INSERCION DE CALCULOS DE IMPUESTOS (INSERCION EN CASO 
     
     $cont=  count($_POST["idRetaceo"]);//CUANTAS FILAS DE DEVOLVIO EL ARREGLO
     $items[$cont];
-    print_r($_POST);
+    //print_r($_POST);
     //SE ORDENA LAS FILAS OBTENIDAS Y ENVIADAS DESDE EL FRM. POR MEDIO DE JQUERY.
     foreach ($_POST as $campo => $valor)
     {
@@ -78,11 +78,13 @@ if(isset($_GET["res"])){//REINICIALIZAR LOS DATOS DEL RETACEO
     
 $existencia= mysql_query("SELECT inciso,descripcion,pais FROM retaceoImpuestos where idRetaceo=".  hideunlock($_SESSION["n_declaracion"]), $link);
 $msj="";
-if(mysql_num_rows($existencia)<=0){//SI NO HAY CALCULO HECHOS EL LOS OBTIENE.
+
+if(mysql_num_rows($existencia)<=0){//SI NO HAY CALCULO HECHOS EL OBTIENE LOS ITEMS.
 $qry= "select item.partidaArancelaria,item.descripcion,idItem from item inner join factura on item.idFactura=factura.idFactura where item.idRetaceo=".  hideunlock($_SESSION["n_declaracion"])." group by agrupar,partidaArancelaria order by factura.idFactRetaceo,idItemFactura";
+
 $result = mysql_query($qry, $link);
 $msj="<h3 style='color:red'>No se ha realizado ningun calculo de impuestos</h3>";
-}else{//SI HAY SOLAMENTE LOS MUESTRA
+}else{//SI HAY SOLAMENTE LOS MUESTRA LOS QUE ESTEN EN LA TABLA DE RETACEOIMPUESTO
 $result = $existencia;   
 }
 

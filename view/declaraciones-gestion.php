@@ -534,7 +534,7 @@ from factura where idRetaceo='.hideunlock($_SESSION["n_declaracion"]).') f','','
 </tr>
 <tr><td class="menu_abajo">&nbsp;</td></tr>
 
-<? if($resultado){?>
+<? if($resultado && isset($_REQUEST["submit"])){?>
 <tr><td class="menu_interior_arriba">&nbsp;</td></tr>
 <tr>
 <td align="center" valign="top">
@@ -756,9 +756,23 @@ from factura where idRetaceo='.hideunlock($_SESSION["n_declaracion"]).') f','','
                 ?>
 
 <!--------------------------INCIIO DEL FORM PARA INGRESAR DATOS INICIALES DE FACTURAS ----------------------->             
-<form class="frmspecial" name="frmf" id="frmf" action="<?=$_SERVER['REQUEST_URI'];?>" method="post" style="margin:0px;"> 
+<a name="FactInic"></a>
+<? if($resultado && (isset($_REQUEST["updf"]) || isset($_REQUEST["updf"]))){?>
+
+  <table align="center" border="0" cellpadding="0" cellspacing="0" width="930">
+    <tbody><tr>
+      <td valign="top">
+      <br />
+      <span class="<? echo $clase_css; ?>" style="color: #ff3300"><? echo $mensaje; ?></span>
+      <br />
+      </td>
+    </tr>
+  </tbody></table> 
+
+<? } ?>
+<form class="frmspecial" name="frmf" id="frmf" action="<?=$_SERVER['REQUEST_URI'];?>#FactInic" method="post" style="margin:0px;"> 
                  
-              <h4 style="font-family:helvetica">Agregar Datos Iniciales de Factura</h4>
+              <h4 style="font-family:helvetica">Agregar Datos Iniciales de Factura <br><b style="font-size:12px;color: #785635">(Utilice la Tecla Tab para pasar de un campo a otro)</b></h4>
               <input class="required" name="idFactRetaceo" id="idFactRetaceo" type="hidden" value="" title="">
                 
              <table><tr>
@@ -831,7 +845,7 @@ from factura where idRetaceo='.hideunlock($_SESSION["n_declaracion"]).') f','','
 <!---------------------------FIN DEL FORMULARIO-------------------------------------->
 
 
-            <div style="float:center" class="texto_explicacion_formulario">Detalles de Facturas: (De doble click para editar) - Para Ingresar Items Seleccione la opcion Facturas <img src="../images/icono-tienda.gif" width="25" height="20" border="0"></div>
+            <div style="float:center" class="texto_explicacion_formulario">Detalles de Facturas: (Doble click para editar) - Para Ingresar Items Seleccione la opcion Facturas <img src="../images/icono-tienda.gif" width="25" height="20" border="0"></div>
 <form method="post" action="<?php echo $_SERVER['REQUEST_URI'];?>"> 
 
     <input style="margin-left:45%;margin-bottom:5px" type="submit" name="opdet" value="Eliminar Seleccionados" onclick="return confirm('Esta seguro que desea Eliminar los registros seleccionados?') ;" />
