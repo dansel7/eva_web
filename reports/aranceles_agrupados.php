@@ -139,9 +139,20 @@ $resultado=mysql_query("select item.descripcion,item.bultos,item.pesoBruto,item.
             //    " from factura inner join item on factura.idFactura=item.idFactura where item.idRetaceo='".hideunlock($_SESSION["n_declaracion"])."' order by factura.idFactura,factura.numero,item.idItemFactura"
             ,$link);
 
-
+//Variables de Sumatorias Totales
 $fobSubt=0;
 $fobTotal=0;
+//------//
+$bultosSubt=0;
+$bultosTotal=0;
+//------//
+$pesoSubt=0;
+$pesoTotal=0;
+//------//
+$cuantiaSubt=0;
+$cuantiaTotal=0;
+//-----------------------------//
+
 $tempA=0;
 $tempB=0;
 $NumItem=1;
@@ -158,14 +169,25 @@ if($tempA==0 && $fobSubt==0){}//se comprueba que es el primer valor de los regis
             $varr.="<tr>
 <td style=\"text-align:left\"><b>".$tempB."</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <b>DAI:". 0.0 ."</b></td>
-                <td style=\"text-align:right\"><b>". 0 ."</b></td>                    
-		<td style=\"text-align:right\"><b>". 0 ."</b></td>
-                <td style=\"text-align:right\"><b>". 0 ."</b></td>
-		<td style=\"text-align:right\"><b>".number_format(round($fobSubt,2),2)."</b></td>
+                <td style=\"text-align:right\"><b>". number_format(round($bultosSubt,2),2) ."</b></td>                    
+                <td style=\"text-align:right\"><b>". number_format(round($pesoSubt,2),2) ."</b></td>
+		<td style=\"text-align:right\"><b>". number_format(round($cuantiaSubt,2),2) ."</b></td>
+                <td style=\"text-align:right\"><b>". number_format(round($fobSubt,2),2) ."</b></td>
                 <td colspan=\"3\" style=\"text-align:center\"><b>Item: &nbsp;&nbsp;". $NumItem ."</b></td>
 		</tr><tr><td colspan=8></td></tr>";
+                //CALCULO DE LOS TOTALES Y SUBTOTALES
                 $fobTotal+=$fobSubt;
 		$fobSubt=0;
+                //------//
+                $bultosTotal+=$bultosSubt;
+		$bultosSubt=0;
+                //------//
+                $pesoTotal+=$pesoSubt;
+		$pesoSubt=0;
+                //------//
+                $cuantiaTotal+=$cuantiaSubt;
+		$cuantiaSubt=0;
+                //-----------------------------//
                 $NumItem++;
                 
              //}
@@ -182,7 +204,13 @@ if($tempA==0 && $fobSubt==0){}//se comprueba que es el primer valor de los regis
                 <td style=\"text-align:right\">&nbsp;</td>
                 </tr>";
 
-$fobSubt+=$row_exp[4];	
+	
+$bultosSubt+=$row_exp[1];
+$pesoSubt+=$row_exp[2];
+$cuantiaSubt+=$row_exp[3];
+$fobSubt+=$row_exp[4];
+
+
 $tempA=$row_exp[7];//Guarda un temporal que seria la bandera de agrupado anterior para comparar
 $tempB=$row_exp[8];//Guarda un temporal que seria la partida arancelaria anterior para comparar
 
@@ -191,14 +219,25 @@ $tempB=$row_exp[8];//Guarda un temporal que seria la partida arancelaria anterio
 $varr.="<tr>
 		<td><b>".$tempB."</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <b>DAI:". 0.0 ."</b></td>
-                <td style=\"text-align:right\"><b>". 0 ."</b></td>                    
-		<td style=\"text-align:right\"><b>". 0 ."</b></td>
-                <td style=\"text-align:right\"><b>". 0 ."</b></td>
-		<td style=\"text-align:right\"><b>".number_format(round($fobSubt,2),2)."</b></td>
+                <td style=\"text-align:right\"><b>". number_format(round($bultosSubt,2),2) ."</b></td>                    
+                <td style=\"text-align:right\"><b>". number_format(round($pesoSubt,2),2) ."</b></td>
+		<td style=\"text-align:right\"><b>". number_format(round($cuantiaSubt,2),2) ."</b></td>
+                <td style=\"text-align:right\"><b>". number_format(round($fobSubt,2),2) ."</b></td>
                 <td colspan=\"3\" style=\"text-align:center\"><b>Item: &nbsp;&nbsp;". $NumItem ."</b></td>
 		</tr><tr><td colspan=8></td></tr></table>";
+
 $fobTotal+=$fobSubt;
-		$fobSubt=0;
+$bultosTotal+=$bultosSubt;
+$pesoTotal+=$pesoSubt;
+$cuantiaTotal+=$cuantiaSubt;
+
+$fobSubt=0;
+$bultosSubt=0;
+$pesoSubt=0;
+$cuantiaSubt=0;
+
+
+
 // ---------------PIE DEL REPORTE-----------------
 //PIE DE TABLA
 $fin=$rsd.$varr."<b>
@@ -213,9 +252,9 @@ $fin=$rsd.$varr."<b>
         </tr>
         <tr>
         <td>&nbsp;</td>
-        <td colspan=\"2\" style=\"text-align:center\">". 0 ."</td>
-        <td colspan=\"2\" style=\"text-align:center\">". 0 ."</td>
-        <td colspan=\"2\" style=\"text-align:center\">". 0 ."</td>
+        <td colspan=\"2\" style=\"text-align:center\">".number_format(round($bultosTotal,2),2)."</td>
+        <td colspan=\"2\" style=\"text-align:center\">".number_format(round($pesoTotal,2),2)."</td>
+        <td colspan=\"2\" style=\"text-align:center\">".number_format(round($cuantiaTotal,2),2)."</td>
         <td colspan=\"2\" style=\"text-align:center\">".number_format(round($fobTotal,2),2)."</td>
         <td>&nbsp;</td>
         </tr>

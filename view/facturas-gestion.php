@@ -892,7 +892,7 @@ $total=0;
                 <td style="display:none">
                   <?=$fact["agrupar"]?> 
                 </td>
-              <td >
+              <td class="tabla_filas" style="border-left: 1px solid rgb(226, 226, 226); border-right: 1px solid rgb(226, 226, 226);border-bottom: 1px solid rgb(226, 226, 226);">
               <center><input type="checkbox" onclick="delRow(this.checked, '<? echo  $fact["idItem"]; ?>')" /><input type="hidden" name="idsimps[]" id="idsimps<? echo  $fact["idItem"];; ?>" /></center>
               </td>
             </tr>
