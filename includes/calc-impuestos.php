@@ -73,18 +73,22 @@ if(isset($_GET["res"])){//REINICIALIZAR LOS DATOS DEL RETACEO
         }
     
 }
-    
+   
     
     
 $existencia= mysql_query("SELECT inciso,descripcion,pais FROM retaceoImpuestos where idRetaceo=".  hideunlock($_SESSION["n_declaracion"]), $link);
 $msj="";
 
 if(mysql_num_rows($existencia)<=0){//SI NO HAY CALCULO HECHOS EL OBTIENE LOS ITEMS.
-$qry= "select item.partidaArancelaria,item.descripcion,idItem from item inner join factura on item.idFactura=factura.idFactura where item.idRetaceo=".  hideunlock($_SESSION["n_declaracion"])." group by agrupar,partidaArancelaria order by factura.idFactRetaceo,idItemFactura";
+$qry= "select item.partidaArancelaria,item.descripcion,idItem,arancel.dai ,item.agrupar 
+    from item inner join factura on item.idFactura=factura.idFactura inner join arancel on arancel.inciso=item.partidaArancelaria
+    where item.idRetaceo=".  hideunlock($_SESSION["n_declaracion"]) ." 
+    group by agrupar,partidaArancelaria 
+    order by factura.idFactRetaceo,idItemFactura";
 
 $result = mysql_query($qry, $link);
 $msj="<h3 style='color:red'>No se ha realizado ningun calculo de impuestos</h3>";
-}else{//SI HAY SOLAMENTE LOS MUESTRA LOS QUE ESTEN EN LA TABLA DE RETACEOIMPUESTO
+}else{//SI HAY CALCULO SOLAMENTE MOSTRARA LOS QUE ESTEN EN LA TABLA DE RETACEOIMPUESTO
 $result = $existencia;   
 }
 
@@ -163,8 +167,10 @@ $i=0;
           <input id="idItemImp" type="hidden" name="idItemImp[]" value="<?=$i?>"/></Td>
       <Td class="tabla_filas"><?=$fila[0]?>
           <input id="inciso" type="hidden" name="inciso[]" value="<?=$fila[0]?>"/></Td>
+      <input id="arancel" type="hidden" name="arancel[]" value="<?=$fila[3]?>"/></Td>
+     <input id="agrupar" type="hidden" name="agrupar[]" value="<?=$fila[4]?>"/></Td>
       <Td class="tabla_filas">
-          <input id="descripcion" name="descripcion[]" style="width:250px" value="<?=$fila[1]?>" /></Td>
+          <input id="descripcion" name="descripcion[]" style="width:250px" value="<?=htmlentities($fila[1])?>" /></Td>
       <Td class="tabla_filas">
           <select name="pais[]" id="pais" >
                 <option value="" selected>Seleccione una Pais</option>

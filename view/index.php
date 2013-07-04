@@ -216,13 +216,13 @@ $_SESSION['timeout'] = time();
 
                     <tbody><tr>
 
-                      <td class="menu_fondo_2" valign="top">   
-<!--INICIO DE MENU-->
-   						 <table align="center" border="0" cellpadding="0" cellspacing="0">
+                            <td class="menu_fondo_2" valign="top">   
+<!----------------------------------INICIO DE MENU-------------------------------------------------->
+                 <table id="ex5" align="center" border="0" cellpadding="0" cellspacing="0">
 
-    			  			<tbody>
+                <tbody>
 
-                  				<tr>
+                <tr>
 
                                     
 
@@ -231,7 +231,7 @@ $_SESSION['timeout'] = time();
 			  <td align="center" valign="top">
 			  	<div><img src="../images/transparente(1).gif" height="8" width="1"></div>
 
-				<div align="center"><a href="empresas-listado.php"><img src="../images/icono-empresas.gif" border="0"></a></div>
+				<div align="center"><a href="empresas-listado.php"><img class="im" src="../images/icono-empresas.gif" border="0"></a></div>
 
 				<div style="height:30px;"><a href="empresas-listado.php" class="modulo_titulo">Gesti&oacute;n de<br>Empresas</a></div>
 

@@ -76,7 +76,7 @@ $rsd='
 	<td width="100px"><b>No. Retaceo:</b> </td>
         <td width="225px" style="text-align:right">'.$rows_e["numRegistro"].'&nbsp;&nbsp;&nbsp;&nbsp;</td>
         <td width="100px"><b>FOB:</b></td> 
-        <td width="100px" style="text-align:right">'.$rows_e["FOB"].'&nbsp;&nbsp;&nbsp;&nbsp;</td> 
+        <td width="100px" style="text-align:right">'.number_format($rows_e["FOB"],2).'&nbsp;&nbsp;&nbsp;&nbsp;</td> 
         <td width="100px"><b>DAI:</b> </td> 
         <td width="60px" style="text-align:right">'.$rows_e["DAI"].'</td>     
 </tr>
@@ -84,7 +84,7 @@ $rsd='
 	<td width="100px"><b>NIT:</b> </td>
         <td width="225px" style="text-align:right">'.$rows_e["NIT"].'&nbsp;&nbsp;&nbsp;&nbsp;</td>
         <td width="100px"><b>Flete:</b></td> 
-        <td width="100px" style="text-align:right">'.$rows_e["flete"].'&nbsp;&nbsp;&nbsp;&nbsp;</td> 
+        <td width="100px" style="text-align:right">'.number_format($rows_e["flete"],2).'&nbsp;&nbsp;&nbsp;&nbsp;</td> 
         <td width="100px"><b>IVA:</b> </td> 
         <td width="60px" style="text-align:right">'.$rows_e["IVA"].'</td>     
 </tr>
@@ -100,14 +100,14 @@ $rsd='
 	<td width="100px"><b>Consignatario:</b> </td>
         <td width="225px" style="text-align:right">'.$rows_e["nombre"].'&nbsp;&nbsp;&nbsp;&nbsp;</td>
         <td width="100px"><b>Seguro:</b></td> 
-        <td width="100px" style="text-align:right">'.$rows_e["seguro"].'&nbsp;&nbsp;&nbsp;&nbsp;</td> 
+        <td width="100px" style="text-align:right">'.number_format($rows_e["seguro"],2).'&nbsp;&nbsp;&nbsp;&nbsp;</td> 
         <td colspan="2"></td> 
 </tr>
 <tr>
 	<td width="100px"><b>Doc.Transporte:</b> </td>
         <td width="225px" style="text-align:right">'.$rows_e["numeroDocumentoTransporte"].'&nbsp;&nbsp;&nbsp;&nbsp;</td>
         <td width="100px"><b>CIF:</b></td> 
-        <td width="100px" style="text-align:right">'.$rows_e["CIF"].'&nbsp;&nbsp;&nbsp;&nbsp;</td> 
+        <td width="100px" style="text-align:right">'.number_format($rows_e["CIF"],2).'&nbsp;&nbsp;&nbsp;&nbsp;</td> 
         <td colspan="2"></td>   
 </tr>
 
@@ -130,13 +130,12 @@ $rsd='
 
 //$resultado=mysql_query("select * from factura where numeroretaceo='jor301'",$link);
 
-
-$resultado=mysql_query("select item.descripcion,item.bultos,item.pesoBruto,item.cuantia as cuantia,(item.cuantia * item.precioUnitario) as fob," .
-            " factura.numero as factura,factura.idFactRetaceo, agrupar,partidaArancelaria  ".
-            //se puso esta linea.
-" from item inner join factura on item.idFactura=factura.idFactura where item.idRetaceo=".  hideunlock($_SESSION["n_declaracion"]).
-            " order by agrupar desc,item.idItem asc,factura.idFactRetaceo"
-            //    " from factura inner join item on factura.idFactura=item.idFactura where item.idRetaceo='".hideunlock($_SESSION["n_declaracion"])."' order by factura.idFactura,factura.numero,item.idItemFactura"
+//INICIO DE CONSULTA 
+$resultado=mysql_query("select item.descripcion,item.bultos,item.pesoBruto,item.cuantia as cuantia,(item.cuantia * item.precioUnitario) as fob, 
+    factura.numero as factura,factura.idFactRetaceo, item.agrupar,partidaArancelaria 
+    from item inner join factura on item.idFactura=factura.idFactura inner join retaceoImpuestos on item.idRetaceo=retaceoImpuestos.idRetaceo
+    where item.idRetaceo=".  hideunlock($_SESSION["n_declaracion"])." and item.partidaArancelaria=retaceoImpuestos.inciso
+    order by retaceoImpuestos.idItemImp"
             ,$link);
 
 //Variables de Sumatorias Totales

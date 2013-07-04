@@ -20,7 +20,7 @@
 
                       <td class="menu_fondo_2" valign="top">   
 <!--- Aca comienza el table del menu-->
-   		<table align="left" border="0" cellpadding="0" cellspacing="0">
+   		<table id="ex2" align="left" border="0" cellpadding="0" cellspacing="0">
 
     			  			<tbody>
 

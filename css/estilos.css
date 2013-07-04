@@ -3,6 +3,46 @@ body {
 	margin:0px;
 	background:#F5F5F5 url(../images/background.gif) repeat;
 }
+
+/*efectos para imagenes*/
+img { opacity: 0.8;
+/*Transition*/ -webkit-transition: all 0.5s ease; 
+                -moz-transition: all 0.5s ease; 
+                -o-transition: all 0.5s ease;
+/*Reflection*/ -webkit-box-reflect: below 0px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(.7, transparent), to(rgba(0,0,0,0.2))); }
+
+img:hover{ opacity: 1; 
+/*Reflection*/ -webkit-box-reflect: below 0px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(.7, transparent), to(rgba(0,0,0,0.4)));
+/*Glow*/ -webkit-box-shadow: 0px 0px 20px rgba(104,102,102,0.8); 
+        -moz-box-shadow: 0px 0px 20px rgba(104,102,102,0.8);
+        box-shadow: 0px 0px 20px rgba(104,102,102,0.8); }
+/*efectos para imagenes*/
+
+
+/*ESTILO PARA MENU LATERAL*/
+#ex2 img { opacity: 0.8;
+/*Transition*/ -webkit-transition: all 0.5s ease; 
+                -moz-transition: all 0.5s ease; 
+                -o-transition: all 0.5s ease;
+/*Reflection*/ -webkit-box-reflect: below 0px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(.7, transparent), to(rgba(0,0,0,0.2))); }
+#ex2 img:hover{ opacity: 1; 
+/*Reflection*/ -webkit-box-reflect: below 0px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(.7, transparent), to(rgba(0,0,0,0.4)));
+/*Glow*/ -webkit-box-shadow: 0px 0px 20px rgba(104,102,102,0.8); 
+        -moz-box-shadow: 0px 0px 20px rgba(104,102,102,0.8);
+        box-shadow: 0px 0px 20px rgba(104,102,102,0.8); }
+
+/*ESTILO PARA EL MENU DEL INDEX*/
+#ex5 img { margin-bottom: 10px; opacity: 0.8;
+/*Transition*/ -webkit-transition: all 0.5s ease; 
+                -moz-transition: all 0.5s ease; 
+                -o-transition: all 0.5s ease;
+/*Reflection*/ -webkit-box-reflect: below 0px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(.7, transparent), to(rgba(0,0,0,0.2))); }
+#ex5 img:hover { opacity: 1; 
+/*Reflection*/ -webkit-box-reflect: below 0px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(.7, transparent), to(rgba(0,0,0,0.4)));
+/*Glow*/ -webkit-box-shadow: 0px 0px 20px rgba(104,102,102,0.8); 
+        -moz-box-shadow: 0px 0px 20px rgba(104,102,102,0.8);
+        box-shadow: 0px 0px 20px rgba(104,102,102,0.8); }
+
 /*ESTILO PARA LA PAGINACION*/
 .pagination {
 	padding: 3px;
