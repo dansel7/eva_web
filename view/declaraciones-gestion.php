@@ -67,19 +67,20 @@ if (isset($_POST['submit'])){
 //PARA QUE GUARDE EL NIT SIN ENCRIPTACION.	
     $_POST['NIT']=  hideunlock($_POST['NIT']);
     
+// -------------------------UPDATE & INSERT--------------------------------
 //Funcion para poder hacer el insert, o update de declaracion
 if($_POST['submit']=='Actualizar'){/////-------ACTUALIZAR-----------/////
     
         $_POST["fechaModificado"]=date("Y-m-d H:i:s");
         $resultado = $clase_database->formToDB($link,'retaceo','post','', 'submit, frm, ','update','idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');
-if ($resultado){ 
+        if ($resultado){ 
             $mensaje = "Informacion Almacenada Exitosamente";
             $clase_css = "texto_ok";
         }else{
             $mensaje = "Error al Almacenar Informacion";
             $clase_css = "texto_error";
         }
-}
+}   
 else if($_POST['submit']=='Guardar'){///////----------GUARDAR NUEVO--------/////////
     
         $_POST["usuario"]=$_SESSION["usu"];
@@ -91,7 +92,7 @@ else if($_POST['submit']=='Guardar'){///////----------GUARDAR NUEVO--------/////
         $_POST["cuantia"]=0.0;
         $_POST["FOB"]=0.0;
         $_POST["otrosGastos"]=0.0;
-        $_POST["seguro"]=0.0;
+        if($_POST["seguro"]=="")$_POST["seguro"]=0.0;
         $_POST["CIF"]=0.0;
         $_POST["DAI"]=0.0;
         $_POST["IVA"]=0.0;
@@ -279,11 +280,14 @@ if(isset($_POST['opdet'])){
 //PRIMERO COMPRUEBA SI SE DEBE CALCULAR EL SEGURO O NO.
 if(strtoupper($_SESSION["calculoseguro"])=="S")
 {
+    $porcent=0.0;
+    if(strtoupper($_SESSION["TPSeguro"])=="E"){$porcent=0.015;}
+    else if(strtoupper($_SESSION["TPSeguro"])=="I"){$porcent=0.0125;}
 $resultado = $clase_database->formToDB($link,'retaceo r,(SELECT SUM(otrosGastos) og,SUM(FOB) fob,SUM(cuantia) c,SUM(pesoBruto) pb,SUM(bultos) b 
-from factura where idRetaceo='.hideunlock($_SESSION["n_declaracion"]).') f','','r.FOB=f.fob,r.cuantia=f.c,r.pesoBruto=f.pb,r.bultos=f.b,r.otrosGastos=f.og,r.seguro=(f.fob+f.og+r.flete)*0.00275,r.cif=(f.fob+f.og+r.flete)+((f.fob+f.og+r.flete)*0.00275)','','update','idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');
+from factura where idRetaceo='.hideunlock($_SESSION["n_declaracion"]).') f','','r.FOB=f.fob,r.cuantia=f.c,r.pesoBruto=f.pb,r.bultos=f.b,r.otrosGastos=f.og,r.seguro=(f.fob*'.$porcent.'),r.cif=(f.fob+f.og+r.flete)+((f.fob+f.og+r.flete)*1.1*'.$porcent.')','','update','idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');
 }else{
 $resultado = $clase_database->formToDB($link,'retaceo r,(SELECT SUM(otrosGastos) og,SUM(FOB) fob,SUM(cuantia) c,SUM(pesoBruto) pb,SUM(bultos) b 
-from factura where idRetaceo='.hideunlock($_SESSION["n_declaracion"]).') f','','r.FOB=f.fob,r.cuantia=f.c,r.pesoBruto=f.pb,r.bultos=f.b,r.otrosGastos=f.og,r.cif=(f.fob+f.og+r.flete)+((f.fob+f.og+r.flete)*0.00275)','','update','idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');  
+from factura where idRetaceo='.hideunlock($_SESSION["n_declaracion"]).') f','','r.FOB=f.fob,r.cuantia=f.c,r.pesoBruto=f.pb,r.bultos=f.b,r.otrosGastos=f.og,r.cif=(f.fob+f.og+r.flete)+r.seguro','','update','idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');  
 }
  
                         

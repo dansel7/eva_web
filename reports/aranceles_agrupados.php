@@ -3,7 +3,7 @@
 //error_reporting(0);
 session_start();
 
-if(!isset($_SESSION['usu'])){
+if(!isset($_SESSION['usu']) || !isset($_SESSION["n_declaracion"])){
 		$direccion = "Location: ../index.php";
 		header($direccion);
 	}else{
@@ -75,17 +75,17 @@ $rsd='
 <tr>
 	<td width="100px"><b>No. Retaceo:</b> </td>
         <td width="225px" style="text-align:right">'.$rows_e["numRegistro"].'&nbsp;&nbsp;&nbsp;&nbsp;</td>
-        <td width="100px"><b>FOB:</b></td> 
+        <td width="100px"><b>FOB Total:</b></td> 
         <td width="100px" style="text-align:right">'.number_format($rows_e["FOB"],2).'&nbsp;&nbsp;&nbsp;&nbsp;</td> 
-        <td width="100px"><b>DAI:</b> </td> 
+        <td width="100px"><b>DAI Total:</b> </td> 
         <td width="60px" style="text-align:right">'.$rows_e["DAI"].'</td>     
 </tr>
 <tr>
 	<td width="100px"><b>NIT:</b> </td>
         <td width="225px" style="text-align:right">'.$rows_e["NIT"].'&nbsp;&nbsp;&nbsp;&nbsp;</td>
-        <td width="100px"><b>Flete:</b></td> 
+        <td width="100px"><b>Flete Total:</b></td> 
         <td width="100px" style="text-align:right">'.number_format($rows_e["flete"],2).'&nbsp;&nbsp;&nbsp;&nbsp;</td> 
-        <td width="100px"><b>IVA:</b> </td> 
+        <td width="100px"><b>IVA Total:</b> </td> 
         <td width="60px" style="text-align:right">'.$rows_e["IVA"].'</td>     
 </tr>
 <tr>
@@ -93,12 +93,12 @@ $rsd='
         <td width="225px" style="text-align:right">'.date("d-m-Y", strtotime($rows_e["fecha"])).'&nbsp;&nbsp;&nbsp;&nbsp;</td>
         <td width="100px"><b>O.Gastos:</b></td> 
         <td width="100px" style="text-align:right">'.$rows_e["otrosGastos"].'&nbsp;&nbsp;&nbsp;&nbsp;</td> 
-        <td width="100px"><b>A Pago:</b> </td> 
+        <td width="100px"><b>Total A Pagar:</b> </td> 
         <td width="60px" style="text-align:right">'.$rows_e["aPago"].'</td>     
 </tr>
 <tr>
 	<td width="100px"><b>Consignatario:</b> </td>
-        <td width="225px" style="text-align:right">'.$rows_e["nombre"].'&nbsp;&nbsp;&nbsp;&nbsp;</td>
+        <td width="225px" style="text-align:left">'.$rows_e["nombre"].'&nbsp;&nbsp;&nbsp;&nbsp;</td>
         <td width="100px"><b>Seguro:</b></td> 
         <td width="100px" style="text-align:right">'.number_format($rows_e["seguro"],2).'&nbsp;&nbsp;&nbsp;&nbsp;</td> 
         <td colspan="2"></td> 
@@ -106,7 +106,7 @@ $rsd='
 <tr>
 	<td width="100px"><b>Doc.Transporte:</b> </td>
         <td width="225px" style="text-align:right">'.$rows_e["numeroDocumentoTransporte"].'&nbsp;&nbsp;&nbsp;&nbsp;</td>
-        <td width="100px"><b>CIF:</b></td> 
+        <td width="100px"><b>CIF Total:</b></td> 
         <td width="100px" style="text-align:right">'.number_format($rows_e["CIF"],2).'&nbsp;&nbsp;&nbsp;&nbsp;</td> 
         <td colspan="2"></td>   
 </tr>
@@ -121,7 +121,7 @@ $rsd='
 		<td style="text-align:right;width:55px"><b>Bultos</b></td>
 		<td style="text-align:right;width:80px"><b>Peso Bruto</b></td>
 		<td style="text-align:right;width:60px"><b>Cuantia</b></td>
-		<td style="text-align:right;width:80px"><b>Valor</b></td>
+		<td style="text-align:right;width:80px"><b>FOB</b></td>
 		<td style="text-align:right;width:65px"><b>Factura</b></td>
                 <td style="text-align:right;width:30px"><b>ODF</b></td>
                 <td style="text-align:center;width:80px"><b>TLC</b></td>
@@ -132,10 +132,12 @@ $rsd='
 
 //INICIO DE CONSULTA 
 $resultado=mysql_query("select item.descripcion,item.bultos,item.pesoBruto,item.cuantia as cuantia,(item.cuantia * item.precioUnitario) as fob, 
-    factura.numero as factura,factura.idFactRetaceo, item.agrupar,partidaArancelaria 
+    factura.numero as factura,factura.idFactRetaceo, item.agrupar,partidaArancelaria,retaceoimpuestos.arancel,retaceoimpuestos.pais
     from item inner join factura on item.idFactura=factura.idFactura inner join retaceoImpuestos on item.idRetaceo=retaceoImpuestos.idRetaceo
-    where item.idRetaceo=".  hideunlock($_SESSION["n_declaracion"])." and item.partidaArancelaria=retaceoImpuestos.inciso
-    order by retaceoImpuestos.idItemImp"
+    where item.idRetaceo=".  hideunlock($_SESSION["n_declaracion"])." 
+        and item.partidaArancelaria=retaceoImpuestos.inciso 
+        and item.agrupar=retaceoimpuestos.agrupar
+    order by retaceoImpuestos.idItemImp,factura.idFactRetaceo"
             ,$link);
 
 //Variables de Sumatorias Totales
@@ -161,13 +163,13 @@ while($row_exp = mysql_fetch_array($resultado)) //CONSULTA PARA CADA REGISTRO
 //PARA HACER UNA AGRUPACION
 $FlagAgrupado=$row_exp[7];//PRIMERO SE GUARDA LA BANDERA DE AGRUPADO
 $PartidaAgrupada=$row_exp[8];//SEGUNDO SE GUARDA LA PARTIDA ARANCELARIA QUE AGRUPA
-
+$dai=$row_exp[9];
 //La agrupacion se valida desde aca
 if($tempA==0 && $fobSubt==0){}//se comprueba que es el primer valor de los registros y no imprime nada
  else  if($PartidaAgrupada!=$tempB || $FlagAgrupado!=$tempA){//compara si son diferentes las banderas de agrupados asi para poder Agrupar
             $varr.="<tr>
 <td style=\"text-align:left\"><b>".$tempB."</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <b>DAI:". 0.0 ."</b></td>
+                <b>DAI:". $dai ."</b></td>
                 <td style=\"text-align:right\"><b>". number_format(round($bultosSubt,2),2) ."</b></td>                    
                 <td style=\"text-align:right\"><b>". number_format(round($pesoSubt,2),2) ."</b></td>
 		<td style=\"text-align:right\"><b>". number_format(round($cuantiaSubt,2),2) ."</b></td>
@@ -200,7 +202,7 @@ if($tempA==0 && $fobSubt==0){}//se comprueba que es el primer valor de los regis
 		<td style=\"text-align:right\">".number_format(round($row_exp[4],2),2)."</td>
 		<td style=\"text-align:right\">$row_exp[5]</td>
                 <td style=\"text-align:right\">$row_exp[6]</td>
-                <td style=\"text-align:right\">&nbsp;</td>
+                <td style=\"text-align:center\">$row_exp[10]</td>
                 </tr>";
 
 	
@@ -217,7 +219,7 @@ $tempB=$row_exp[8];//Guarda un temporal que seria la partida arancelaria anterio
 }//FIN IMPRESION CADA REGISTRO
 $varr.="<tr>
 		<td><b>".$tempB."</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <b>DAI:". 0.0 ."</b></td>
+                <b>DAI:". $dai ."</b></td>
                 <td style=\"text-align:right\"><b>". number_format(round($bultosSubt,2),2) ."</b></td>                    
                 <td style=\"text-align:right\"><b>". number_format(round($pesoSubt,2),2) ."</b></td>
 		<td style=\"text-align:right\"><b>". number_format(round($cuantiaSubt,2),2) ."</b></td>
@@ -246,7 +248,7 @@ $fin=$rsd.$varr."<b>
         <td colspan=\"2\" style=\"text-align:center\">Bultos</td>
         <td colspan=\"2\" style=\"text-align:center\">Peso (Kgs)</td>
         <td colspan=\"2\" style=\"text-align:center\">Cuantia</td>
-        <td colspan=\"2\" style=\"text-align:center\">Valor</td>
+        <td colspan=\"2\" style=\"text-align:center\">FOB Total</td>
         <td>&nbsp;</td>
         </tr>
         <tr>

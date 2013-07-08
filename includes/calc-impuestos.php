@@ -76,7 +76,7 @@ if(isset($_GET["res"])){//REINICIALIZAR LOS DATOS DEL RETACEO
    
     
     
-$existencia= mysql_query("SELECT inciso,descripcion,pais FROM retaceoImpuestos where idRetaceo=".  hideunlock($_SESSION["n_declaracion"]), $link);
+$existencia= mysql_query("SELECT inciso,descripcion,pais,arancel,agrupar FROM retaceoImpuestos where idRetaceo=".  hideunlock($_SESSION["n_declaracion"]), $link);
 $msj="";
 
 if(mysql_num_rows($existencia)<=0){//SI NO HAY CALCULO HECHOS EL OBTIENE LOS ITEMS.
