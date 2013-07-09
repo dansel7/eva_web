@@ -221,18 +221,21 @@ function escribir($var){ echo $varr = isset($var) ? $var : ""; }
                             }
 
                       }
-            ?>     
-
+            ?>    
+                      
+                      <div style="margin-left:35%">
                     <div class="texto_explicacion_formulario">Nombre de la Empresa:</div>
-                    <div>
-                            <input name="nombre" id="nombre" style="width: 928px;" type="text" value="<? echo isset($nombre_empresa) ? $nombre_empresa : "";?>" class="required" title="Ingrese el Nombre de la Empresa">
+                    <div><br><br>
+                            <input name="nombre" id="nombre" style="width: 300px;" type="text" value="<? echo isset($nombre_empresa) ? $nombre_empresa : "";?>" class="required" title="Ingrese el Nombre de la Empresa">
                             <input name="idEmpresa" id="idEmpresa" type="hidden" value="<? echo isset($idEmpresa) ? $idEmpresa : "";?>";>
                     </div>
                     <br>
                     <div class="texto_explicacion_formulario">N&uacute;mero de Identidad Tributaria (NIT):</div>
-                    <div>
-                            <input name="NIT" id="NIT" rows="1" style="width: 928px;" type="text" value="<? echo isset($NIT) ? $NIT : "";?>" class="required" title="Ingrese el N&uacute;mero de Identidad Tributario">
+                    <div><br><br>
+                            <input name="NIT" id="NIT" rows="1" style="width: 300px;" type="text" value="<? echo isset($NIT) ? $NIT : "";?>" class="required" title="Ingrese el N&uacute;mero de Identidad Tributario">
                     </div>
+                      </div>
+                    
                 <br>
                 <hr>
                 <center>
@@ -241,12 +244,12 @@ function escribir($var){ echo $varr = isset($var) ? $var : ""; }
         if(!strcmp($opc, 'nuevo')){	
             ?>
 
-          <div><input name="submit" id="submit" style="text-align: center;font-size: 20px" value="Guardar" type="submit"></div>
+          <div><input name="submit" id="submit" style="text-align: center;font-size: 18px" value="Guardar" type="submit"></div>
         <?php
         } 
         else if(strcmp($id_empresa,0)){
             ?>
-          <div><input name="submit" id="submit" style="text-align: center;font-size: 20px" value="Actualizar" type="submit"></div>
+          <div><input name="submit" id="submit" style="text-align: center;font-size: 18px" value="Actualizar" type="submit"></div>
         <?php    
         }	
             ?>

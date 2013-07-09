@@ -58,75 +58,7 @@ $orientacion="vertical";
 $meses=array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
 // ---------------INICIO DEL REPORTE-----------------
 
-$impuestos = mysql_query("SELECT inciso,descripcion,pais FROM retaceoImpuestos where idRetaceo=".  hideunlock($_SESSION["n_declaracion"]), $link);
-$itemImpuestos = array();
-while ($rowp=mysql_fetch_row($impuestos)){
-$itemImpuestos[]=$rowp;
-}
-    
-$result=mysql_query("select r.*,e.nombre from retaceo r inner join empresas e on r.nit=e.nit where r.idRetaceo='".hideunlock($_SESSION["n_declaracion"])."'",$link);
-
-while($rows_e = mysql_fetch_array($result)){ //CONSULTA PARA ENCABEZADO
-$pdf->addpage($orientacion,'legal');//AGREGA NUEVA PAGINA POR CADA MES
-
-$rsd='
-<table width="100%">
-<tr><td colspan="3" style="text-align:center"><b>REPORTE PARTIDAS ARANCELARIAS AGRUPADAS</b><br></td></tr>
-<tr>
-	<td width="100px"><b>No. Retaceo:</b> </td>
-        <td width="225px" style="text-align:right">'.$rows_e["numRegistro"].'&nbsp;&nbsp;&nbsp;&nbsp;</td>
-        <td width="100px"><b>FOB Total:</b></td> 
-        <td width="100px" style="text-align:right">'.number_format($rows_e["FOB"],2).'&nbsp;&nbsp;&nbsp;&nbsp;</td> 
-        <td width="100px"><b>DAI Total:</b> </td> 
-        <td width="60px" style="text-align:right">'.$rows_e["DAI"].'</td>     
-</tr>
-<tr>
-	<td width="100px"><b>NIT:</b> </td>
-        <td width="225px" style="text-align:right">'.$rows_e["NIT"].'&nbsp;&nbsp;&nbsp;&nbsp;</td>
-        <td width="100px"><b>Flete Total:</b></td> 
-        <td width="100px" style="text-align:right">'.number_format($rows_e["flete"],2).'&nbsp;&nbsp;&nbsp;&nbsp;</td> 
-        <td width="100px"><b>IVA Total:</b> </td> 
-        <td width="60px" style="text-align:right">'.$rows_e["IVA"].'</td>     
-</tr>
-<tr>
-	<td width="100px"><b>Fecha:</b> </td>
-        <td width="225px" style="text-align:right">'.date("d-m-Y", strtotime($rows_e["fecha"])).'&nbsp;&nbsp;&nbsp;&nbsp;</td>
-        <td width="100px"><b>O.Gastos:</b></td> 
-        <td width="100px" style="text-align:right">'.$rows_e["otrosGastos"].'&nbsp;&nbsp;&nbsp;&nbsp;</td> 
-        <td width="100px"><b>Total A Pagar:</b> </td> 
-        <td width="60px" style="text-align:right">'.$rows_e["aPago"].'</td>     
-</tr>
-<tr>
-	<td width="100px"><b>Consignatario:</b> </td>
-        <td width="225px" style="text-align:left">'.$rows_e["nombre"].'&nbsp;&nbsp;&nbsp;&nbsp;</td>
-        <td width="100px"><b>Seguro:</b></td> 
-        <td width="100px" style="text-align:right">'.number_format($rows_e["seguro"],2).'&nbsp;&nbsp;&nbsp;&nbsp;</td> 
-        <td colspan="2"></td> 
-</tr>
-<tr>
-	<td width="100px"><b>Doc.Transporte:</b> </td>
-        <td width="225px" style="text-align:right">'.$rows_e["numeroDocumentoTransporte"].'&nbsp;&nbsp;&nbsp;&nbsp;</td>
-        <td width="100px"><b>CIF Total:</b></td> 
-        <td width="100px" style="text-align:right">'.number_format($rows_e["CIF"],2).'&nbsp;&nbsp;&nbsp;&nbsp;</td> 
-        <td colspan="2"></td>   
-</tr>
-
-</table>	
-<br>
-
-
-<table border="0" width="100%" cellpadding="1" cellspacing="0" >
-<tr>	
-		<td style="width:255px" ><b>Descripcion</b></td>
-		<td style="text-align:right;width:55px"><b>Bultos</b></td>
-		<td style="text-align:right;width:80px"><b>Peso Bruto</b></td>
-		<td style="text-align:right;width:60px"><b>Cuantia</b></td>
-		<td style="text-align:right;width:80px"><b>FOB</b></td>
-		<td style="text-align:right;width:65px"><b>Factura</b></td>
-                <td style="text-align:right;width:30px"><b>ODF</b></td>
-                <td style="text-align:center;width:80px"><b>TLC</b></td>
-</tr>';
-}
+//----------ENCABEZADO CREADO DESPUES DE LA IMPRESION DE LOS ITEMS-----//
 
 //$resultado=mysql_query("select * from factura where numeroretaceo='jor301'",$link);
 
@@ -237,9 +169,75 @@ $bultosSubt=0;
 $pesoSubt=0;
 $cuantiaSubt=0;
 
+$DAI="0.00";
+//-------ENCABEZADO DEL REPORTE CALCULADO AL FINAL DE LOS TOTALES----------//
+$result=mysql_query("select r.*,e.nombre from retaceo r inner join empresas e on r.nit=e.nit where r.idRetaceo='".hideunlock($_SESSION["n_declaracion"])."'",$link);
+
+while($rows_e = mysql_fetch_array($result)){ //CONSULTA PARA ENCABEZADO
+$pdf->addpage($orientacion,'legal');//AGREGA NUEVA PAGINA POR CADA MES
+
+$rsd='
+<table width="100%">
+<tr><td colspan="3" style="text-align:center"><b>REPORTE PARTIDAS ARANCELARIAS AGRUPADAS</b><br></td></tr>
+<tr>
+	<td width="100px"><b>No. Retaceo:</b> </td>
+        <td width="225px" style="text-align:right">'.$rows_e["numRegistro"].'&nbsp;&nbsp;&nbsp;&nbsp;</td>
+        <td width="100px"><b>FOB Total:</b></td> 
+        <td width="100px" style="text-align:right">'.number_format($rows_e["FOB"],2).'&nbsp;&nbsp;&nbsp;&nbsp;</td> 
+        <td width="100px"><b>DAI Total:</b> </td> 
+        <td width="60px" style="text-align:right">'.$DAI.'</td>     
+</tr>
+<tr>
+	<td width="100px"><b>NIT:</b> </td>
+        <td width="225px" style="text-align:right">'.$rows_e["NIT"].'&nbsp;&nbsp;&nbsp;&nbsp;</td>
+        <td width="100px"><b>Flete Total:</b></td> 
+        <td width="100px" style="text-align:right">'.number_format($rows_e["flete"],2).'&nbsp;&nbsp;&nbsp;&nbsp;</td> 
+        <td width="100px"><b>IVA Total:</b> </td> 
+        <td width="60px" style="text-align:right">'.$rows_e["IVA"].'</td>     
+</tr>
+<tr>
+	<td width="100px"><b>Fecha:</b> </td>
+        <td width="225px" style="text-align:right">'.date("d-m-Y", strtotime($rows_e["fecha"])).'&nbsp;&nbsp;&nbsp;&nbsp;</td>
+        <td width="100px"><b>O.Gastos:</b></td> 
+        <td width="100px" style="text-align:right">'.$rows_e["otrosGastos"].'&nbsp;&nbsp;&nbsp;&nbsp;</td> 
+        <td width="100px"><b>Total A Pagar:</b> </td> 
+        <td width="60px" style="text-align:right">'.$rows_e["aPago"].'</td>     
+</tr>
+<tr>
+	<td width="100px"><b>Consignatario:</b> </td>
+        <td width="225px" style="text-align:left">'.$rows_e["nombre"].'&nbsp;&nbsp;&nbsp;&nbsp;</td>
+        <td width="100px"><b>Seguro:</b></td> 
+        <td width="100px" style="text-align:right">'.number_format($rows_e["seguro"],2).'&nbsp;&nbsp;&nbsp;&nbsp;</td> 
+        <td colspan="2"></td> 
+</tr>
+<tr>
+	<td width="100px"><b>Doc.Transporte:</b> </td>
+        <td width="225px" style="text-align:right">'.$rows_e["numeroDocumentoTransporte"].'&nbsp;&nbsp;&nbsp;&nbsp;</td>
+        <td width="100px"><b>CIF Total:</b></td> 
+        <td width="100px" style="text-align:right">'.number_format($rows_e["CIF"],2).'&nbsp;&nbsp;&nbsp;&nbsp;</td> 
+        <td colspan="2"></td>   
+</tr>
+
+</table>	
+<br>
 
 
-// ---------------PIE DEL REPORTE-----------------
+<table border="0" width="100%" cellpadding="1" cellspacing="0" >
+<tr>	
+		<td style="width:255px" ><b>Descripcion</b></td>
+		<td style="text-align:right;width:55px"><b>Bultos</b></td>
+		<td style="text-align:right;width:80px"><b>Peso Bruto</b></td>
+		<td style="text-align:right;width:60px"><b>Cuantia</b></td>
+		<td style="text-align:right;width:80px"><b>FOB</b></td>
+		<td style="text-align:right;width:65px"><b>Factura</b></td>
+                <td style="text-align:right;width:30px"><b>ODF</b></td>
+                <td style="text-align:center;width:80px"><b>TLC</b></td>
+</tr>';
+}
+//------------FIN ENCABEZADO---------------//
+
+
+// ---------------PIE DEL REPORTE-----------------//
 //PIE DE TABLA
 $fin=$rsd.$varr."<b>
 <table border=\"0\" >              

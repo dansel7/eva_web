@@ -67,12 +67,31 @@ if (isset($_POST['submit'])){
 //PARA QUE GUARDE EL NIT SIN ENCRIPTACION.	
     $_POST['NIT']=  hideunlock($_POST['NIT']);
     
-// -------------------------UPDATE & INSERT--------------------------------
+// -------------------------UPDATE & INSERT--------------------------------//
 //Funcion para poder hacer el insert, o update de declaracion
 if($_POST['submit']=='Actualizar'){/////-------ACTUALIZAR-----------/////
     
+    
         $_POST["fechaModificado"]=date("Y-m-d H:i:s");
         $resultado = $clase_database->formToDB($link,'retaceo','post','', 'submit, frm, ','update','idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');
+
+//CALCULA LOS VALORES DEL RETACEO.
+//PRIMERO COMPRUEBA SI SE DEBE CALCULAR EL SEGURO O NO.
+if(strtoupper($_POST["calcularSeguro"])=="S")
+{
+
+    $porcent=0.0;
+    if(strtoupper($_POST["TipoCalculoSeguro"])=="E"){$porcent=0.015;}
+    else if(strtoupper($_POST["TipoCalculoSeguro"])=="I"){$porcent=0.0125;}
+$resultado = $clase_database->formToDB($link,'retaceo r,(SELECT SUM(otrosGastos) og,SUM(FOB) fob,SUM(cuantia) c,SUM(pesoBruto) pb,SUM(bultos) b 
+from factura where idRetaceo='.hideunlock($_SESSION["n_declaracion"]).') f','','r.FOB=f.fob,r.cuantia=f.c,r.pesoBruto=f.pb,r.bultos=f.b,r.otrosGastos=f.og,r.seguro=(f.fob*'.$porcent.'),r.cif=(f.fob+f.og+r.flete)+((f.fob+f.og+r.flete)*1.1*'.$porcent.')','','update','idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');
+}else{
+$resultado = $clase_database->formToDB($link,'retaceo r,(SELECT SUM(otrosGastos) og,SUM(FOB) fob,SUM(cuantia) c,SUM(pesoBruto) pb,SUM(bultos) b 
+from factura where idRetaceo='.hideunlock($_SESSION["n_declaracion"]).') f','','r.FOB=f.fob,r.cuantia=f.c,r.pesoBruto=f.pb,r.bultos=f.b,r.otrosGastos=f.og,r.cif=(f.fob+f.og+r.flete)+r.seguro','','update','idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');  
+}
+//------FIN--CALCULA LOS VALORES DEL RETACEO-----
+        
+        
         if ($resultado){ 
             $mensaje = "Informacion Almacenada Exitosamente";
             $clase_css = "texto_ok";
@@ -106,7 +125,6 @@ if ($resultado){
        
 }else{
         header("Location: http://".$_SERVER['HTTP_HOST'].$_SERVER["PHP_SELF"]."?xm=2");
- 
 }       
 }
 	
@@ -121,7 +139,7 @@ if(isset($_GET["xm"])){
         $clase_css = "texto_error";
         }
 }
-
+// ------------------------- FIN UPDATE & INSERT FIN --------------------------------//
 
 //-------------------------------------------------------------------------------
 //----AGREGAR DATOS NUEVOS DE FACTURAS
@@ -216,7 +234,9 @@ if(isset($_POST['updf'])){
    
    
    
-}//------OBTIENE LOS DATOS DE LA DECLARACION DESDE LA BD PARA ABRIRLO-------
+}
+//
+////------OBTIENE LOS DATOS DE LA DECLARACION DESDE LA BD PARA ABRIRLO-------
 //VARIABLE QUE VERIFICA SI LA DECLARACION EXISTE Y ES VALIDA.
 $dec_valid=0;
 //CARGA DE DATOS DESDE BD
@@ -359,6 +379,7 @@ from factura where idRetaceo='.hideunlock($_SESSION["n_declaracion"]).') f','','
                        }
                        
                     });
+                    39.6
                     if($("#calcularSeguro").is(':checked')) { 
                            $("#seguro").attr("readonly",true);
                            $("#seguro").attr("class","required read");

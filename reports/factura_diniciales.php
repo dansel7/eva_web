@@ -115,7 +115,7 @@ if(strtoupper($_SESSION["calculoseguro"])=="S")
     $porcent=0.0;
     if(strtoupper($_SESSION["TPSeguro"])=="E"){$porcent=0.015;}
     else if(strtoupper($_SESSION["TPSeguro"])=="I"){$porcent=0.0125;}
-    $seguro=$montoAsegurado*$porcent;
+    $seguro=$fobTotal*$porcent;
 }else if(strtoupper($_SESSION["calculoseguro"])=="N"){
     $seguro=$montoAsegurado*($_SESSION["porcentSeguro"]/100);
 }
