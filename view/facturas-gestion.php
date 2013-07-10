@@ -99,7 +99,7 @@ if(strtoupper($_SESSION["calculoseguro"])=="S")
     if(strtoupper($_SESSION["TPSeguro"])=="E"){$porcent=0.015;}
     else if(strtoupper($_SESSION["TPSeguro"])=="I"){$porcent=0.0125;}
 $resultado = $clase_database->formToDB($link,'retaceo r,(SELECT SUM(otrosGastos) og,SUM(FOB) fob,SUM(cuantia) c,SUM(pesoBruto) pb,SUM(bultos) b 
-from factura where idRetaceo='.hideunlock($_SESSION["n_declaracion"]).') f','','r.FOB=f.fob,r.cuantia=f.c,r.pesoBruto=f.pb,r.bultos=f.b,r.otrosGastos=f.og,r.seguro=(f.fob*'.$porcent.'),r.cif=(f.fob+f.og+r.flete)+((f.fob+f.og+r.flete)*1.1*'.$porcent.')','','update','idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');
+from factura where idRetaceo='.hideunlock($_SESSION["n_declaracion"]).') f','','r.FOB=f.fob,r.cuantia=f.c,r.pesoBruto=f.pb,r.bultos=f.b,r.otrosGastos=f.og,r.seguro=(f.fob*'.$porcent.'),r.cif=(f.fob+f.og+r.flete)+(f.fob*'.$porcent.')','','update','idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');
 }else{
 $resultado = $clase_database->formToDB($link,'retaceo r,(SELECT SUM(otrosGastos) og,SUM(FOB) fob,SUM(cuantia) c,SUM(pesoBruto) pb,SUM(bultos) b 
 from factura where idRetaceo='.hideunlock($_SESSION["n_declaracion"]).') f','','r.FOB=f.fob,r.cuantia=f.c,r.pesoBruto=f.pb,r.bultos=f.b,r.otrosGastos=f.og,r.cif=(f.fob+f.og+r.flete)+r.seguro','','update','idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');  
@@ -150,7 +150,7 @@ if(strtoupper($_SESSION["TPSeguro"])=="E"){$porcent=0.015;}
 else if(strtoupper($_SESSION["TPSeguro"])=="I"){$porcent=0.0125;}
 
 $resultado = $clase_database->formToDB($link,'retaceo r,(SELECT SUM(otrosGastos) og,SUM(FOB) fob,SUM(cuantia) c,SUM(pesoBruto) pb,SUM(bultos) b 
-from factura where idRetaceo='.hideunlock($_SESSION["n_declaracion"]).') f','','r.FOB=f.fob,r.cuantia=f.c,r.pesoBruto=f.pb,r.bultos=f.b,r.otrosGastos=f.og,r.seguro=(f.fob*'.$porcent.'),r.cif=(f.fob+f.og+r.flete)+((f.fob+f.og+r.flete)*1.1*'.$porcent.')','','update','idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');
+from factura where idRetaceo='.hideunlock($_SESSION["n_declaracion"]).') f','','r.FOB=f.fob,r.cuantia=f.c,r.pesoBruto=f.pb,r.bultos=f.b,r.otrosGastos=f.og,r.seguro=(f.fob*'.$porcent.'),r.cif=(f.fob+f.og+r.flete)+(f.fob*'.$porcent.')','','update','idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');
 }else{
 $resultado = $clase_database->formToDB($link,'retaceo r,(SELECT SUM(otrosGastos) og,SUM(FOB) fob,SUM(cuantia) c,SUM(pesoBruto) pb,SUM(bultos) b 
 from factura where idRetaceo='.hideunlock($_SESSION["n_declaracion"]).') f','','r.FOB=f.fob,r.cuantia=f.c,r.pesoBruto=f.pb,r.bultos=f.b,r.otrosGastos=f.og,r.cif=(f.fob+f.og+r.flete)+r.seguro','','update','idRetaceo="'.hideunlock($_SESSION["n_declaracion"]).'"');  
