@@ -79,7 +79,9 @@ if(isset($_GET["res"])){//REINICIALIZAR LOS DATOS DEL RETACEO
 $existencia= mysql_query("SELECT inciso,descripcion,pais,arancel,agrupar FROM retaceoImpuestos where idRetaceo=".  hideunlock($_SESSION["n_declaracion"]), $link);
 $msj="";
 
-if(mysql_num_rows($existencia)<=0){//SI NO HAY CALCULO HECHOS EL OBTIENE LOS ITEMS.
+if(mysql_num_rows($existencia)<=0){
+           //SI NO HAY CALCULO HECHOS EL OBTIENE LOS ITEMS.
+    
 $qry= "select item.partidaArancelaria,item.descripcion,idItem,arancel.dai ,item.agrupar 
     from item inner join factura on item.idFactura=factura.idFactura inner join arancel on arancel.inciso=item.partidaArancelaria
     where item.idRetaceo=".  hideunlock($_SESSION["n_declaracion"]) ." 
@@ -88,7 +90,10 @@ $qry= "select item.partidaArancelaria,item.descripcion,idItem,arancel.dai ,item.
 
 $result = mysql_query($qry, $link);
 $msj="<h3 style='color:red'>No se ha realizado ningun calculo de impuestos</h3>";
-}else{//SI HAY CALCULO SOLAMENTE MOSTRARA LOS QUE ESTEN EN LA TABLA DE RETACEOIMPUESTO
+
+}else{
+
+        //SI HAY CALCULO SOLAMENTE MOSTRARA LOS QUE ESTEN EN LA TABLA DE RETACEOIMPUESTO
 $result = $existencia;   
 }
 

@@ -363,9 +363,10 @@ from factura where idRetaceo='.hideunlock($_SESSION["n_declaracion"]).') f','','
 
                     //FUNCION QUE QUITE MODO LECTURA AL SEGURO AL DESCHEQUEAR CHECK CALCULARSEGURO
                     $("#calcularSeguro").click(function(){
+                        
                        if($("#calcularSeguro").is(':checked')) { 
                            $("#seguro").attr("readonly",true);
-                           $("#seguro").attr("class","required read");
+                           $("#seguro").attr("class","read");
                            $("#TipoCalculoSeguroE").removeAttr("disabled");
                            $("#TipoCalculoSeguroI").removeAttr("disabled");
                            $("#tdPorc").css("display","none");
@@ -379,10 +380,9 @@ from factura where idRetaceo='.hideunlock($_SESSION["n_declaracion"]).') f','','
                        }
                        
                     });
-                    39.6
                     if($("#calcularSeguro").is(':checked')) { 
                            $("#seguro").attr("readonly",true);
-                           $("#seguro").attr("class","required read");
+                           $("#seguro").attr("class","read");
                            $("#TipoCalculoSeguroE").removeAttr("disabled");
                            $("#TipoCalculoSeguroI").removeAttr("disabled");
                            $("#tdPorc").css("display","none");

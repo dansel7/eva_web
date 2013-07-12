@@ -64,7 +64,19 @@
 
 		  	  
 
-			    </tr><tr>                 
+			    </tr><tr>                
+
+
+			
+
+			  <td align="center" valign="top"><div><img src="../images/transparente(1).gif" height="8" width="1"></div>
+
+				<div id="btncalc1" align="center"><a href=""><img width="45%" height="40%" src="../images/icono-impuestos.gif" border="0"></a></div>
+
+				<div id="btncalc2" style="height:25px;"><a href="" class="modulo_titulo"> Calculo Impuestos</a></div>
+                                <br>
+			  </td>
+			   </tr><tr>                 
 
                
 
@@ -106,19 +118,7 @@
 
 		  	  
 
-			     </tr><tr>                
-
-
-			
-
-			  <td align="center" valign="top"><div><img src="../images/transparente(1).gif" height="8" width="1"></div>
-
-				<div id="btncalc1" align="center"><a href=""><img width="45%" height="40%" src="../images/icono-impuestos.gif" border="0"></a></div>
-
-				<div id="btncalc2" style="height:25px;"><a href="" class="modulo_titulo"> Calculo Impuestos</a></div>
-                                <br>
-			  </td>
-			   </tr><tr>
+			     </tr><tr>
 
 			
 
