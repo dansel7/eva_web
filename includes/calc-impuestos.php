@@ -14,20 +14,26 @@ if(isset($_SESSION["n_declaracion"])){//SI ESTA LOGUEADO MUESTRA SUS RESPECTIVOS
 if(isset($_GET["ins"])){//INSERCION DE CALCULOS DE IMPUESTOS (INSERCION EN CASO ESPECIAL)
     
     
-    $cont=  count($_POST["idRetaceo"]);//CUANTAS FILAS DE DEVOLVIO EL ARREGLO
+    $cont=  count($_POST["idRetaceo"]);//CUANTAS FILAS DEVOLVIO EL ARREGLO
     $items[$cont];
     //print_r($_POST);
     //SE ORDENA LAS FILAS OBTENIDAS Y ENVIADAS DESDE EL FRM. POR MEDIO DE JQUERY.
-    foreach ($_POST as $campo => $valor)
+    $tempPais[$cont];
+    
+    foreach ($_POST as $campo => $valor)//FOR PARA LAS FILAS
     {
         $campos.=$campo.", ";//CAMPOS OBTENIDOS DEL FRM
-
+        ;//almacena el pais si se ha seleccionado
         $i=0;
-        for($n=0;$n<=4;$n++){
+        for($n=0;$n<=4;$n++){//FOR PARA LAS COLUMNAS        
+            if($campo=='pais') $tempPais[$i]=$valor[$n];//SE ALMACENA EL PAIS PARA PODER UTILIZARLO Y SABER SI TIENE TLC
+                
             if($campo=='idItemImp')
             $items[$i].=$valor[$n].", ";//SE ALMACENA EN LA MATRIZ CORRESPONDIENTE LOS VALORES
-            else
-            $items[$i].="'".$valor[$n]."', ";
+            else if($campo=='tlc')//se ejecuta una consulta que devuelva el id del tlc si es que tiene por medio del pais
+                   $items[$i].="(select idtlc from tlc where codigo_pais='". $tempPais[$i] ."') , ";
+            else   
+               $items[$i].="'".$valor[$n]."', ";
         $i++;
         }
     }
@@ -37,6 +43,7 @@ if(isset($_GET["ins"])){//INSERCION DE CALCULOS DE IMPUESTOS (INSERCION EN CASO 
     $sql = "INSERT INTO retaceoimpuestos (".$campos.") VALUES "; //INICIO DEL INSERT MULTIPLE, SE AGREGAN LOS CAMPOS.
 
     for($x=0;$x<$cont;$x++){// SE ADJUNTAN LOS VALORES A INGRESAR
+        
     $sql.="(".$items[$x]."), ";
     }
     
@@ -76,17 +83,20 @@ if(isset($_GET["res"])){//REINICIALIZAR LOS DATOS DEL RETACEO
    
     
     
-$existencia= mysql_query("SELECT inciso,descripcion,pais,arancel,agrupar FROM retaceoImpuestos where idRetaceo=".  hideunlock($_SESSION["n_declaracion"]), $link);
+$existencia= mysql_query("SELECT inciso,descripcion,pais,arancel,agrupar,tlc 
+                          FROM retaceoImpuestos     
+                          where idRetaceo=".  hideunlock($_SESSION["n_declaracion"]), $link);
 $msj="";
 
 if(mysql_num_rows($existencia)<=0){
            //SI NO HAY CALCULO HECHOS EL OBTIENE LOS ITEMS.
     
-$qry= "select item.partidaArancelaria,item.descripcion,idItem,arancel.dai ,item.agrupar 
+$qry= "select item.partidaArancelaria,item.descripcion,idItem,arancel.dai ,item.agrupar, '' dummi
     from item inner join factura on item.idFactura=factura.idFactura inner join arancel on arancel.inciso=item.partidaArancelaria
     where item.idRetaceo=".  hideunlock($_SESSION["n_declaracion"]) ." 
     group by agrupar,partidaArancelaria 
     order by factura.idFactRetaceo,idItemFactura";
+
 
 $result = mysql_query($qry, $link);
 $msj="<h3 style='color:red'>No se ha realizado ningun calculo de impuestos</h3>";
@@ -97,7 +107,7 @@ $msj="<h3 style='color:red'>No se ha realizado ningun calculo de impuestos</h3>"
 $result = $existencia;   
 }
 
-$paises = mysql_query("SELECT * FROM paises", $link);
+$paises = mysql_query("SELECT * FROM paises order by descripcion", $link);
 $datos = array();
 while ($rowp=mysql_fetch_row($paises)){
 $datos[]=$rowp;
@@ -171,9 +181,11 @@ $i=0;
       <input id="idRetaceo" type="hidden" name="idRetaceo[]" value="<?=hideunlock($_SESSION["n_declaracion"])?>"/>
           <input id="idItemImp" type="hidden" name="idItemImp[]" value="<?=$i?>"/></Td>
       <Td class="tabla_filas"><?=$fila[0]?>
-          <input id="inciso" type="hidden" name="inciso[]" value="<?=$fila[0]?>"/></Td>
-      <input id="arancel" type="hidden" name="arancel[]" value="<?=$fila[3]?>"/></Td>
-     <input id="agrupar" type="hidden" name="agrupar[]" value="<?=$fila[4]?>"/></Td>
+      <input id="inciso" type="hidden" name="inciso[]" value="<?=$fila[0]?>"/>
+      <input id="arancel" type="hidden" name="arancel[]" value="<?=$fila[3]?>"/>
+      <input id="agrupar" type="hidden" name="agrupar[]" value="<?=$fila[4]?>"/>
+      
+      </Td>
       <Td class="tabla_filas">
           <input id="descripcion" name="descripcion[]" style="width:250px" value="<?=htmlentities($fila[1])?>" /></Td>
       <Td class="tabla_filas">
@@ -184,6 +196,7 @@ $i=0;
                  <option value="<?=$val[0]?>" <?if($val[0]==$fila[2]) echo "selected";?> ><?=$val[1]?></option>								
                 <? }?>
           </select>
+          <input id="tlc" type="hidden" name="tlc[]" value="<?=$fila[5]?>"/>
       </Td>
           </tr>
     <?php
